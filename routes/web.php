@@ -1,0 +1,265 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\FirmController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LogoController;
+use App\Http\Controllers\PartyController;
+
+use App\Http\Controllers\InputChalanController;
+
+// Auth Routes
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// Protected Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+        $firms = \App\Models\Firm::orderBy('name')->get();
+        $parties = \App\Models\Party::orderBy('name')->get();
+        return view('dashboard', compact('firms', 'parties'));
+    });
+
+    Route::get('/register', function () {
+        $parties = \App\Models\Party::orderBy('name')->get();
+        // Query chalans based on party filter
+        $query = \App\Models\InputChalan::with(['items', 'firm']);
+        $outQuery = \App\Models\OutputChalan::with(['firm']);
+        if (request('party_id')) {
+            $query->where('party_id', request('party_id'));
+            $outQuery->where('party_id', request('party_id'));
+        }
+        
+        $status = request('status', 'pending');
+        if ($status === 'done') {
+            $query->where('is_done', 1);
+            $outQuery->where('is_done', 1);
+        } else {
+            $query->where('is_done', 0);
+            $outQuery->where('is_done', 0);
+        }
+
+        $outputChalans = clone $outQuery;
+        $outputChalans = $outputChalans->latest('date')->get()->map(function($ch) {
+            $ch->source_type = 'output';
+            return $ch;
+        });
+
+        $genQuery = \App\Models\GenerateChalan::with(['firm', 'items']);
+        if (request('party_id')) {
+            $genQuery->where('party_id', request('party_id'));
+        }
+        if ($status === 'done') {
+            $genQuery->where('is_done', 1);
+        } else {
+            $genQuery->where('is_done', 0);
+        }
+        $genChalans = $genQuery->latest('date')->get()->map(function($ch) {
+            $ch->source_type = 'generate';
+            $ch->total_pcs = $ch->items->sum('pcs');
+            $ch->total_amount = $ch->items->sum('amount');
+            $ch->party_chalan_no = $ch->party_ch;
+            return $ch;
+        });
+
+        $mergedOutputs = collect()->concat($outputChalans)->concat($genChalans)->sortByDesc('date');
+        $inputChalans = $query->latest('date')->get();
+        $outputChalans = $mergedOutputs;
+
+        $firms = \App\Models\Firm::orderBy('name')->get();
+
+        return view('register', compact('parties', 'inputChalans', 'outputChalans', 'firms'));
+    })->name('register.index');
+
+    Route::get('/register/print', function () {
+        $parties = \App\Models\Party::orderBy('name')->get();
+        $query = \App\Models\InputChalan::with(['items', 'firm']);
+        $outQuery = \App\Models\OutputChalan::with(['firm']);
+        if (request('party_id')) {
+            $query->where('party_id', request('party_id'));
+            $outQuery->where('party_id', request('party_id'));
+        }
+        
+        $status = request('status', 'pending');
+        if ($status === 'done') {
+            $query->where('is_done', 1);
+            $outQuery->where('is_done', 1);
+        } else {
+            $query->where('is_done', 0);
+            $outQuery->where('is_done', 0);
+        }
+
+        $outputChalans = clone $outQuery;
+        $outputChalans = $outputChalans->oldest('date')->get()->map(function($ch) {
+            $ch->source_type = 'output';
+            return $ch;
+        });
+
+        $genQuery = \App\Models\GenerateChalan::with(['firm', 'items']);
+        if (request('party_id')) {
+            $genQuery->where('party_id', request('party_id'));
+        }
+        if ($status === 'done') {
+            $genQuery->where('is_done', 1);
+        } else {
+            $genQuery->where('is_done', 0);
+        }
+        $genChalans = $genQuery->oldest('date')->get()->map(function($ch) {
+            $ch->source_type = 'generate';
+            $ch->total_pcs = clone $ch->items()->sum('pcs');
+            $ch->total_pcs = $ch->items->sum('pcs');
+            $ch->total_amount = $ch->items->sum('amount');
+            $ch->party_chalan_no = $ch->party_ch;
+            return $ch;
+        });
+
+        $mergedOutputs = collect()->concat($outputChalans)->concat($genChalans)->sortBy('date');
+
+        $inputChalans = $query->oldest('date')->get();
+        $outputChalans = $mergedOutputs;
+        
+        $party = request('party_id') ? \App\Models\Party::find(request('party_id')) : null;
+
+        return view('register-print', compact('inputChalans', 'outputChalans', 'party'));
+    })->name('register.print');
+
+    Route::get('/input-chalan', function () {
+        $firms = \App\Models\Firm::orderBy('name')->get();
+        $parties = \App\Models\Party::orderBy('name')->get();
+        return view('input-chalan', compact('firms', 'parties'));
+    });
+    
+    Route::post('/input-chalan', [InputChalanController::class, 'store'])->name('input-chalan.store');
+    Route::post('/input-chalan/quick-store', [InputChalanController::class, 'quickStore'])->name('input-chalan.quick-store');
+    Route::get('/input-chalan/{inputChalan}/edit', [InputChalanController::class, 'edit'])->name('input-chalan.edit');
+    Route::put('/input-chalan/{inputChalan}', [InputChalanController::class, 'update'])->name('input-chalan.update');
+    Route::delete('/input-chalan/{inputChalan}', [InputChalanController::class, 'destroy'])->name('input-chalan.destroy');
+    Route::post('/input-chalans/{inputChalan}/toggle-done', function(\App\Models\InputChalan $inputChalan) {
+        $inputChalan->is_done = !$inputChalan->is_done;
+        $inputChalan->save();
+        return back()->with('success', 'Chalan status updated!');
+    })->name('input-chalans.toggle-done');
+    Route::get('/generate-chalans', [App\Http\Controllers\GenerateChalanController::class, 'index'])->name('generate-chalans.index');
+    Route::get('/generate-chalan', function () {
+        $firms = \App\Models\Firm::orderBy('name')->get();
+        $parties = \App\Models\Party::orderBy('name')->get();
+        return view('generate-chalan', compact('firms', 'parties'));
+    })->name('generate-chalan.create');
+    Route::post('/generate-chalans', [App\Http\Controllers\GenerateChalanController::class, 'store'])->name('generate-chalans.store');
+    Route::get('/generate-chalans/{generateChalan}/edit', [App\Http\Controllers\GenerateChalanController::class, 'edit'])->name('generate-chalans.edit');
+    Route::put('/generate-chalans/{generateChalan}', [App\Http\Controllers\GenerateChalanController::class, 'update'])->name('generate-chalans.update');
+    Route::delete('/generate-chalans/{generateChalan}', [App\Http\Controllers\GenerateChalanController::class, 'destroy'])->name('generate-chalans.destroy');
+    Route::post('/generate-chalans/{generateChalan}/toggle-done', function(\App\Models\GenerateChalan $generateChalan) {
+        $generateChalan->is_done = !$generateChalan->is_done;
+        $generateChalan->save();
+        return back()->with('success', 'Generate Chalan status updated!');
+    })->name('generate-chalans.toggle-done');
+    Route::get('/generate-chalans/{generateChalan}/print', [App\Http\Controllers\GenerateChalanController::class, 'print'])->name('generate-chalans.print');
+
+    // Output Chalans (Register Side & Separate Page)
+    Route::get('/output-chalans', [App\Http\Controllers\OutputChalanController::class, 'create'])->name('output-chalans.create');
+    Route::post('/output-chalans', [App\Http\Controllers\OutputChalanController::class, 'store'])->name('output-chalans.store');
+    Route::post('/output-chalans/quick-store', [App\Http\Controllers\OutputChalanController::class, 'quickStore'])->name('output-chalans.quick-store');
+    Route::get('/output-chalans/{outputChalan}/edit', [App\Http\Controllers\OutputChalanController::class, 'edit'])->name('output-chalans.edit');
+    Route::put('/output-chalans/{outputChalan}', [App\Http\Controllers\OutputChalanController::class, 'update'])->name('output-chalans.update');
+    Route::delete('/output-chalans/{outputChalan}', [App\Http\Controllers\OutputChalanController::class, 'destroy'])->name('output-chalans.destroy');
+    Route::post('/output-chalans/{outputChalan}/toggle-done', function(\App\Models\OutputChalan $outputChalan) {
+        $outputChalan->is_done = !$outputChalan->is_done;
+        $outputChalan->save();
+        return back()->with('success', 'Output Chalan status updated!');
+    })->name('output-chalans.toggle-done');
+
+    Route::get('/api/input-chalans/by-no/{chalan_no}', function ($chalan_no) {
+        $chalan = \App\Models\InputChalan::with(['items', 'party'])->where('chalan_no', $chalan_no)->first();
+        if ($chalan) {
+            return response()->json($chalan);
+        }
+        return response()->json(['error' => 'Not found'], 404);
+    });
+
+    Route::get('/generate-bills', [App\Http\Controllers\GenerateBillController::class, 'index'])->name('generate-bills.index');
+    Route::get('/generate-bill', [App\Http\Controllers\GenerateBillController::class, 'create'])->name('generate-bills.create');
+    Route::post('/generate-bills', [App\Http\Controllers\GenerateBillController::class, 'store'])->name('generate-bills.store');
+    Route::get('/generate-bills/{generateBill}/edit', [App\Http\Controllers\GenerateBillController::class, 'edit'])->name('generate-bills.edit');
+    Route::put('/generate-bills/{generateBill}', [App\Http\Controllers\GenerateBillController::class, 'update'])->name('generate-bills.update');
+    Route::delete('/generate-bills/{generateBill}', [App\Http\Controllers\GenerateBillController::class, 'destroy'])->name('generate-bills.destroy');
+    Route::get('/generate-bills/{generateBill}/print', [App\Http\Controllers\GenerateBillController::class, 'print'])->name('generate-bills.print');
+
+    Route::get('/rcvd-payment', function () {
+        $firms = \App\Models\Firm::orderBy('name')->get();
+        $parties = \App\Models\Party::orderBy('name')->get();
+        return view('rcvd-payment', compact('firms', 'parties'));
+    });
+
+    Route::get('/purchase-bills', [\App\Http\Controllers\PurchaseBillController::class, 'index'])->name('purchase-bill.index');
+    Route::get('/purchase-bill', [\App\Http\Controllers\PurchaseBillController::class, 'create'])->name('purchase-bill.create');
+    Route::post('/purchase-bills', [\App\Http\Controllers\PurchaseBillController::class, 'store'])->name('purchase-bill.store');
+    Route::get('/purchase-bills/{purchaseBill}/edit', [\App\Http\Controllers\PurchaseBillController::class, 'edit'])->name('purchase-bill.edit');
+    Route::put('/purchase-bills/{purchaseBill}', [\App\Http\Controllers\PurchaseBillController::class, 'update'])->name('purchase-bill.update');
+    Route::delete('/purchase-bills/{purchaseBill}', [\App\Http\Controllers\PurchaseBillController::class, 'destroy'])->name('purchase-bill.destroy');
+    Route::get('/purchase-bills/{purchaseBill}/print', [\App\Http\Controllers\PurchaseBillController::class, 'print'])->name('purchase-bill.print');
+
+    Route::get('/generate-cheque', function () {
+        $firms = \App\Models\Firm::orderBy('name')->get();
+        $parties = \App\Models\Party::orderBy('name')->get();
+        return view('generate-cheque', compact('firms', 'parties'));
+    });
+
+    Route::get('/bank-book', [\App\Http\Controllers\BankBookController::class, 'index'])->name('bank-book.index');
+    Route::post('/bank-book', [\App\Http\Controllers\BankBookController::class, 'store'])->name('bank-book.store');
+    Route::delete('/bank-book/{bankBook}', [\App\Http\Controllers\BankBookController::class, 'destroy'])->name('bank-book.destroy');
+
+    Route::get('/thread-boxes', function () {
+        $firms = \App\Models\Firm::orderBy('name')->get();
+        $parties = \App\Models\Party::orderBy('name')->get();
+        return view('thread-boxes', compact('firms', 'parties'));
+    });
+
+    Route::get('/dhaga-cuttings', [\App\Http\Controllers\DhagaCuttingController::class, 'index'])->name('dhaga-cuttings.index');
+    Route::get('/dhaga-cuttings/create', [\App\Http\Controllers\DhagaCuttingController::class, 'create'])->name('dhaga-cuttings.create');
+    Route::post('/dhaga-cuttings', [\App\Http\Controllers\DhagaCuttingController::class, 'store'])->name('dhaga-cuttings.store');
+    Route::get('/dhaga-cuttings/{dhagaCutting}/edit', [\App\Http\Controllers\DhagaCuttingController::class, 'edit'])->name('dhaga-cuttings.edit');
+    Route::put('/dhaga-cuttings/{dhagaCutting}', [\App\Http\Controllers\DhagaCuttingController::class, 'update'])->name('dhaga-cuttings.update');
+
+    Route::get('/inter-exchange', [\App\Http\Controllers\InterExchangeController::class, 'index'])->name('inter-exchange.index');
+    Route::get('/inter-exchange/create', [\App\Http\Controllers\InterExchangeController::class, 'create'])->name('inter-exchange.create');
+    Route::post('/inter-exchange', [\App\Http\Controllers\InterExchangeController::class, 'store'])->name('inter-exchange.store');
+    Route::get('/inter-exchange/{interExchange}/edit', [\App\Http\Controllers\InterExchangeController::class, 'edit'])->name('inter-exchange.edit');
+    Route::put('/inter-exchange/{interExchange}', [\App\Http\Controllers\InterExchangeController::class, 'update'])->name('inter-exchange.update');
+    Route::delete('/inter-exchange/{interExchange}', [\App\Http\Controllers\InterExchangeController::class, 'destroy'])->name('inter-exchange.destroy');
+
+    // Settings Pages
+    Route::get('/settings', function () {
+        return view('settings.index');
+    })->name('settings.index');
+
+    Route::prefix('settings')->group(function () {
+        Route::resource('users', UserController::class);
+        Route::resource('firms', FirmController::class);
+        Route::resource('parties', PartyController::class);
+        
+        Route::get('thread-boxes-company', [\App\Http\Controllers\ThreadBoxSetupController::class, 'index'])->name('settings.thread-boxes-company');
+        Route::post('thread-boxes-company', [\App\Http\Controllers\ThreadBoxSetupController::class, 'store'])->name('settings.thread-boxes-company.store');
+        Route::delete('thread-boxes-company/{companyName}', [\App\Http\Controllers\ThreadBoxSetupController::class, 'destroy'])->name('settings.thread-boxes-company.destroy');
+        
+        Route::get('inter-exchange-company', [\App\Http\Controllers\InterExchangeSetupController::class, 'index'])->name('settings.inter-exchange-company');
+        Route::post('inter-exchange-company', [\App\Http\Controllers\InterExchangeSetupController::class, 'store'])->name('settings.inter-exchange-company.store');
+        Route::delete('inter-exchange-company/{companyName}', [\App\Http\Controllers\InterExchangeSetupController::class, 'destroy'])->name('settings.inter-exchange-company.destroy');
+        
+        // Logo Settings
+        Route::get('logo', [LogoController::class, 'index'])->name('settings.logo');
+        Route::post('logo', [LogoController::class, 'update'])->name('settings.logo.update');
+
+        // Dh. Cutting Person Settings
+        Route::resource('dh-cutting-people', \App\Http\Controllers\DhCuttingPersonController::class);
+
+        // Machine Settings
+        Route::resource('machines', \App\Http\Controllers\MachineController::class);
+
+        // Karigar Settings
+        Route::resource('karigars', \App\Http\Controllers\KarigarController::class);
+    });
+});
