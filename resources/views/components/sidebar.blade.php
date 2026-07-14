@@ -11,6 +11,12 @@
     <span class="font-bold text-[15px] text-slate-800 tracking-widest uppercase sidebar-text whitespace-nowrap">VAIBHAV EMBRO</span>
 </div>
 
+<div class="px-6 py-4 border-b border-slate-200 bg-white">
+    <a href="{{ route('chat.index') }}" class="block w-full bg-[#1b2537] text-white text-center py-3 font-bold text-sm tracking-widest uppercase hover:bg-[#25324a] transition-colors shadow-sm">
+        CHAT BOX
+    </a>
+</div>
+
 <div class="flex-1 overflow-y-auto sidebar-content bg-white py-4">
     @php
         $menuGroups = [

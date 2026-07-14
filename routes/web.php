@@ -231,6 +231,9 @@ Route::middleware('auth')->group(function () {
     Route::put('/inter-exchange/{interExchange}', [\App\Http\Controllers\InterExchangeController::class, 'update'])->name('inter-exchange.update');
     Route::delete('/inter-exchange/{interExchange}', [\App\Http\Controllers\InterExchangeController::class, 'destroy'])->name('inter-exchange.destroy');
 
+    // Chat System (Globally available to all users)
+    Route::get('/chat', [\App\Http\Controllers\ChatController::class, 'index'])->name('chat.index');
+
     // Settings Pages
     Route::get('/settings', function () {
         return view('settings.index');
