@@ -10,7 +10,21 @@ class ChatController extends Controller
     public function index()
     {
         $users = User::where('id', '!=', auth()->id())->orderBy('name')->get();
+        foreach($users as $user) {
+            $user->unread_count = \App\Models\Message::where('sender_id', $user->id)
+                                    ->where('receiver_id', auth()->id())
+                                    ->where('is_read', false)
+                                    ->count();
+        }
         return view('chat.index', compact('users'));
+    }
+
+    public function unreadCount()
+    {
+        $count = \App\Models\Message::where('receiver_id', auth()->id())
+                    ->where('is_read', false)
+                    ->count();
+        return response()->json(['count' => $count]);
     }
 
     public function fetchMessages($userId)

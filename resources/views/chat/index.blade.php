@@ -31,6 +31,9 @@
                 <div class="flex-1 min-w-0 pointer-events-none">
                     <div class="flex justify-between items-baseline mb-1">
                         <h3 class="text-sm font-bold text-slate-800 truncate contact-name">{{ $user->name }}</h3>
+                        @if($user->unread_count > 0)
+                            <span class="bg-green-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center shrink-0">{{ $user->unread_count }}</span>
+                        @endif
                     </div>
                     <p class="text-xs text-slate-500 truncate font-medium">Click to chat</p>
                 </div>
