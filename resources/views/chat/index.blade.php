@@ -59,12 +59,12 @@
                 </div>
             </div>
             <div class="flex items-center gap-4 text-slate-500">
-                <!-- Video Call (Placeholder) -->
-                <button class="hover:text-indigo-600 transition-colors p-2 rounded-full hover:bg-slate-200" title="Video Call (Coming Soon)" onclick="alert('Video calling will be enabled in Phase 3!')">
+                <!-- Video Call -->
+                <button class="hover:text-indigo-600 transition-colors p-2 rounded-full hover:bg-slate-200" title="Video Call" onclick="startCall(true)">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                 </button>
-                <!-- Audio Call (Placeholder) -->
-                <button class="hover:text-indigo-600 transition-colors p-2 rounded-full hover:bg-slate-200" title="Voice Call (Coming Soon)" onclick="alert('Voice calling will be enabled in Phase 3!')">
+                <!-- Audio Call -->
+                <button class="hover:text-indigo-600 transition-colors p-2 rounded-full hover:bg-slate-200" title="Voice Call" onclick="startCall(false)">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
                 </button>
             </div>
@@ -114,6 +114,34 @@
 
 </div>
 
+<!-- Video/Audio Call Modal -->
+<div id="call-modal" class="fixed inset-0 bg-slate-900/95 z-[100] flex flex-col items-center justify-center hidden">
+    <div class="relative w-full max-w-4xl h-[70vh] bg-black rounded-lg overflow-hidden shadow-2xl flex items-center justify-center border border-slate-700">
+        <!-- Remote Video -->
+        <video id="remote-video" class="w-full h-full object-cover hidden" autoplay playsinline></video>
+        <!-- Audio Only Avatar -->
+        <div id="audio-avatar" class="w-32 h-32 rounded-full bg-indigo-600 flex items-center justify-center text-white text-5xl font-bold shadow-lg hidden">...</div>
+        
+        <!-- Local Video (Picture in Picture) -->
+        <video id="local-video" class="absolute bottom-4 right-4 w-48 h-36 bg-slate-800 object-cover rounded shadow-lg border-2 border-white hidden" autoplay playsinline muted></video>
+        
+        <!-- Status Overlay -->
+        <div id="call-status" class="absolute top-8 text-white font-bold text-xl tracking-wider uppercase animate-pulse">Calling...</div>
+    </div>
+    
+    <!-- Controls -->
+    <div class="mt-8 flex gap-6">
+        <button id="btn-answer" class="h-16 w-16 rounded-full bg-green-500 hover:bg-green-600 text-white flex items-center justify-center shadow-lg transition-transform hover:scale-110 hidden" title="Answer">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+        </button>
+        <button id="btn-end" class="h-16 w-16 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center shadow-lg transition-transform hover:scale-110" title="End Call">
+            <svg class="w-8 h-8 transform rotate-[135deg]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+        </button>
+    </div>
+</div>
+
+<!-- PeerJS for WebRTC -->
+<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 <script>
     const authId = {{ auth()->id() }};
     let activeUserId = null;
@@ -141,6 +169,10 @@
             document.getElementById('active-user-id').value = activeUserId;
             document.getElementById('active-user-name').textContent = this.dataset.name;
             document.getElementById('active-user-initial').textContent = this.dataset.initial;
+
+            // Remove badge
+            const badge = this.querySelector('.bg-green-500');
+            if(badge) badge.remove();
 
             // Switch panes
             document.getElementById('empty-state').style.display = 'none';
@@ -173,7 +205,7 @@
                         } else if (msg.attachment_type === 'video') {
                             attachmentHtml = `<video src="${url}" controls class="rounded-sm max-w-[200px] mb-2 border border-slate-200"></video>`;
                         } else {
-                            attachmentHtml = `<a href="${url}" target="_blank" class="flex items-center gap-2 bg-black/5 p-2 mb-2 rounded-sm text-indigo-700 hover:underline"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> Download File</a>`;
+                            attachmentHtml = `<a href="${url}" target="_blank" class="flex items-center gap-2 bg-black/5 p-2 mb-2 rounded-sm text-indigo-700 hover:underline font-bold"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg> Download File</a>`;
                         }
                     }
 
@@ -245,8 +277,6 @@
         if(message) formData.append('message', message);
         if(selectedFile) formData.append('attachment', selectedFile);
 
-        // Optimistic UI updates could go here
-
         // Reset inputs
         input.value = '';
         clearAttachment();
@@ -260,6 +290,134 @@
             loadMessages();
         })
         .catch(err => console.error(err));
+    }
+
+    // --- WebRTC PeerJS Call Logic ---
+    const peerId = 'vaibhav-embro-user-' + authId;
+    const peer = new Peer(peerId);
+    let localStream = null;
+    let currentCall = null;
+    let isVideoCall = false;
+
+    const callModal = document.getElementById('call-modal');
+    const localVideo = document.getElementById('local-video');
+    const remoteVideo = document.getElementById('remote-video');
+    const audioAvatar = document.getElementById('audio-avatar');
+    const callStatus = document.getElementById('call-status');
+    const btnAnswer = document.getElementById('btn-answer');
+    const btnEnd = document.getElementById('btn-end');
+
+    peer.on('open', function(id) {
+        console.log('My PeerJS ID is: ' + id);
+    });
+
+    // Start outgoing call
+    window.startCall = function(video) {
+        if(!activeUserId) return;
+        isVideoCall = video;
+        
+        navigator.mediaDevices.getUserMedia({ video: isVideoCall, audio: true })
+            .then(stream => {
+                localStream = stream;
+                showCallUI(true, isVideoCall);
+                callStatus.textContent = 'Calling ' + document.getElementById('active-user-name').textContent + '...';
+                btnAnswer.classList.add('hidden');
+
+                const targetPeerId = 'vaibhav-embro-user-' + activeUserId;
+                currentCall = peer.call(targetPeerId, stream, { metadata: { video: isVideoCall } });
+                
+                setupCallEvents(currentCall);
+            })
+            .catch(err => {
+                alert('Microphone/Camera access denied or unavailable.');
+                console.error(err);
+            });
+    };
+
+    // Receive incoming call
+    peer.on('call', function(call) {
+        isVideoCall = call.metadata ? call.metadata.video : true;
+        currentCall = call;
+        
+        callStatus.textContent = 'Incoming Call...';
+        showCallUI(false, isVideoCall);
+        btnAnswer.classList.remove('hidden');
+
+        // Play ringtone ideally here
+
+        btnAnswer.onclick = function() {
+            btnAnswer.classList.add('hidden');
+            callStatus.textContent = 'Connecting...';
+            
+            navigator.mediaDevices.getUserMedia({ video: isVideoCall, audio: true })
+                .then(stream => {
+                    localStream = stream;
+                    if(isVideoCall) {
+                        localVideo.srcObject = stream;
+                        localVideo.classList.remove('hidden');
+                    }
+                    call.answer(stream);
+                    setupCallEvents(call);
+                })
+                .catch(err => {
+                    alert('Microphone/Camera access denied.');
+                    endCall();
+                });
+        };
+    });
+
+    function setupCallEvents(call) {
+        call.on('stream', function(remoteStream) {
+            callStatus.textContent = ''; // Connected
+            if(isVideoCall) {
+                remoteVideo.srcObject = remoteStream;
+                remoteVideo.classList.remove('hidden');
+                audioAvatar.classList.add('hidden');
+            } else {
+                remoteVideo.srcObject = remoteStream; // still attach for audio
+                remoteVideo.classList.add('hidden');
+                audioAvatar.classList.remove('hidden');
+            }
+        });
+
+        call.on('close', endCall);
+        call.on('error', endCall);
+    }
+
+    // End call
+    btnEnd.addEventListener('click', function() {
+        if(currentCall) {
+            currentCall.close();
+        }
+        endCall();
+    });
+
+    function endCall() {
+        if(localStream) {
+            localStream.getTracks().forEach(track => track.stop());
+            localStream = null;
+        }
+        if(currentCall) {
+            currentCall.close();
+            currentCall = null;
+        }
+        callModal.classList.add('hidden');
+        remoteVideo.srcObject = null;
+        localVideo.srcObject = null;
+    }
+
+    function showCallUI(isOutgoing, hasVideo) {
+        callModal.classList.remove('hidden');
+        if(hasVideo && isOutgoing && localStream) {
+            localVideo.srcObject = localStream;
+            localVideo.classList.remove('hidden');
+            remoteVideo.classList.remove('hidden');
+            audioAvatar.classList.add('hidden');
+        } else if (!hasVideo) {
+            localVideo.classList.add('hidden');
+            remoteVideo.classList.add('hidden');
+            audioAvatar.classList.remove('hidden');
+        }
     }
 </script>
 @endsection
