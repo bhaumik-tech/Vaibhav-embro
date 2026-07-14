@@ -33,6 +33,7 @@ class UserController extends Controller
             'post' => 'nullable|string|max:255',
             'second_mobile_no' => 'nullable|string|max:20',
             'permissions' => 'nullable|array',
+            'page_permissions' => 'nullable|array',
         ]);
 
         $permissionsString = $request->permissions ? implode(',', $request->permissions) : null;
@@ -46,6 +47,7 @@ class UserController extends Controller
             'post' => $request->post,
             'second_mobile_no' => $request->second_mobile_no,
             'permission' => $permissionsString,
+            'page_permissions' => $request->page_permissions,
         ]);
 
         return redirect()->route('users.index')->with('success', 'User added successfully!');
@@ -68,15 +70,17 @@ class UserController extends Controller
             'post' => 'nullable|string|max:255',
             'second_mobile_no' => 'nullable|string|max:20',
             'permissions' => 'nullable|array',
+            'page_permissions' => 'nullable|array',
         ]);
 
-        $data = $request->except(['password', 'permissions']);
+        $data = $request->except(['password', 'permissions', 'page_permissions']);
         
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
 
         $data['permission'] = $request->permissions ? implode(',', $request->permissions) : null;
+        $data['page_permissions'] = $request->page_permissions;
 
         $user->update($data);
 

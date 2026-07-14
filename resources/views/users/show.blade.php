@@ -73,7 +73,37 @@
                             </div>
                         </div>
                     </div>
+                    </div>
                 </div>
+
+                @if(!empty($user->page_permissions))
+                    <div class="bg-slate-50 border border-slate-200 p-6">
+                        <h3 class="text-sm font-bold text-slate-700 uppercase tracking-widest mb-4 flex items-center gap-2 border-b border-slate-200 pb-3">
+                            <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                            Page Permissions
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            @foreach($user->page_permissions as $page => $actions)
+                                <div class="bg-white border border-slate-200 p-3 shadow-sm">
+                                    <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wider block border-b border-slate-100 pb-1 mb-2">{{ str_replace('_', ' ', $page) }}</span>
+                                    <div class="flex flex-wrap gap-2">
+                                        @foreach($actions as $action)
+                                            @php
+                                                $color = match($action) {
+                                                    'view' => 'blue',
+                                                    'edit' => 'indigo',
+                                                    'remove' => 'red',
+                                                    default => 'slate'
+                                                };
+                                            @endphp
+                                            <span class="bg-{{ $color }}-50 text-{{ $color }}-700 border border-{{ $color }}-100 px-2 py-0.5 text-[10px] font-bold uppercase rounded-sm">{{ $action === 'edit' ? 'edit/add' : $action }}</span>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>

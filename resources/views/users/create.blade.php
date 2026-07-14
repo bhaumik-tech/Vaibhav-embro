@@ -92,7 +92,52 @@
                     @error('permissions') <span class="text-red-500 text-xs font-bold">{{ $message }}</span> @enderror
                 </div>
 
-                <!-- Row 6: Buttons -->
+                <!-- Row 6: Page Permissions -->
+                <div>
+                    <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Page Permissions</div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 border border-slate-300 p-4 bg-white">
+                        @php
+                            $pages = [
+                                'dashboard' => 'Dashboard',
+                                'users' => 'Users',
+                                'firms' => 'Firms',
+                                'parties' => 'Parties',
+                                'machines' => 'Machines',
+                                'karigars' => 'Karigars',
+                                'dh_cutting' => 'Dh. Cutting',
+                                'inter_exchange' => 'Inter-Exchange',
+                                'thread_boxes' => 'Thread Boxes',
+                                'input_chalan' => 'Input Chalan',
+                                'generate_chalan' => 'Generate Chalan',
+                                'output_chalan' => 'Output Chalan',
+                                'purchase_bill' => 'Purchase Bill',
+                                'generate_bill' => 'Generate Bill',
+                                'bank_book' => 'Bank Book',
+                            ];
+                        @endphp
+                        @foreach($pages as $key => $label)
+                            <div class="bg-slate-50 border border-slate-200 p-3 flex flex-col gap-2">
+                                <span class="text-sm font-extrabold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-1 mb-1">{{ $label }}</span>
+                                <div class="flex items-center gap-4">
+                                    <label class="flex items-center gap-1.5 cursor-pointer">
+                                        <input type="checkbox" name="page_permissions[{{ $key }}][]" value="view" class="w-3.5 h-3.5 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
+                                        <span class="text-xs font-bold text-slate-600">View</span>
+                                    </label>
+                                    <label class="flex items-center gap-1.5 cursor-pointer">
+                                        <input type="checkbox" name="page_permissions[{{ $key }}][]" value="edit" class="w-3.5 h-3.5 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
+                                        <span class="text-xs font-bold text-slate-600">Edit/Add</span>
+                                    </label>
+                                    <label class="flex items-center gap-1.5 cursor-pointer">
+                                        <input type="checkbox" name="page_permissions[{{ $key }}][]" value="remove" class="w-3.5 h-3.5 text-red-600 border-slate-300 rounded focus:ring-red-500">
+                                        <span class="text-xs font-bold text-slate-600">Remove</span>
+                                    </label>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Row 7: Buttons -->
                 <div class="flex justify-end gap-4 mt-4">
                     <button type="submit"
                         class="border border-green-600 bg-green-500 text-white px-10 py-3 text-sm font-bold hover:bg-green-600 transition-colors shadow-sm uppercase tracking-wide">
@@ -100,7 +145,7 @@
                     </button>
                     <button type="button" onclick="window.history.back()"
                         class="border border-slate-300 bg-white text-slate-700 px-10 py-3 text-sm font-bold hover:bg-slate-50 transition-colors shadow-sm uppercase tracking-wide">
-                        cancle
+                        cancel
                     </button>
                 </div>
 

@@ -28,6 +28,7 @@ class User extends Authenticatable
         'second_mobile_no',
         'username',
         'permission',
+        'page_permissions',
     ];
 
     /**
@@ -50,6 +51,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'page_permissions' => 'array',
         ];
     }
 
@@ -83,5 +85,19 @@ class User extends Authenticatable
         }
 
         return \App\Models\Firm::whereIn('id', $perms)->pluck('name')->toArray();
+    }
+
+    /**
+     * Check if user has specific page permission.
+     * If user is admin, they have all permissions.
+     */
+    public function hasPagePermission($page, $action)
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        $perms = $this->page_permissions ?? [];
+        return isset($perms[$page]) && in_array($action, (array) $perms[$page]);
     }
 }
