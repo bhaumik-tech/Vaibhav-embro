@@ -71,7 +71,7 @@ Route::middleware('auth')->group(function () {
         $firms = \App\Models\Firm::getPermitted();
 
         return view('register', compact('parties', 'inputChalans', 'outputChalans', 'firms'));
-    })->name('register.index')->middleware('page.permission:input_chalan,view');
+    })->name('register.index')->middleware('page.permission:registers,view');
 
     Route::get('/register/print', function () {
         $parties = \App\Models\Party::orderBy('name')->get();
@@ -123,7 +123,7 @@ Route::middleware('auth')->group(function () {
         $party = request('party_id') ? \App\Models\Party::find(request('party_id')) : null;
 
         return view('register-print', compact('inputChalans', 'outputChalans', 'party'));
-    })->name('register.print')->middleware('page.permission:input_chalan,view');
+    })->name('register.print')->middleware('page.permission:registers,view');
 
     Route::get('/input-chalan', function () {
         $firms = \App\Models\Firm::getPermitted();
@@ -192,7 +192,7 @@ Route::middleware('auth')->group(function () {
         $firms = \App\Models\Firm::getPermitted();
         $parties = \App\Models\Party::orderBy('name')->get();
         return view('rcvd-payment', compact('firms', 'parties'));
-    })->middleware('page.permission:bank_book,view');
+    })->middleware('page.permission:rcvd_payment,view');
 
     Route::get('/purchase-bills', [\App\Http\Controllers\PurchaseBillController::class, 'index'])->name('purchase-bill.index')->middleware('page.permission:purchase_bill,view');
     Route::get('/purchase-bill', [\App\Http\Controllers\PurchaseBillController::class, 'create'])->name('purchase-bill.create')->middleware('page.permission:purchase_bill,edit');
@@ -206,7 +206,7 @@ Route::middleware('auth')->group(function () {
         $firms = \App\Models\Firm::getPermitted();
         $parties = \App\Models\Party::orderBy('name')->get();
         return view('generate-cheque', compact('firms', 'parties'));
-    })->middleware('page.permission:bank_book,view');
+    })->middleware('page.permission:generate_cheque,view');
 
     Route::get('/bank-book', [\App\Http\Controllers\BankBookController::class, 'index'])->name('bank-book.index')->middleware('page.permission:bank_book,view');
     Route::post('/bank-book', [\App\Http\Controllers\BankBookController::class, 'store'])->name('bank-book.store');
