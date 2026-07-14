@@ -2,7 +2,7 @@
 @section('title', 'Add user (master)')
 
 @section('content')
-    <div class="bg-slate-50 h-full flex flex-col items-center justify-center p-6">
+<div class="bg-slate-50 min-h-full flex flex-col items-center py-8 px-6">
 
         @if(session('success'))
             <div
