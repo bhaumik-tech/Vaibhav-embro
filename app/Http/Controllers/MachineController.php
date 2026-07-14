@@ -5,9 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Machine;
 use App\Models\Firm;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class MachineController extends Controller
+class MachineController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('page.permission:machines,edit', only: ['create', 'store', 'edit', 'update', 'quickStore']),
+            new Middleware('page.permission:machines,remove', only: ['destroy']),
+        ];
+    }
+
     public function index()
     {
         $machines = Machine::with('firm')->orderBy('machine_no')->get();

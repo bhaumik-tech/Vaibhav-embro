@@ -5,11 +5,21 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Firm;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
-class UserController extends Controller
+class UserController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('page.permission:users,edit', only: ['create', 'store', 'edit', 'update', 'quickStore']),
+            new Middleware('page.permission:users,remove', only: ['destroy']),
+        ];
+    }
+
     public function index()
     {
         $users = User::orderBy('updated_at', 'desc')->get();

@@ -7,9 +7,19 @@ use App\Models\OutputChalan;
 use App\Models\OutputChalanItem;
 use App\Models\Party;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class OutputChalanController extends Controller
+class OutputChalanController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('page.permission:output_chalan,edit', only: ['create', 'store', 'edit', 'update', 'quickStore']),
+            new Middleware('page.permission:output_chalan,remove', only: ['destroy']),
+        ];
+    }
+
     public function create()
     {
         return redirect()->route('register.index');

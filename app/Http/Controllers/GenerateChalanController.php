@@ -6,9 +6,19 @@ use App\Models\GenerateChalan;
 use App\Models\Firm;
 use App\Models\Party;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class GenerateChalanController extends Controller
+class GenerateChalanController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('page.permission:generate_chalan,edit', only: ['create', 'store', 'edit', 'update', 'quickStore']),
+            new Middleware('page.permission:generate_chalan,remove', only: ['destroy']),
+        ];
+    }
+
     public function index()
     {
         $parties = Party::orderBy('name')->get();

@@ -6,9 +6,19 @@ use App\Models\GenerateBill;
 use App\Models\Firm;
 use App\Models\Party;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class GenerateBillController extends Controller
+class GenerateBillController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('page.permission:generate_bill,edit', only: ['create', 'store', 'edit', 'update', 'quickStore']),
+            new Middleware('page.permission:generate_bill,remove', only: ['destroy']),
+        ];
+    }
+
     public function index()
     {
         $parties = Party::orderBy('name')->get();

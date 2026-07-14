@@ -3,11 +3,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use App\Models\ThreadBoxSetup;
 use App\Models\Firm;
 
-class ThreadBoxSetupController extends Controller
+class ThreadBoxSetupController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('page.permission:thread_boxes,edit', only: ['create', 'store', 'edit', 'update', 'quickStore']),
+            new Middleware('page.permission:thread_boxes,remove', only: ['destroy']),
+        ];
+    }
+
     public function index(Request $request)
     {
         $companyName = $request->query('company_name');

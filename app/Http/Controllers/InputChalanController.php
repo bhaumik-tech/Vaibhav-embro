@@ -4,9 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\InputChalan;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class InputChalanController extends Controller
+class InputChalanController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('page.permission:input_chalan,edit', only: ['create', 'store', 'edit', 'update', 'quickStore']),
+            new Middleware('page.permission:input_chalan,remove', only: ['destroy']),
+        ];
+    }
+
     public function store(Request $request)
     {
         $request->validate([

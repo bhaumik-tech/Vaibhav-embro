@@ -5,9 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\DhagaCutting;
 use App\Models\DhCuttingPerson;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class DhagaCuttingController extends Controller
+class DhagaCuttingController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('page.permission:dh_cutting,edit', only: ['create', 'store', 'edit', 'update', 'quickStore']),
+            new Middleware('page.permission:dh_cutting,remove', only: ['destroy']),
+        ];
+    }
+
     public function index(Request $request)
     {
         $people = DhCuttingPerson::orderBy('person_name')->get();

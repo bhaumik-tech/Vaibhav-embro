@@ -3,12 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use App\Models\Firm;
 use App\Models\Party;
 use App\Models\BankBook;
 
-class BankBookController extends Controller
+class BankBookController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('page.permission:bank_book,edit', only: ['create', 'store', 'edit', 'update', 'quickStore']),
+            new Middleware('page.permission:bank_book,remove', only: ['destroy']),
+        ];
+    }
+
     public function index(Request $request)
     {
         $firms = Firm::getPermitted();

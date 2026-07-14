@@ -4,9 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Firm;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class FirmController extends Controller
+class FirmController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('page.permission:firms,edit', only: ['create', 'store', 'edit', 'update', 'quickStore']),
+            new Middleware('page.permission:firms,remove', only: ['destroy']),
+        ];
+    }
+
     public function index()
     {
         $firms = Firm::getPermitted();

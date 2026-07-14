@@ -3,12 +3,22 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use App\Models\PurchaseBill;
 use App\Models\Firm;
 use App\Models\Party;
 
-class PurchaseBillController extends Controller
+class PurchaseBillController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('page.permission:purchase_bill,edit', only: ['create', 'store', 'edit', 'update', 'quickStore']),
+            new Middleware('page.permission:purchase_bill,remove', only: ['destroy']),
+        ];
+    }
+
     public function index()
     {
         $purchaseBills = PurchaseBill::with(['firm', 'party'])->latest('bill_date')->get();

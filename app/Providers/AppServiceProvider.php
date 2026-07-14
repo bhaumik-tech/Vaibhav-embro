@@ -19,6 +19,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Illuminate\Support\Facades\Blade::if('canpage', function ($page, $action = 'view') {
+            return auth()->check() && auth()->user()->hasPagePermission($page, $action);
+        });
     }
 }

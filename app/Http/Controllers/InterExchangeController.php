@@ -5,9 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\InterExchange;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class InterExchangeController extends Controller
+class InterExchangeController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('page.permission:inter_exchange,edit', only: ['create', 'store', 'edit', 'update', 'quickStore']),
+            new Middleware('page.permission:inter_exchange,remove', only: ['destroy']),
+        ];
+    }
+
     public function index()
     {
         $interExchanges = InterExchange::with(['aapnarUser', 'lenarUser'])->latest('date')->get();
