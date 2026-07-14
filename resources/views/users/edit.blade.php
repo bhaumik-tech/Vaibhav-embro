@@ -75,31 +75,45 @@
                 </div>
             </div>
 
-            <!-- Row 5: Permission (Firms) -->
+            <!-- Row 5: Permissions (Firms) -->
             <div>
                 <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Permissions (Firms)</div>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 border border-slate-300 p-4 bg-white">
+                <div class="border border-slate-300 bg-white overflow-hidden shadow-sm">
                     @php
                         $userPerms = old('permissions', explode(',', $user->permission ?? ''));
                     @endphp
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" name="permissions[]" value="admin" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-green-500" {{ in_array('admin', $userPerms) ? 'checked' : '' }}>
-                        <span class="text-sm font-bold text-slate-700">Full Admin (All Firms)</span>
-                    </label>
-                    @foreach($firms as $firm)
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" name="permissions[]" value="{{ $firm->id }}" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-green-500" {{ in_array($firm->id, $userPerms) ? 'checked' : '' }}>
-                            <span class="text-sm font-semibold text-slate-600">{{ $firm->name }}</span>
-                        </label>
-                    @endforeach
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-slate-100">
+                            <tr>
+                                <th class="p-3 text-xs font-bold text-slate-700 uppercase tracking-widest border-b border-slate-200">Firm Name</th>
+                                <th class="p-3 text-xs font-bold text-slate-700 uppercase tracking-widest border-b border-slate-200 text-center w-32">Allow Access</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr class="hover:bg-slate-50 transition-colors bg-blue-50/20">
+                                <td class="p-3 text-sm font-extrabold text-blue-800 border-r border-slate-100">Full Admin (All Firms)</td>
+                                <td class="p-3 text-center">
+                                    <input type="checkbox" name="permissions[]" value="admin" class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 cursor-pointer" {{ in_array('admin', $userPerms) ? 'checked' : '' }}>
+                                </td>
+                            </tr>
+                            @foreach($firms as $firm)
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="p-3 text-sm font-bold text-slate-700 border-r border-slate-100">{{ $firm->name }}</td>
+                                <td class="p-3 text-center">
+                                    <input type="checkbox" name="permissions[]" value="{{ $firm->id }}" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-green-500 cursor-pointer" {{ in_array($firm->id, $userPerms) ? 'checked' : '' }}>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-                @error('permissions') <span class="text-red-500 text-xs font-bold">{{ $message }}</span> @enderror
+                @error('permissions') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
             </div>
 
             <!-- Row 6: Page Permissions -->
             <div>
                 <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Page Permissions</div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 border border-slate-300 p-4 bg-white">
+                <div class="border border-slate-300 bg-white overflow-hidden shadow-sm">
                     @php
                         $pages = [
                             'dashboard' => 'Dashboard',
@@ -120,28 +134,35 @@
                         ];
                         $pagePerms = old('page_permissions', $user->page_permissions ?? []);
                     @endphp
-                    @foreach($pages as $key => $label)
-                        @php
-                            $permsForPage = $pagePerms[$key] ?? [];
-                        @endphp
-                        <div class="bg-slate-50 border border-slate-200 p-3 flex flex-col gap-2">
-                            <span class="text-sm font-extrabold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-1 mb-1">{{ $label }}</span>
-                            <div class="flex items-center gap-4">
-                                <label class="flex items-center gap-1.5 cursor-pointer">
-                                    <input type="checkbox" name="page_permissions[{{ $key }}][]" value="view" class="w-3.5 h-3.5 text-blue-600 border-slate-300 rounded focus:ring-blue-500" {{ in_array('view', $permsForPage) ? 'checked' : '' }}>
-                                    <span class="text-xs font-bold text-slate-600">View</span>
-                                </label>
-                                <label class="flex items-center gap-1.5 cursor-pointer">
-                                    <input type="checkbox" name="page_permissions[{{ $key }}][]" value="edit" class="w-3.5 h-3.5 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500" {{ in_array('edit', $permsForPage) ? 'checked' : '' }}>
-                                    <span class="text-xs font-bold text-slate-600">Edit/Add</span>
-                                </label>
-                                <label class="flex items-center gap-1.5 cursor-pointer">
-                                    <input type="checkbox" name="page_permissions[{{ $key }}][]" value="remove" class="w-3.5 h-3.5 text-red-600 border-slate-300 rounded focus:ring-red-500" {{ in_array('remove', $permsForPage) ? 'checked' : '' }}>
-                                    <span class="text-xs font-bold text-slate-600">Remove</span>
-                                </label>
-                            </div>
-                        </div>
-                    @endforeach
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-slate-100">
+                            <tr>
+                                <th class="p-3 text-xs font-bold text-slate-700 uppercase tracking-widest border-b border-slate-200 border-r border-slate-200">Module / Page</th>
+                                <th class="p-3 text-xs font-bold text-slate-700 uppercase tracking-widest border-b border-slate-200 text-center w-28 border-r border-slate-200">View</th>
+                                <th class="p-3 text-xs font-bold text-slate-700 uppercase tracking-widest border-b border-slate-200 text-center w-28 border-r border-slate-200">Edit / Add</th>
+                                <th class="p-3 text-xs font-bold text-slate-700 uppercase tracking-widest border-b border-slate-200 text-center w-28">Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            @foreach($pages as $key => $label)
+                            @php
+                                $permsForPage = $pagePerms[$key] ?? [];
+                            @endphp
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="p-3 text-sm font-extrabold text-slate-700 border-r border-slate-200 bg-slate-50/50">{{ $label }}</td>
+                                <td class="p-3 text-center border-r border-slate-200 hover:bg-blue-50/50 transition-colors">
+                                    <input type="checkbox" name="page_permissions[{{ $key }}][]" value="view" class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 cursor-pointer" {{ in_array('view', $permsForPage) ? 'checked' : '' }}>
+                                </td>
+                                <td class="p-3 text-center border-r border-slate-200 hover:bg-indigo-50/50 transition-colors">
+                                    <input type="checkbox" name="page_permissions[{{ $key }}][]" value="edit" class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500 cursor-pointer" {{ in_array('edit', $permsForPage) ? 'checked' : '' }}>
+                                </td>
+                                <td class="p-3 text-center hover:bg-red-50/50 transition-colors">
+                                    <input type="checkbox" name="page_permissions[{{ $key }}][]" value="remove" class="w-4 h-4 text-red-600 border-slate-300 rounded focus:ring-red-500 cursor-pointer" {{ in_array('remove', $permsForPage) ? 'checked' : '' }}>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
