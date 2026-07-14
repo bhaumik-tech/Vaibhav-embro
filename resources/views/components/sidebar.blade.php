@@ -36,8 +36,7 @@
                 ['name' => 'Dhaga cutting', 'url' => '/dhaga-cuttings', 'icon' => 'M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z', 'permission_key' => 'dh_cutting'],
             ],
             'OTHER' => [
-                ['name' => 'Settings', 'url' => '/settings', 'icon' => 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z', 'permission_key' => 'users'], // We map Settings to users for now, or maybe it should be visible if any settings permission exists.
-                ['name' => 'Log out', 'url' => '/logout', 'icon' => 'M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1', 'permission_key' => null],
+                ['name' => 'Settings', 'url' => '/settings', 'icon' => 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z', 'permission_key' => 'users'],
             ],
         ];
         $currentPath = request()->path();
@@ -85,16 +84,16 @@
 </div>
 
 <div class="p-0 bg-white shrink-0 border-t border-slate-200">
-    <div class="sidebar-link flex items-center justify-center p-4 gap-4 transition-all hover:bg-slate-50">
-        <div class="h-10 w-10 shrink-0 bg-indigo-600 flex items-center justify-center shadow-sm border border-indigo-700 uppercase">
+    <a href="/logout" class="sidebar-link flex items-center justify-center p-4 gap-4 transition-all hover:bg-red-50 group cursor-pointer w-full text-left" title="Click to Logout">
+        <div class="h-10 w-10 shrink-0 bg-indigo-600 flex items-center justify-center shadow-sm border border-indigo-700 uppercase group-hover:bg-red-600 group-hover:border-red-700 transition-colors">
             <span class="text-white font-bold text-sm">{{ strtoupper(substr(auth()->user()->name ?? 'G', 0, 1)) }}</span>
         </div>
         <div class="flex flex-col sidebar-text flex-1">
-            <span class="text-[13px] font-bold text-slate-800 uppercase tracking-wide">{{ auth()->user()->name ?? 'Guest' }}</span>
-            <span class="text-[11px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">{{ auth()->user()->post ?? 'User' }}</span>
+            <span class="text-[13px] font-bold text-slate-800 uppercase tracking-wide group-hover:text-red-700 transition-colors">{{ auth()->user()->name ?? 'Guest' }}</span>
+            <span class="text-[11px] text-slate-500 font-bold uppercase tracking-widest mt-0.5 group-hover:text-red-500 transition-colors">{{ auth()->user()->post ?? 'User' }}</span>
         </div>
         <div class="sidebar-text">
-            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+            <svg class="w-5 h-5 text-slate-400 group-hover:text-red-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
         </div>
-    </div>
+    </a>
 </div>
