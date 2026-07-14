@@ -17,7 +17,7 @@ class GenerateChalanController extends Controller
             $query->where('party_id', request('party_id'));
         }
         $generateChalans = $query->latest('date')->get();
-        $firms = Firm::orderBy('name')->get();
+        $firms = Firm::getPermitted();
 
         return view('generate-chalans-index', compact('parties', 'generateChalans', 'firms'));
     }
@@ -102,7 +102,7 @@ class GenerateChalanController extends Controller
 
     public function edit(GenerateChalan $generateChalan)
     {
-        $firms = Firm::orderBy('name')->get();
+        $firms = Firm::getPermitted();
         $parties = Party::orderBy('name')->get();
         $generateChalan->load('items');
         return view('generate-chalan-edit', compact('generateChalan', 'firms', 'parties'));

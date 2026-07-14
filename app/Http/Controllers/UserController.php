@@ -18,7 +18,7 @@ class UserController extends Controller
 
     public function create()
     {
-        $firms = Firm::orderBy('name')->get();
+        $firms = Firm::getPermitted();
         return view('users.create', compact('firms'));
     }
 
@@ -32,8 +32,10 @@ class UserController extends Controller
             'mobile_no' => 'nullable|string|max:20',
             'post' => 'nullable|string|max:255',
             'second_mobile_no' => 'nullable|string|max:20',
-            'permission' => 'nullable|string|max:255',
+            'permissions' => 'nullable|array',
         ]);
+
+        $permissionsString = $request->permissions ? implode(',', $request->permissions) : null;
 
         User::create([
             'name' => $request->name,
@@ -43,7 +45,7 @@ class UserController extends Controller
             'mobile_no' => $request->mobile_no,
             'post' => $request->post,
             'second_mobile_no' => $request->second_mobile_no,
-            'permission' => $request->permission,
+            'permission' => $permissionsString,
         ]);
 
         return redirect()->route('users.index')->with('success', 'User added successfully!');
@@ -51,7 +53,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        $firms = Firm::orderBy('name')->get();
+        $firms = Firm::getPermitted();
         return view('users.edit', compact('user', 'firms'));
     }
 
@@ -65,14 +67,16 @@ class UserController extends Controller
             'mobile_no' => 'nullable|string|max:20',
             'post' => 'nullable|string|max:255',
             'second_mobile_no' => 'nullable|string|max:20',
-            'permission' => 'nullable|string|max:255',
+            'permissions' => 'nullable|array',
         ]);
 
-        $data = $request->except('password');
+        $data = $request->except(['password', 'permissions']);
         
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
+
+        $data['permission'] = $request->permissions ? implode(',', $request->permissions) : null;
 
         $user->update($data);
 

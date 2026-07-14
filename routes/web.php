@@ -18,7 +18,7 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 // Protected Routes
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
-        $firms = \App\Models\Firm::orderBy('name')->get();
+        $firms = \App\Models\Firm::getPermitted();
         $parties = \App\Models\Party::orderBy('name')->get();
         return view('dashboard', compact('firms', 'parties'));
     });
@@ -69,7 +69,7 @@ Route::middleware('auth')->group(function () {
         $inputChalans = $query->latest('date')->get();
         $outputChalans = $mergedOutputs;
 
-        $firms = \App\Models\Firm::orderBy('name')->get();
+        $firms = \App\Models\Firm::getPermitted();
 
         return view('register', compact('parties', 'inputChalans', 'outputChalans', 'firms'));
     })->name('register.index');
@@ -127,7 +127,7 @@ Route::middleware('auth')->group(function () {
     })->name('register.print');
 
     Route::get('/input-chalan', function () {
-        $firms = \App\Models\Firm::orderBy('name')->get();
+        $firms = \App\Models\Firm::getPermitted();
         $parties = \App\Models\Party::orderBy('name')->get();
         return view('input-chalan', compact('firms', 'parties'));
     });
@@ -144,7 +144,7 @@ Route::middleware('auth')->group(function () {
     })->name('input-chalans.toggle-done');
     Route::get('/generate-chalans', [App\Http\Controllers\GenerateChalanController::class, 'index'])->name('generate-chalans.index');
     Route::get('/generate-chalan', function () {
-        $firms = \App\Models\Firm::orderBy('name')->get();
+        $firms = \App\Models\Firm::getPermitted();
         $parties = \App\Models\Party::orderBy('name')->get();
         return view('generate-chalan', compact('firms', 'parties'));
     })->name('generate-chalan.create');
@@ -189,7 +189,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/generate-bills/{generateBill}/print', [App\Http\Controllers\GenerateBillController::class, 'print'])->name('generate-bills.print');
 
     Route::get('/rcvd-payment', function () {
-        $firms = \App\Models\Firm::orderBy('name')->get();
+        $firms = \App\Models\Firm::getPermitted();
         $parties = \App\Models\Party::orderBy('name')->get();
         return view('rcvd-payment', compact('firms', 'parties'));
     });
@@ -203,7 +203,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/purchase-bills/{purchaseBill}/print', [\App\Http\Controllers\PurchaseBillController::class, 'print'])->name('purchase-bill.print');
 
     Route::get('/generate-cheque', function () {
-        $firms = \App\Models\Firm::orderBy('name')->get();
+        $firms = \App\Models\Firm::getPermitted();
         $parties = \App\Models\Party::orderBy('name')->get();
         return view('generate-cheque', compact('firms', 'parties'));
     });
@@ -213,7 +213,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/bank-book/{bankBook}', [\App\Http\Controllers\BankBookController::class, 'destroy'])->name('bank-book.destroy');
 
     Route::get('/thread-boxes', function () {
-        $firms = \App\Models\Firm::orderBy('name')->get();
+        $firms = \App\Models\Firm::getPermitted();
         $parties = \App\Models\Party::orderBy('name')->get();
         return view('thread-boxes', compact('firms', 'parties'));
     });

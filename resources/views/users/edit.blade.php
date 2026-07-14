@@ -75,10 +75,25 @@
                 </div>
             </div>
 
-            <!-- Row 5: Permission -->
-            <div class="w-3/3">
-                <input type="text" name="permission" placeholder="Permission" value="{{ old('permission', $user->permission) }}"
-                    class="w-full border border-slate-300 p-4 text-sm focus:border-green-500 focus:ring-1 focus:ring-green-500 placeholder-slate-500 font-bold text-center bg-slate-50">
+            <!-- Row 5: Permission (Firms) -->
+            <div>
+                <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Permissions (Firms)</div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 border border-slate-300 p-4 bg-white">
+                    @php
+                        $userPerms = old('permissions', explode(',', $user->permission ?? ''));
+                    @endphp
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" name="permissions[]" value="admin" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-green-500" {{ in_array('admin', $userPerms) ? 'checked' : '' }}>
+                        <span class="text-sm font-bold text-slate-700">Full Admin (All Firms)</span>
+                    </label>
+                    @foreach($firms as $firm)
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" name="permissions[]" value="{{ $firm->id }}" class="w-4 h-4 text-green-600 border-slate-300 rounded focus:ring-green-500" {{ in_array($firm->id, $userPerms) ? 'checked' : '' }}>
+                            <span class="text-sm font-semibold text-slate-600">{{ $firm->name }}</span>
+                        </label>
+                    @endforeach
+                </div>
+                @error('permissions') <span class="text-red-500 text-xs font-bold">{{ $message }}</span> @enderror
             </div>
 
             <!-- Row 6: Buttons -->

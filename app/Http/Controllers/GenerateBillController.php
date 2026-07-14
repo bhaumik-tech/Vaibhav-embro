@@ -17,14 +17,14 @@ class GenerateBillController extends Controller
             $query->where('party_id', request('party_id'));
         }
         $generateBills = $query->latest('date')->get();
-        $firms = Firm::orderBy('name')->get();
+        $firms = Firm::getPermitted();
 
         return view('generate-bills-index', compact('parties', 'generateBills', 'firms'));
     }
 
     public function create()
     {
-        $firms = Firm::orderBy('name')->get();
+        $firms = Firm::getPermitted();
         $parties = Party::orderBy('name')->get();
         return view('generate-bill', compact('firms', 'parties'));
     }
@@ -77,7 +77,7 @@ class GenerateBillController extends Controller
 
     public function edit(GenerateBill $generateBill)
     {
-        $firms = Firm::orderBy('name')->get();
+        $firms = Firm::getPermitted();
         $parties = Party::orderBy('name')->get();
         $generateBill->load('items');
         return view('generate-bill-edit', compact('generateBill', 'firms', 'parties'));

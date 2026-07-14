@@ -12,4 +12,19 @@ class Firm extends Model
         'gst_number',
         'bank_account_number',
     ];
+
+    public static function getPermitted()
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return collect();
+        }
+        
+        if ($user->isAdmin()) {
+            return static::orderBy('name')->get();
+        }
+
+        $permittedIds = $user->getPermittedFirmIds();
+        return static::whereIn('id', $permittedIds)->orderBy('name')->get();
+    }
 }

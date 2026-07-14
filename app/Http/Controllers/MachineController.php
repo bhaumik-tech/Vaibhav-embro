@@ -16,7 +16,7 @@ class MachineController extends Controller
 
     public function create()
     {
-        $firms = Firm::orderBy('name')->get();
+        $firms = Firm::getPermitted();
         return view('settings.machines.create', compact('firms'));
     }
 
@@ -49,7 +49,7 @@ class MachineController extends Controller
 
     public function edit(Machine $machine)
     {
-        $firms = Firm::orderBy('name')->get();
+        $firms = Firm::getPermitted();
         return view('settings.machines.edit', compact('machine', 'firms'));
     }
 

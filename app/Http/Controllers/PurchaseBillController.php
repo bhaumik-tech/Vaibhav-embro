@@ -17,7 +17,7 @@ class PurchaseBillController extends Controller
 
     public function create()
     {
-        $firms = Firm::orderBy('name')->get();
+        $firms = Firm::getPermitted();
         $parties = Party::orderBy('name')->get();
         return view('purchase-bill', compact('firms', 'parties'));
     }
@@ -43,7 +43,7 @@ class PurchaseBillController extends Controller
 
     public function edit(PurchaseBill $purchaseBill)
     {
-        $firms = Firm::orderBy('name')->get();
+        $firms = Firm::getPermitted();
         $parties = Party::orderBy('name')->get();
         return view('purchase-bill', compact('purchaseBill', 'firms', 'parties'));
     }

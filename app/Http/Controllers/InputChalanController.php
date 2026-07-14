@@ -78,7 +78,7 @@ class InputChalanController extends Controller
 
     public function edit(InputChalan $inputChalan)
     {
-        $firms = \App\Models\Firm::orderBy('name')->get();
+        $firms = \App\Models\Firm::getPermitted();
         $parties = \App\Models\Party::orderBy('name')->get();
         $inputChalan->load('items');
         return view('input-chalan-edit', compact('inputChalan', 'firms', 'parties'));

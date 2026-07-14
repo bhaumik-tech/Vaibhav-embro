@@ -9,7 +9,7 @@ class FirmController extends Controller
 {
     public function index()
     {
-        $firms = Firm::latest()->get();
+        $firms = Firm::getPermitted();
         return view('firms.index', compact('firms'));
     }
 

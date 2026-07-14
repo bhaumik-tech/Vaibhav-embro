@@ -16,7 +16,7 @@ class InterExchangeSetupController extends Controller
         $boxTypes = InterExchangeSetup::select('type_of_box')->whereNotNull('type_of_box')->where('type_of_box', '!=', '')->distinct()->pluck('type_of_box');
         $companyNames = InterExchangeSetup::select('company_name')->whereNotNull('company_name')->where('company_name', '!=', '')->distinct()->pluck('company_name');
         
-        $firms = Firm::orderBy('name')->get();
+        $firms = Firm::getPermitted();
 
         // If explicitly editing/viewing a company or creating a new one
         if ($companyName || $action === 'create') {

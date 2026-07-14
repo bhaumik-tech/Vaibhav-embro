@@ -11,7 +11,7 @@ class BankBookController extends Controller
 {
     public function index(Request $request)
     {
-        $firms = Firm::orderBy('name')->get();
+        $firms = Firm::getPermitted();
         $parties = Party::orderBy('name')->get();
 
         $selectedFirm = $request->firm_id;

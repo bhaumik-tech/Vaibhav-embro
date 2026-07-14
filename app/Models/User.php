@@ -52,4 +52,22 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function getPermittedFirmIds()
+    {
+        if (empty($this->permission)) {
+            return [];
+        }
+        $perms = explode(',', $this->permission);
+        if (in_array('admin', $perms)) {
+            return \App\Models\Firm::pluck('id')->toArray();
+        }
+        return $perms;
+    }
+
+    public function isAdmin()
+    {
+        if (empty($this->permission)) return false;
+        return in_array('admin', explode(',', $this->permission));
+    }
 }
