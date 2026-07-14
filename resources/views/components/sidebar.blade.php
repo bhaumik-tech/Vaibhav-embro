@@ -86,12 +86,12 @@
 
 <div class="p-0 bg-white shrink-0 border-t border-slate-200">
     <div class="sidebar-link flex items-center justify-center p-4 gap-4 transition-all hover:bg-slate-50">
-        <div class="h-10 w-10 shrink-0 bg-indigo-600 flex items-center justify-center shadow-sm border border-indigo-700">
-            <span class="text-white font-bold text-sm">A</span>
+        <div class="h-10 w-10 shrink-0 bg-indigo-600 flex items-center justify-center shadow-sm border border-indigo-700 uppercase">
+            <span class="text-white font-bold text-sm">{{ strtoupper(substr(auth()->user()->name ?? 'G', 0, 1)) }}</span>
         </div>
         <div class="flex flex-col sidebar-text flex-1">
-            <span class="text-[13px] font-bold text-slate-800 uppercase tracking-wide">Admin User</span>
-            <span class="text-[11px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">Master Admin</span>
+            <span class="text-[13px] font-bold text-slate-800 uppercase tracking-wide">{{ auth()->user()->name ?? 'Guest' }}</span>
+            <span class="text-[11px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">{{ auth()->user()->post ?? 'User' }}</span>
         </div>
         <div class="sidebar-text">
             <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>

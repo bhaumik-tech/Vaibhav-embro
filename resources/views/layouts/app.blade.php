@@ -119,11 +119,11 @@
                 <!-- User Profile -->
                 <div class="flex items-center gap-3 cursor-pointer group">
                     <div class="text-right hidden sm:block">
-                        <div class="text-[11px] font-bold text-slate-800 uppercase tracking-widest group-hover:text-indigo-600 transition-colors">Admin User</div>
-                        <div class="text-[9px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">All Firms</div>
+                        <div class="text-[11px] font-bold text-slate-800 uppercase tracking-widest group-hover:text-indigo-600 transition-colors">{{ auth()->user()->name ?? 'Guest' }}</div>
+                        <div class="text-[9px] text-slate-500 font-bold uppercase tracking-widest mt-0.5">{{ auth()->user()->post ?? 'User' }}</div>
                     </div>
-                    <div class="h-9 w-9 bg-slate-800 text-white flex items-center justify-center font-bold text-sm border border-slate-900 group-hover:bg-indigo-600 group-hover:border-indigo-700 transition-colors shadow-sm">
-                        A
+                    <div class="h-9 w-9 bg-slate-800 text-white flex items-center justify-center font-bold text-sm border border-slate-900 group-hover:bg-indigo-600 group-hover:border-indigo-700 transition-colors shadow-sm uppercase">
+                        {{ strtoupper(substr(auth()->user()->name ?? 'G', 0, 1)) }}
                     </div>
                 </div>
             </div>
