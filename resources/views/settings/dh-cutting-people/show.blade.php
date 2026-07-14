@@ -11,9 +11,11 @@
         <div class="bg-slate-100 border border-slate-300 py-2.5 px-6 font-bold text-slate-700 text-sm uppercase tracking-wider shadow-sm flex-1">
             Person Details: {{ $dhCuttingPerson->person_name }}
         </div>
-        <a href="{{ route('dh-cutting-people.edit', $dhCuttingPerson) }}" class="h-10 px-6 bg-indigo-600 text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center hover:bg-indigo-700 transition-colors shadow-sm border border-indigo-700">
+        @canpage('dh_cutting', 'edit')
+<a href="{{ route('dh-cutting-people.edit', $dhCuttingPerson) }}" class="h-10 px-6 bg-indigo-600 text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center hover:bg-indigo-700 transition-colors shadow-sm border border-indigo-700">
             Edit Person
         </a>
+@endcanpage
     </div>
 
     <div class="flex-1 overflow-y-auto px-6 pb-6">

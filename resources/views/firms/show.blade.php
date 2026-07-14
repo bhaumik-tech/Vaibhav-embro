@@ -12,9 +12,11 @@
                 </a>
                 <h2 class="font-bold text-slate-700 text-lg uppercase tracking-wide">Firm Details: {{ $firm->name }}</h2>
             </div>
-            <a href="{{ route('firms.edit', $firm) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 text-sm font-bold uppercase tracking-wider transition-colors">
+            @canpage('firms', 'edit')
+<a href="{{ route('firms.edit', $firm) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 text-sm font-bold uppercase tracking-wider transition-colors">
                 Edit Firm
             </a>
+@endcanpage
         </div>
 
         <div class="flex-1 overflow-auto p-6">

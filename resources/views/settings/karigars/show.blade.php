@@ -11,9 +11,11 @@
         <div class="bg-slate-100 border border-slate-300 py-2.5 px-6 font-bold text-slate-700 text-sm uppercase tracking-wider shadow-sm flex-1">
             Karigar Details: {{ $karigar->name }}
         </div>
-        <a href="{{ route('karigars.edit', $karigar) }}" class="h-10 px-6 bg-indigo-600 text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center hover:bg-indigo-700 transition-colors shadow-sm border border-indigo-700">
+        @canpage('karigars', 'edit')
+<a href="{{ route('karigars.edit', $karigar) }}" class="h-10 px-6 bg-indigo-600 text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center hover:bg-indigo-700 transition-colors shadow-sm border border-indigo-700">
             Edit Karigar
         </a>
+@endcanpage
     </div>
 
     <div class="flex-1 overflow-y-auto px-6 pb-6">

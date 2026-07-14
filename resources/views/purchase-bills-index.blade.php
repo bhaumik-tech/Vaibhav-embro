@@ -11,9 +11,11 @@
         <div class="bg-slate-100 border border-slate-300 py-2.5 px-6 font-bold text-slate-700 text-sm uppercase tracking-wider shadow-sm flex-1">
             Purchase Bills Management
         </div>
-        <a href="{{ route('purchase-bill.create') }}" class="h-10 px-6 bg-indigo-600 text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center hover:bg-indigo-700 transition-colors shadow-sm border border-indigo-700">
+        @canpage('purchase_bill', 'edit')
+<a href="{{ route('purchase-bill.create') }}" class="h-10 px-6 bg-indigo-600 text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center hover:bg-indigo-700 transition-colors shadow-sm border border-indigo-700">
             + Add New Entry
         </a>
+@endcanpage
     </div>
 
     @if(session('success'))
@@ -50,16 +52,20 @@
                                 <a href="{{ route('purchase-bill.print', $bill) }}" target="_blank" class="text-slate-600 hover:text-indigo-600 transition-colors" title="Print">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                                 </a>
-                                <a href="{{ route('purchase-bill.edit', $bill) }}" class="text-indigo-600 hover:text-indigo-800 transition-colors" title="Edit">
+                                @canpage('purchase_bill', 'edit')
+<a href="{{ route('purchase-bill.edit', $bill) }}" class="text-indigo-600 hover:text-indigo-800 transition-colors" title="Edit">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                 </a>
-                                <form action="{{ route('purchase-bill.destroy', $bill) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this bill?');" class="inline">
+@endcanpage
+                                @canpage('purchase_bill', 'remove')
+<form action="{{ route('purchase-bill.destroy', $bill) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this bill?');" class="inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="text-red-500 hover:text-red-700 transition-colors" title="Delete">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                     </button>
                                 </form>
+@endcanpage
                             </td>
                         </tr>
                     @empty
