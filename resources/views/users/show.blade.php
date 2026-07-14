@@ -54,8 +54,13 @@
                         <div>
                             <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Permission</div>
                             <div class="text-sm font-bold text-slate-800 bg-white p-2.5 border border-slate-200">
-                                @if($user->permission)
-                                    <span class="bg-slate-200 text-slate-700 px-2.5 py-1 text-xs uppercase">{{ $user->permission }}</span>
+                                @php $permNames = $user->getPermissionNames(); @endphp
+                                @if(count($permNames) > 0)
+                                    <div class="flex flex-wrap gap-1">
+                                        @foreach($permNames as $name)
+                                            <span class="bg-slate-200 text-slate-700 px-2 py-0.5 text-xs font-bold uppercase rounded-sm">{{ $name }}</span>
+                                        @endforeach
+                                    </div>
                                 @else
                                     -
                                 @endif

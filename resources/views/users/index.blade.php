@@ -44,8 +44,13 @@
                             <td class="py-4 px-4 text-sm font-semibold text-slate-600">{{ $user->primary_firm_name ?: '-' }}</td>
                             <td class="py-4 px-4 text-sm font-semibold text-slate-600">{{ $user->post ?: '-' }}</td>
                             <td class="py-4 px-4 text-sm font-semibold text-slate-600">
-                                @if($user->permission)
-                                    <span class="bg-slate-200 text-slate-700 px-2.5 py-1 text-xs uppercase">{{ $user->permission }}</span>
+                                @php $permNames = $user->getPermissionNames(); @endphp
+                                @if(count($permNames) > 0)
+                                    <div class="flex flex-wrap gap-1">
+                                        @foreach($permNames as $name)
+                                            <span class="bg-slate-200 text-slate-700 px-2 py-0.5 text-[10px] font-bold uppercase rounded-sm">{{ $name }}</span>
+                                        @endforeach
+                                    </div>
                                 @else
                                     -
                                 @endif

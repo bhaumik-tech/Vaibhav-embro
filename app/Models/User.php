@@ -70,4 +70,18 @@ class User extends Authenticatable
         if (empty($this->permission)) return false;
         return in_array('admin', explode(',', $this->permission));
     }
+
+    public function getPermissionNames()
+    {
+        if (empty($this->permission)) {
+            return [];
+        }
+        
+        $perms = explode(',', $this->permission);
+        if (in_array('admin', $perms)) {
+            return ['Full Admin (All Firms)'];
+        }
+
+        return \App\Models\Firm::whereIn('id', $perms)->pluck('name')->toArray();
+    }
 }
