@@ -131,6 +131,10 @@
                             'purchase_bill' => 'Purchase Bill',
                             'generate_bill' => 'Generate Bill',
                             'bank_book' => 'Bank Book',
+                            'registers' => 'Registers',
+                            'generate_cheque' => 'Generate Cheque',
+                            'rcvd_payment' => 'Rcvd Payment',
+                            'production' => 'Production',
                         ];
                         $pagePerms = old('page_permissions', $user->page_permissions ?? []);
                     @endphp

@@ -127,6 +127,10 @@
                                 'purchase_bill' => 'Purchase Bill',
                                 'generate_bill' => 'Generate Bill',
                                 'bank_book' => 'Bank Book',
+                                'registers' => 'Registers',
+                                'generate_cheque' => 'Generate Cheque',
+                                'rcvd_payment' => 'Rcvd Payment',
+                                'production' => 'Production',
                             ];
                         @endphp
                         <table class="w-full text-left border-collapse">
