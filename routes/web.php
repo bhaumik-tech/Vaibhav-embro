@@ -233,6 +233,8 @@ Route::middleware('auth')->group(function () {
 
     // Chat System (Globally available to all users)
     Route::get('/chat', [\App\Http\Controllers\ChatController::class, 'index'])->name('chat.index');
+    Route::get('/chat/messages/{userId}', [\App\Http\Controllers\ChatController::class, 'fetchMessages'])->name('chat.fetch');
+    Route::post('/chat/send', [\App\Http\Controllers\ChatController::class, 'sendMessage'])->name('chat.send');
 
     // Settings Pages
     Route::get('/settings', function () {
