@@ -24,12 +24,14 @@
         <div class="flex-1 grid grid-cols-2 xl:grid-cols-4 gap-4 overflow-y-auto content-start pb-4 pr-2">
             
             @foreach($firms as $firm)
-                <div class="bg-white border border-slate-200 p-4 flex flex-col justify-between shadow-sm min-h-[140px] hover:shadow-md transition-shadow">
+                <div class="bg-white border border-slate-200 p-4 flex flex-col shadow-sm min-h-[140px] hover:shadow-md transition-shadow h-full">
                     <h3 class="font-extrabold text-center text-slate-800 mb-2 truncate uppercase tracking-widest text-[13px]">{{ $firm->name }}</h3>
-                    <div class="text-center text-xs font-bold text-slate-600 space-y-1 bg-slate-50 py-3 border border-slate-200">
-                        <div>M=1_</div>
-                        <div>M=2_</div>
-                        <div class="text-[10px] mt-1 text-slate-400 tracking-widest">.. + ..</div>
+                    <div class="text-center text-xs font-bold text-slate-600 space-y-1 bg-slate-50 py-3 border border-slate-200 flex-1 flex flex-col justify-center max-h-[200px] overflow-y-auto">
+                        @forelse($firm->machines as $machine)
+                            <div>M={{ $machine->machine_no }}_</div>
+                        @empty
+                            <div class="text-[10px] text-slate-400 tracking-widest uppercase">No Machines</div>
+                        @endforelse
                     </div>
                 </div>
             @endforeach
@@ -57,8 +59,6 @@
                         'Ready to Delivery',
                         'Today\'s Delivery',
                         'Register',
-                        '.........',
-                        'Chat Box'
                     ];
                 @endphp
                 @foreach($rightMenu as $item)

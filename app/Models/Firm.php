@@ -27,4 +27,9 @@ class Firm extends Model
         $permittedIds = $user->getPermittedFirmIds();
         return static::whereIn('id', $permittedIds)->orderBy('name')->get();
     }
+
+    public function machines()
+    {
+        return $this->hasMany(Machine::class);
+    }
 }

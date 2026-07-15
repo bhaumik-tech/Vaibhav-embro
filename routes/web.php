@@ -7,6 +7,7 @@ use App\Http\Controllers\FirmController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoController;
 use App\Http\Controllers\PartyController;
+use App\Http\Controllers\RcvdPaymentController;
 
 use App\Http\Controllers\InputChalanController;
 
@@ -18,7 +19,7 @@ Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 // Protected Routes
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
-        $firms = \App\Models\Firm::getPermitted();
+        $firms = \App\Models\Firm::getPermitted()->load('machines');
         $parties = \App\Models\Party::orderBy('name')->get();
         return view('dashboard', compact('firms', 'parties'));
     })->middleware('page.permission:dashboard,view');
@@ -188,11 +189,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/generate-bills/{generateBill}', [App\Http\Controllers\GenerateBillController::class, 'destroy'])->name('generate-bills.destroy');
     Route::get('/generate-bills/{generateBill}/print', [App\Http\Controllers\GenerateBillController::class, 'print'])->name('generate-bills.print')->middleware('page.permission:generate_bill,view');
 
-    Route::get('/rcvd-payment', function () {
-        $firms = \App\Models\Firm::getPermitted();
-        $parties = \App\Models\Party::orderBy('name')->get();
-        return view('rcvd-payment', compact('firms', 'parties'));
-    })->middleware('page.permission:rcvd_payment,view');
+    Route::get('/rcvd-payment', [RcvdPaymentController::class, 'index'])->name('rcvd-payment.index')->middleware('page.permission:rcvd_payment,view');
+    Route::get('/rcvd-payment/create', [RcvdPaymentController::class, 'create'])->name('rcvd-payment.create')->middleware('page.permission:rcvd_payment,edit');
+    Route::post('/rcvd-payment', [RcvdPaymentController::class, 'store'])->name('rcvd-payment.store')->middleware('page.permission:rcvd_payment,edit');
+    Route::get('/rcvd-payment/{rcvdPayment}/edit', [RcvdPaymentController::class, 'edit'])->name('rcvd-payment.edit')->middleware('page.permission:rcvd_payment,edit');
+    Route::put('/rcvd-payment/{rcvdPayment}', [RcvdPaymentController::class, 'update'])->name('rcvd-payment.update')->middleware('page.permission:rcvd_payment,edit');
+    Route::delete('/rcvd-payment/{rcvdPayment}', [RcvdPaymentController::class, 'destroy'])->name('rcvd-payment.destroy')->middleware('page.permission:rcvd_payment,remove');
 
     Route::get('/purchase-bills', [\App\Http\Controllers\PurchaseBillController::class, 'index'])->name('purchase-bill.index')->middleware('page.permission:purchase_bill,view');
     Route::get('/purchase-bill', [\App\Http\Controllers\PurchaseBillController::class, 'create'])->name('purchase-bill.create')->middleware('page.permission:purchase_bill,edit');

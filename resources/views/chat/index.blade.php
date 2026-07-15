@@ -54,7 +54,7 @@
                     <span class="text-indigo-700 font-bold text-md" id="active-user-initial">S</span>
                 </div>
                 <div>
-                    <h3 class="text-sm font-bold text-slate-800" id="active-user-name">User Name</h3>
+                    <h3 class="text-sm font-bold text-slate-800" id="active-user-name">User Name</h3>   
                     <p class="text-[11px] text-green-600 font-bold uppercase tracking-wide">Online</p>
                 </div>
             </div>

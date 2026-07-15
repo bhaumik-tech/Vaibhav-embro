@@ -85,7 +85,7 @@
                     
                     <div class="flex items-center pb-2 relative">
                         <div class="absolute left-2 top-0 flex justify-center">
-                            <img src="{{ asset('print-logo.png') }}" alt="Logo" class="w-[75px] h-[75px] object-contain">
+                            <img src="{{ asset('print-logo.png') }}" alt="Logo" class="w-[78px] h-[78px] object-contain">
                         </div>
                         <div class="w-full flex flex-col items-center">
                             <h1 class="text-[44px] leading-none font-bold tracking-wide" style="font-family: 'Times New Roman', Times, serif; transform: scaleY(1.1);">

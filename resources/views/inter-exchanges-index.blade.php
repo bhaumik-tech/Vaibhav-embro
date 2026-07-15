@@ -35,6 +35,7 @@
                         <th class="p-4 text-xs font-bold text-slate-700 uppercase tracking-widest border-r border-slate-300">User (Aapnar)</th>
                         <th class="p-4 text-xs font-bold text-slate-700 uppercase tracking-widest border-r border-slate-300">User (Lenar)</th>
                         <th class="p-4 text-xs font-bold text-slate-700 uppercase tracking-widest border-r border-slate-300">Chalan No</th>
+                        <th class="p-4 text-xs font-bold text-slate-700 uppercase tracking-widest border-r border-slate-300 text-center w-24">Photo</th>
                         <th class="p-4 text-xs font-bold text-slate-700 uppercase tracking-widest text-center w-32">Actions</th>
                     </tr>
                 </thead>
@@ -46,6 +47,15 @@
                             <td class="p-4 text-sm font-bold text-indigo-700 border-r border-slate-200">{{ $entry->aapnarUser->name ?? '-' }}</td>
                             <td class="p-4 text-sm font-bold text-teal-700 border-r border-slate-200">{{ $entry->lenarUser->name ?? '-' }}</td>
                             <td class="p-4 text-sm font-bold text-slate-700 border-r border-slate-200">{{ $entry->chalan_no ?: '-' }}</td>
+                            <td class="p-4 text-center border-r border-slate-200">
+                                @if($entry->photo_path)
+                                    <a href="{{ Storage::url($entry->photo_path) }}" target="_blank" class="inline-flex text-indigo-600 hover:text-indigo-800 transition-colors" title="View Photo">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                    </a>
+                                @else
+                                    <span class="text-slate-300">-</span>
+                                @endif
+                            </td>
                             <td class="p-4 flex items-center justify-center gap-3">
                                 @canpage('inter_exchange', 'edit')
 <a href="{{ route('inter-exchange.edit', $entry) }}" class="text-indigo-600 hover:text-indigo-800 transition-colors" title="Edit">
@@ -65,7 +75,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="p-8 text-center text-slate-500 font-bold uppercase tracking-widest text-sm">
+                            <td colspan="7" class="p-8 text-center text-slate-500 font-bold uppercase tracking-widest text-sm">
                                 No Entries Found
                             </td>
                         </tr>

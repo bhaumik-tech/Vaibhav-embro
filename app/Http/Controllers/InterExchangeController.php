@@ -42,15 +42,22 @@ class InterExchangeController extends Controller implements HasMiddleware
             'box_cone' => 'array',
             'quantity' => 'array',
             'amount' => 'array',
+            'photo' => 'nullable|image|max:10240', // 10MB max
         ]);
 
-        $interExchange = InterExchange::create([
+        $data = [
             'user_aapnar_id' => $validated['user_aapnar_id'],
             'user_lenar_id' => $validated['user_lenar_id'],
             'chalan_no' => $validated['chalan_no'],
             'date' => $validated['date'],
             'remark' => $validated['remark'],
-        ]);
+        ];
+
+        if ($request->hasFile('photo')) {
+            $data['photo_path'] = $request->file('photo')->store('inter_exchange_photos', 'public');
+        }
+
+        $interExchange = InterExchange::create($data);
 
         if (!empty($validated['type_of_box'])) {
             foreach ($validated['type_of_box'] as $index => $type) {
@@ -87,15 +94,25 @@ class InterExchangeController extends Controller implements HasMiddleware
             'box_cone' => 'array',
             'quantity' => 'array',
             'amount' => 'array',
+            'photo' => 'nullable|image|max:10240',
         ]);
 
-        $interExchange->update([
+        $data = [
             'user_aapnar_id' => $validated['user_aapnar_id'],
             'user_lenar_id' => $validated['user_lenar_id'],
             'chalan_no' => $validated['chalan_no'],
             'date' => $validated['date'],
             'remark' => $validated['remark'],
-        ]);
+        ];
+
+        if ($request->hasFile('photo')) {
+            if ($interExchange->photo_path) {
+                \Illuminate\Support\Facades\Storage::disk('public')->delete($interExchange->photo_path);
+            }
+            $data['photo_path'] = $request->file('photo')->store('inter_exchange_photos', 'public');
+        }
+
+        $interExchange->update($data);
 
         $interExchange->items()->delete();
 
@@ -117,6 +134,9 @@ class InterExchangeController extends Controller implements HasMiddleware
 
     public function destroy(InterExchange $interExchange)
     {
+        if ($interExchange->photo_path) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($interExchange->photo_path);
+        }
         $interExchange->delete();
         return redirect()->route('inter-exchange.index')->with('success', 'Inter-Exchange deleted successfully.');
     }
