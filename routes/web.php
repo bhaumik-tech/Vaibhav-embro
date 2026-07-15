@@ -239,6 +239,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/chat/messages/{userId}', [\App\Http\Controllers\ChatController::class, 'fetchMessages'])->name('chat.fetch');
     Route::post('/chat/send', [\App\Http\Controllers\ChatController::class, 'sendMessage'])->name('chat.send');
 
+    // Production
+    Route::resource('productions', \App\Http\Controllers\ProductionController::class)->middleware('page.permission:production,edit');
+
     // Settings Pages
     Route::get('/settings', function () {
         return view('settings.index');

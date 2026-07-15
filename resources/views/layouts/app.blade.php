@@ -66,16 +66,19 @@
 
 <body class="text-slate-800 h-screen flex overflow-hidden bg-slate-50">
 
+    <!-- Mobile Overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/50 z-40 hidden lg:hidden transition-opacity" onclick="window.toggleSidebar()"></div>
+
     <!-- Sidebar -->
     <div id="sidebar-container"
-        class="w-64 flex-shrink-0 h-full bg-white border-r border-slate-200 transition-all duration-300 flex flex-col overflow-hidden">
+        class="fixed lg:relative z-50 w-64 flex-shrink-0 h-full bg-white border-r border-slate-200 transition-all duration-300 flex flex-col overflow-hidden -translate-x-full lg:translate-x-0">
         @include('components.sidebar')
     </div>
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col h-full overflow-hidden relative">
         <!-- Top Header -->
-        <header class="bg-white h-[72px] border-b border-slate-200 flex items-center justify-between px-6 shrink-0 shadow-sm">
+        <header class="bg-white min-h-[72px] py-3 sm:py-0 border-b border-slate-200 flex flex-wrap sm:flex-nowrap items-center justify-between gap-4 px-4 sm:px-6 shrink-0 shadow-sm">
             <div class="flex items-center gap-4">
                 <button onclick="window.toggleSidebar()"
                     class="p-2.5 text-slate-500 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 border border-transparent hover:border-slate-200">
@@ -168,14 +171,23 @@
         }
         window.toggleSidebar = function () {
             const sidebar = document.getElementById('sidebar-container');
-            const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+            const overlay = document.getElementById('sidebar-overlay');
 
-            if (isCollapsed) {
-                sidebar.classList.remove('w-64');
-                sidebar.classList.add('w-20'); // 5rem = 80px width
+            if (window.innerWidth < 1024) {
+                // Mobile behavior: toggle drawer
+                sidebar.classList.toggle('-translate-x-full');
+                if (overlay) overlay.classList.toggle('hidden');
             } else {
-                sidebar.classList.remove('w-20');
-                sidebar.classList.add('w-64');
+                // Desktop behavior: toggle collapsed state
+                const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+
+                if (isCollapsed) {
+                    sidebar.classList.remove('w-64');
+                    sidebar.classList.add('w-20'); // 5rem = 80px width
+                } else {
+                    sidebar.classList.remove('w-20');
+                    sidebar.classList.add('w-64');
+                }
             }
         };
 

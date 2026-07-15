@@ -31,7 +31,7 @@
                 </div>
 
                 <!-- Row 2: Primary Firm Name & Mo. No. -->
-                <div class="flex gap-4">
+                <div class="flex flex-col md:flex-row gap-4">
                     <div class="flex-[1]">
                         <select name="primary_firm_name" 
                             class="w-full border border-slate-300 p-3 text-sm focus:border-green-500 focus:ring-1 focus:ring-green-500 placeholder-slate-500 font-bold text-center bg-white text-slate-700">
@@ -48,7 +48,7 @@
                 </div>
 
                 <!-- Row 3: Post & 2nd Mo. No. -->
-                <div class="flex gap-4">
+                <div class="flex flex-col md:flex-row gap-4">
                     <!-- Spacer to push the inputs to the right like in the wireframe, but let's align center or use standard flex -->
                     <div class="flex-[1]">
                         <input type="text" name="post" placeholder="Post"
@@ -61,7 +61,7 @@
                 </div>
 
                 <!-- Row 4: User Name & Password -->
-                <div class="flex gap-4 w-4/4">
+                <div class="flex flex-col md:flex-row gap-4 w-4/4">
                     <div class="flex-1">
                         <input type="text" name="username" placeholder="User Name" required
                             class="w-full border border-slate-300 p-3 text-sm focus:border-green-500 focus:ring-1 focus:ring-green-500 placeholder-slate-500 font-bold text-center bg-white">
@@ -78,7 +78,7 @@
                 <div>
                     <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Permissions (Firms)</div>
                     <div class="border border-slate-300 bg-white overflow-hidden shadow-sm">
-                        <table class="w-full text-left border-collapse">
+                        <div class="overflow-x-auto"><table class="w-full text-left border-collapse">
                             <thead class="bg-slate-100">
                                 <tr>
                                     <th class="p-3 text-xs font-bold text-slate-700 uppercase tracking-widest border-b border-slate-200">Firm Name</th>
@@ -101,7 +101,7 @@
                                 </tr>
                                 @endforeach
                             </tbody>
-                        </table>
+                        </table></div>
                     </div>
                     @error('permissions') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                 </div>
@@ -158,7 +158,7 @@
                                 </tr>
                                 @endforeach
                             </tbody>
-                        </table>
+                        </table></div>
                     </div>
                 </div>
 

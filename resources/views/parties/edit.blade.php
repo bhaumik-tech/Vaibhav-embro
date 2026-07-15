@@ -4,7 +4,7 @@
 @section('content')
 <div class="h-full flex flex-col max-w-3xl mx-auto">
     <!-- Header -->
-    <div class="flex items-center gap-4 mb-6 shrink-0">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-6 shrink-0">
         <a href="{{ route('parties.index') }}" class="h-10 w-10 bg-white border border-slate-300 flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-colors shadow-sm">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
         </a>
@@ -28,7 +28,7 @@
             @csrf
             @method('PUT')
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Name -->
                 <div class="md:col-span-2">
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-widest mb-2">Party Name *</label>
@@ -52,7 +52,7 @@
             </div>
 
             <!-- Tax Settings -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 pt-4 border-t border-slate-200">
+            <div class="grid grid-cols-2 md:grid-cols-1 md:grid-cols-4 gap-6 pt-4 border-t border-slate-200">
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-widest mb-2">Vatav (%)</label>
                     <input type="number" step="0.01" name="vatav" value="{{ old('vatav', $party->vatav) }}"

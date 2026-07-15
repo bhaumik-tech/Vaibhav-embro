@@ -4,7 +4,7 @@
 @section('content')
 <div class="h-full flex flex-col gap-4 overflow-hidden">
     <!-- Header Row -->
-    <div class="flex items-center justify-between bg-white p-4 border border-slate-200 shadow-sm shrink-0">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white p-4 border border-slate-200 shadow-sm shrink-0">
         <h2 class="text-xl font-bold text-slate-800 uppercase tracking-wider">Generate Bills</h2>
         @canpage('generate_bill', 'edit')
 <a href="{{ route('generate-bills.create') }}" class="bg-indigo-600 text-white px-6 py-2 shadow-sm hover:bg-indigo-700 transition-colors uppercase font-bold text-sm">

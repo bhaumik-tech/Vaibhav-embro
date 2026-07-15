@@ -6,7 +6,7 @@
     <div class="w-full max-w-7xl mx-auto bg-white border border-slate-200 shadow-sm flex flex-col flex-1 overflow-hidden">
         
         <div class="bg-slate-100 border-b border-slate-200 py-4 px-6 flex justify-between items-center shrink-0">
-            <div class="flex items-center gap-4">
+            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4">
                 <a href="{{ route('settings.index') }}" class="text-slate-400 hover:text-slate-700 transition-colors" title="Back to Settings">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 </a>

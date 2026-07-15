@@ -31,7 +31,7 @@
             </div>
 
             <!-- Row 2: Primary Firm Name & Mo. No. -->
-            <div class="flex gap-4">
+            <div class="flex flex-col md:flex-row gap-4">
                 <div class="flex-[1]">
                     <select name="primary_firm_name" 
                         class="w-full border border-slate-300 p-3 text-sm focus:border-green-500 focus:ring-1 focus:ring-green-500 font-bold text-center bg-white text-slate-700">
@@ -50,7 +50,7 @@
             </div>
 
             <!-- Row 3: Post & 2nd Mo. No. -->
-            <div class="flex gap-4">
+            <div class="flex flex-col md:flex-row gap-4">
                 <div class="flex-[1]">
                     <input type="text" name="post" placeholder="Post" value="{{ old('post', $user->post) }}"
                         class="w-full border border-slate-300 p-3 text-sm focus:border-green-500 focus:ring-1 focus:ring-green-500 placeholder-slate-500 font-bold text-center bg-white">
@@ -62,7 +62,7 @@
             </div>
 
             <!-- Row 4: User Name & Password -->
-            <div class="flex gap-4 w-4/4">
+            <div class="flex flex-col md:flex-row gap-4 w-4/4">
                 <div class="flex-1">
                     <input type="text" name="username" placeholder="User Name" required value="{{ old('username', $user->username) }}"
                         class="w-full border border-slate-300 p-3 text-sm focus:border-green-500 focus:ring-1 focus:ring-green-500 placeholder-slate-500 font-bold text-center bg-white">

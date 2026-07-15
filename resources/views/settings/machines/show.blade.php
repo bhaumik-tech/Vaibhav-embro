@@ -4,7 +4,7 @@
 @section('content')
 <div class="h-full flex flex-col bg-slate-50">
     <!-- Header -->
-    <div class="flex items-center gap-4 mb-6 shrink-0 p-6 pb-0">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-6 shrink-0 p-6 pb-0">
         <a href="{{ route('machines.index') }}" class="h-10 w-10 bg-white border border-slate-300 flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-colors shadow-sm">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
         </a>
@@ -19,7 +19,7 @@
     </div>
 
     <div class="flex-1 overflow-y-auto px-6 pb-6">
-        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-1 md:grid-cols-2 gap-6">
             
             <!-- Basic Info Section -->
             <div class="bg-white border border-slate-300 shadow-sm p-6">
@@ -74,8 +74,8 @@
                     Bonus Settings
                 </h3>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="flex items-center justify-between bg-slate-50 border border-slate-200 p-4">
+                <div class="grid grid-cols-1 md:grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-50 border border-slate-200 p-4">
                         <div class="text-xs font-bold text-slate-500 uppercase tracking-wider">Bonus on Production</div>
                         <div class="flex items-center gap-3">
                             @if($machine->bonus_production_enabled)
@@ -87,7 +87,7 @@
                         </div>
                     </div>
                     
-                    <div class="flex items-center justify-between bg-slate-50 border border-slate-200 p-4">
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-slate-50 border border-slate-200 p-4">
                         <div class="text-xs font-bold text-slate-500 uppercase tracking-wider">Bonus on % (Frame)</div>
                         <div class="flex items-center gap-3">
                             @if($machine->bonus_frame_enabled)

@@ -30,7 +30,7 @@
                 ['name' => 'Bank book', 'url' => '/bank-book', 'icon' => 'M12 14l9-5-9-5-9 5 9 5z M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z', 'permission_key' => 'bank_book'],
             ],
             'PRODUCTION' => [
-                ['name' => 'production', 'url' => '#', 'icon' => 'M12 14l9-5-9-5-9 5 9 5z M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z', 'permission_key' => 'production'],
+                ['name' => 'production', 'url' => '/productions', 'icon' => 'M12 14l9-5-9-5-9 5 9 5z M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z', 'permission_key' => 'production'],
                 ['name' => 'Thread Boxes', 'url' => '/thread-boxes', 'icon' => 'M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4', 'permission_key' => 'thread_boxes'],
                 ['name' => 'Inter Exchange', 'url' => '/inter-exchange', 'icon' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4', 'permission_key' => 'inter_exchange'],
                 ['name' => 'Dhaga cutting', 'url' => '/dhaga-cuttings', 'icon' => 'M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z', 'permission_key' => 'dh_cutting'],

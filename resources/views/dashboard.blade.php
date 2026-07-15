@@ -18,10 +18,10 @@
     </div>
 
     <!-- Main Content Area -->
-    <div class="flex flex-1 gap-6 overflow-hidden mt-2">
+    <div class="flex flex-col lg:flex-row flex-1 gap-6 overflow-auto lg:overflow-hidden mt-2">
         
         <!-- Grid Area (Left) -->
-        <div class="flex-1 grid grid-cols-2 xl:grid-cols-4 gap-4 overflow-y-auto content-start pb-4 pr-2">
+        <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 overflow-visible lg:overflow-y-auto content-start pb-4 pr-2">
             
             @foreach($firms as $firm)
                 <div class="bg-white border border-slate-200 p-4 flex flex-col shadow-sm min-h-[140px] hover:shadow-md transition-shadow h-full">
@@ -49,7 +49,7 @@
         </div>
 
         <!-- Right Side Menu -->
-        <div class="w-72 bg-white border border-slate-200 p-6 flex flex-col shadow-sm overflow-y-auto">
+        <div class="w-full lg:w-72 bg-white border border-slate-200 p-6 flex flex-col shadow-sm overflow-visible lg:overflow-y-auto shrink-0">
             <h3 class="font-extrabold text-slate-800 mb-6 uppercase tracking-widest text-sm text-center border-b border-slate-200 pb-4">Quick Actions</h3>
             <div class="flex flex-col gap-4 flex-1">
                 @php

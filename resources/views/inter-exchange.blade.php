@@ -4,7 +4,7 @@
 @section('content')
 <div class="h-full flex flex-col">
     <!-- Header -->
-    <div class="flex items-center gap-4 mb-6 shrink-0 px-8 pt-8">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-6 shrink-0 px-8 pt-8">
         <a href="{{ route('inter-exchange.index') }}" class="h-10 w-10 bg-white border border-slate-300 flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-colors shadow-sm">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
         </a>
@@ -34,7 +34,7 @@
             <div class="flex flex-col gap-4">
                 
                 <!-- Row 1: Forms and Ch.No -->
-                <div class="grid grid-cols-5 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                     <div class="col-span-3 relative">
                         <select name="user_aapnar_id" required class="w-full border border-slate-300 p-2.5 text-sm font-bold text-slate-700 appearance-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 cursor-pointer bg-white text-center">
                             <option value="" disabled {{ !isset($interExchange) ? 'selected' : '' }}>User Name (aapnar)</option>
@@ -52,7 +52,7 @@
                 </div>
 
                 <!-- Row 2: Form and Date -->
-                <div class="grid grid-cols-5 gap-4">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                     <div class="col-span-3 relative">
                         <select name="user_lenar_id" required class="w-full border border-slate-300 p-2.5 text-sm font-bold text-slate-700 appearance-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 cursor-pointer bg-white text-center">
                             <option value="" disabled {{ !isset($interExchange) ? 'selected' : '' }}>User Name (lenar)</option>
@@ -70,7 +70,7 @@
                 </div>
 
                 <!-- Table Headers -->
-                <div class="grid grid-cols-5 gap-4 mt-4">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mt-4">
                     <div class="col-span-2 border border-slate-300 p-2.5 text-sm font-bold text-slate-700 flex items-center justify-center bg-slate-50">
                         Type of Box
                     </div>
@@ -89,7 +89,7 @@
                 <div id="exchange-rows" class="flex flex-col gap-4">
                     @if(isset($interExchange) && $interExchange->items->count() > 0)
                         @foreach($interExchange->items as $item)
-                        <div class="grid grid-cols-5 gap-4 relative group">
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 relative group">
                             <input type="text" name="type_of_box[]" value="{{ $item->type_of_box }}" class="col-span-2 border border-slate-300 p-2.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 font-bold text-center text-slate-700">
                             <input type="text" name="box_cone[]" value="{{ $item->box_cone }}" class="col-span-1 border border-slate-300 p-2.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 font-bold text-center text-slate-700">
                             <input type="number" name="quantity[]" value="{{ $item->quantity }}" class="col-span-1 border border-slate-300 p-2.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 font-bold text-center text-slate-700">
@@ -102,7 +102,7 @@
                         @endforeach
                     @else
                         <!-- Default Rows -->
-                        <div class="grid grid-cols-5 gap-4 relative group">
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 relative group">
                             <input type="text" name="type_of_box[]" value="V+ 144m." class="col-span-2 border border-slate-300 p-2.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 font-bold text-center text-slate-700">
                             <input type="text" name="box_cone[]" value="Box" class="col-span-1 border border-slate-300 p-2.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 font-bold text-center text-slate-700">
                             <input type="number" name="quantity[]" value="3" class="col-span-1 border border-slate-300 p-2.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 font-bold text-center text-slate-700">
@@ -112,7 +112,7 @@
                             </button>
                         </div>
                         
-                        <div class="grid grid-cols-5 gap-4 relative group">
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 relative group">
                             <input type="text" name="type_of_box[]" value="Jolly Polister" class="col-span-2 border border-slate-300 p-2.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 font-bold text-center text-slate-700">
                             <input type="text" name="box_cone[]" value="Cone" class="col-span-1 border border-slate-300 p-2.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 font-bold text-center text-slate-700">
                             <input type="number" name="quantity[]" value="24" class="col-span-1 border border-slate-300 p-2.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 font-bold text-center text-slate-700">
@@ -122,7 +122,7 @@
                             </button>
                         </div>
 
-                        <div class="grid grid-cols-5 gap-4 relative group">
+                        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 relative group">
                             <div class="col-span-2 relative">
                                 <input type="text" name="type_of_box[]" value="20Line /" class="w-full border border-slate-300 p-2.5 text-sm font-bold text-slate-700 appearance-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 bg-white text-center">
                             </div>
@@ -145,7 +145,7 @@
                 </div>
 
                 <!-- Total Row -->
-                <div class="grid grid-cols-5 gap-4 mt-2">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mt-2">
                     <div class="col-span-2 flex items-center gap-2">
                         <label class="w-3/5 border border-slate-300 px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors bg-white cursor-pointer text-center relative overflow-hidden">
                             <span id="photo-label-text">Take Photo</span>
@@ -165,7 +165,7 @@
                 </div>
 
                 <!-- Actions Row -->
-                <div class="grid grid-cols-5 gap-4 mt-2">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mt-2">
                     <input type="text" name="remark" value="{{ $interExchange->remark ?? '' }}" placeholder="Remark/ note" class="col-span-2 border border-slate-300 p-2.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 font-bold text-center placeholder-slate-500">
                     <button type="button" class="col-span-1 border border-slate-300 px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors bg-white">
                         Highlight

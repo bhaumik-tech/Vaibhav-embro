@@ -7,7 +7,7 @@
     <!-- Form Header -->
     <div class="p-4 border-b border-slate-200 bg-slate-50 flex flex-col gap-4 shrink-0">
         <!-- Top Row: Firm Dropdown -->
-        <div class="bg-white border border-slate-200 p-0 shadow-sm relative flex items-center justify-between cursor-pointer hover:bg-slate-50">
+        <div class="bg-white border border-slate-200 p-0 shadow-sm relative flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 cursor-pointer hover:bg-slate-50">
             <select name="firm_id" required class="w-full border-none p-2 font-semibold text-slate-700 text-center text-lg focus:ring-0 appearance-none bg-transparent cursor-pointer">
                 <option value="" disabled selected>Select Firm Name</option>
                 @foreach($firms as $firm)
@@ -20,10 +20,10 @@
         </div>
 
         <!-- Bottom Row -->
-        <div class="flex gap-4">
+        <div class="flex flex-col lg:flex-row gap-4">
             <!-- Left Box (Party Details) -->
             <div class="flex-1 bg-white border border-slate-200 p-4 shadow-sm relative">
-                <div class="flex flex-col gap-2 w-full pr-24">
+                <div class="flex flex-col gap-2 w-full pt-10 sm:pt-0 sm:pr-24">
                     <div class="flex items-center gap-2">
                         <label class="font-semibold text-slate-700 w-12 text-sm uppercase">NAME:</label>
                         <select name="party_id" required class="flex-1 font-bold text-slate-800 text-base bg-transparent border-none p-0 focus:ring-0" onchange="updatePartyDetails(this)">
@@ -50,7 +50,7 @@
             </div>
 
             <!-- Right Box (Chalan Info) -->
-            <div class="w-1/3 bg-white border border-slate-200 p-4 shadow-sm flex flex-col justify-center gap-2">
+            <div class="w-full lg:w-1/3 bg-white border border-slate-200 p-4 shadow-sm flex flex-col justify-center gap-2">
                 <div class="flex items-center gap-1">
                     <span class="font-semibold text-slate-700 text-lg whitespace-nowrap">Ch. No.=</span>
                     <input type="text" name="chalan_no" placeholder="Auto" class="bg-transparent border-b border-slate-300 p-0 text-slate-900 font-bold text-lg focus:ring-0 w-full placeholder-slate-400">
@@ -115,7 +115,7 @@
     </div>
 
     <!-- Actions -->
-    <div class="p-4 border-t border-slate-200 bg-slate-50 flex justify-end gap-3 shrink-0">
+    <div class="p-4 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row justify-end gap-3 shrink-0">
         <button type="submit" class="px-6 py-2 bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors shadow-sm">
             Save Draft
         </button>

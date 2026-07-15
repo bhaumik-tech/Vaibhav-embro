@@ -28,7 +28,7 @@
             </div>
 
             <!-- Grid Section -->
-            <div class="grid grid-cols-4 gap-4 mt-2">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mt-2">
                 <!-- Headers -->
                 <div class="col-span-2 border border-slate-300 p-2.5 text-sm font-bold text-slate-700 flex items-center justify-center bg-slate-50">
                     Type of Box

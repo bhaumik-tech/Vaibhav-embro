@@ -6,7 +6,7 @@
     @csrf
     <!-- Form Header -->
     <div class="p-6 border-b border-slate-200 bg-slate-50/50">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-1 md:grid-cols-4 gap-6">
             <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1">Party Name</label>
                 <select name="party_id" required class="w-full border-slate-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm p-2 border font-semibold text-slate-700">

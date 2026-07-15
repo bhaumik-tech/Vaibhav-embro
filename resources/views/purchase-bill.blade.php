@@ -4,7 +4,7 @@
 @section('content')
 <div class="h-full flex flex-col">
     <!-- Header -->
-    <div class="flex items-center gap-4 mb-6 shrink-0 px-8 pt-8">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-6 shrink-0 px-8 pt-8">
         <a href="{{ route('purchase-bill.index') }}" class="h-10 w-10 bg-white border border-slate-300 flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-colors shadow-sm">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
         </a>
@@ -68,10 +68,10 @@
             </div>
 
             <!-- Row 4: Split Layout for Bottom Section -->
-            <div class="flex gap-4 mt-2 items-stretch">
+            <div class="flex flex-col md:flex-row gap-4 mt-2 items-stretch">
                 
                 <!-- Left Side: Remark / note -->
-                <div class="flex-1 flex flex-col pt-12">
+                <div class="flex-1 flex flex-col pt-0 md:pt-12">
                     <textarea name="remark" placeholder="Remark/ note" class="w-full flex-1 min-h-[100px] border border-slate-300 p-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 placeholder-slate-500 font-bold resize-none text-center">{{ old('remark', $purchaseBill->remark ?? '') }}</textarea>
                 </div>
 

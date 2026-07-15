@@ -4,7 +4,7 @@
 @section('content')
 <div class="h-full flex flex-col bg-slate-50">
     <!-- Header -->
-    <div class="flex items-center gap-4 mb-6 shrink-0 p-6 pb-0">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-6 shrink-0 p-6 pb-0">
         <a href="{{ route('karigars.index') }}" class="h-10 w-10 bg-white border border-slate-300 flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-colors shadow-sm">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
         </a>
@@ -19,7 +19,7 @@
     </div>
 
     <div class="flex-1 overflow-y-auto px-6 pb-6">
-        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Profile Section -->
             <div class="bg-white border border-slate-300 shadow-sm p-6 flex flex-col items-center">
                 @if($karigar->photo)
@@ -56,7 +56,7 @@
                         <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
                         Bank Details
                     </h3>
-                    <div class="grid grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Name in Bank</div>
                             <div class="text-sm font-bold text-slate-800 bg-slate-50 p-2.5 border border-slate-200">{{ $karigar->bank_name ?: '-' }}</div>
@@ -108,7 +108,7 @@
                         <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         Aadhar Photos
                     </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Aadhar Front</div>
                             @if($karigar->aadhar_front)

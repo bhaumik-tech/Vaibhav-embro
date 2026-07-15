@@ -28,7 +28,7 @@
                         User Information
                     </h3>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                    <div class="grid grid-cols-1 md:grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                         <div>
                             <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1">Name</div>
                             <div class="text-sm font-bold text-slate-800 bg-white p-2.5 border border-slate-200">{{ $user->name }}</div>

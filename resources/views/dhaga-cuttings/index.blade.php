@@ -4,7 +4,7 @@
 @section('content')
 <div class="h-full flex flex-col max-w-5xl mx-auto w-full">
     <!-- Header with + Button -->
-    <div class="flex items-center justify-between gap-4 mb-6 shrink-0">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-6 shrink-0">
         <div class="bg-slate-100 border border-slate-300 py-2.5 px-6 font-bold text-slate-700 text-sm uppercase tracking-wider shadow-sm flex-1 text-center">
             Person Details (Dhaga cutting)
         </div>
@@ -18,7 +18,7 @@
     <div class="bg-white border border-slate-300 shadow-sm p-6 flex-1 flex flex-col overflow-y-auto">
         
         <!-- Person Information Section -->
-        <div class="grid grid-cols-3 gap-4 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <!-- Row 1 -->
             <div>
                 <select name="person_id" id="person_selector" onchange="changePerson(this.value)" class="w-full border border-slate-300 p-2.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 bg-white font-bold text-slate-800 text-center uppercase tracking-widest cursor-pointer shadow-sm">
@@ -77,7 +77,7 @@
             @if(count($aggregations) > 0)
                 @foreach($aggregations as $index => $agg)
                     <div>
-                        <div class="flex items-center gap-4">
+                        <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4">
                             <div class="w-32 shrink-0 border border-slate-300 bg-white p-3 text-center text-sm font-bold text-slate-700 shadow-sm">
                                 {{ $agg['rate_label'] }}
                             </div>
@@ -130,7 +130,7 @@
             @endif
 
             <!-- Summary Totals -->
-            <div class="flex items-center gap-4 pt-6 mt-4">
+            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4 pt-6 mt-4">
                 @php
                     $startDate = \Carbon\Carbon::createFromDate($year, $month, 1)->startOfMonth()->format('d/m/Y');
                     $endDate = \Carbon\Carbon::createFromDate($year, $month, 1)->endOfMonth()->format('d/m/Y');
@@ -147,12 +147,12 @@
         </div>
 
         <!-- Footer Actions -->
-        <div class="mt-8 border-t border-slate-200 pt-6 flex items-center justify-between gap-4">
+        <div class="mt-8 border-t border-slate-200 pt-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
             <div class="flex-1 max-w-sm">
                 <input type="text" placeholder="Remark / note" class="w-full border border-slate-300 p-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 bg-white font-bold text-slate-800 text-center shadow-sm">
             </div>
             
-            <div class="flex items-center gap-4">
+            <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4">
                 <button type="button" class="bg-white text-slate-700 border border-slate-300 px-8 py-3 text-sm font-bold hover:bg-slate-50 transition-colors shadow-sm uppercase tracking-widest">
                     Print
                 </button>
