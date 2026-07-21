@@ -105,10 +105,15 @@ class DhagaCuttingController extends Controller implements HasMiddleware
             });
         }
 
+        $lastAddedDate = \App\Models\DhagaCutting::when($selectedPersonId, function($q) use ($selectedPersonId) {
+            return $q->where('person_id', $selectedPersonId);
+        })->max('date');
+        $lastAddedDateFormatted = $lastAddedDate ? \Carbon\Carbon::parse($lastAddedDate)->format('d/m/Y') : 'None';
+
         return view('dhaga-cuttings.index', compact(
             'people', 'selectedPerson', 'selectedMonth', 'monthsList', 
             'prevMonth', 'nextMonth', 'aggregations', 'totalWorkRs',
-            'month', 'year'
+            'month', 'year', 'lastAddedDateFormatted'
         ));
     }
 

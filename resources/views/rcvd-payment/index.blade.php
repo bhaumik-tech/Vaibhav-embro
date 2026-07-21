@@ -19,6 +19,22 @@
         @endcanpage
     </div>
 
+    <!-- Tabs Row -->
+    <div class="flex items-center gap-3 bg-white p-2 border border-slate-200 shadow-sm shrink-0 mb-6">
+        <div class="flex flex-1 gap-2 overflow-x-auto custom-scrollbar pb-1">
+            <a href="{{ request()->url() }}" class="px-6 py-2 font-bold shadow-sm transition-colors whitespace-nowrap text-sm uppercase tracking-wider border border-slate-200 {{ !request('party_id') ? 'bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700' : 'bg-slate-50 text-slate-700 hover:bg-slate-100' }}">
+                All Parties
+            </a>
+            @forelse($parties as $party)
+                <a href="{{ request()->url() }}?party_id={{ $party->id }}" class="px-6 py-2 font-bold shadow-sm transition-colors whitespace-nowrap text-sm uppercase tracking-wider border border-slate-200 {{ request('party_id') == $party->id ? 'bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700' : 'bg-slate-50 text-slate-700 hover:bg-slate-100' }}">
+                    {{ $party->name }}
+                </a>
+            @empty
+                <span class="text-slate-400 text-sm font-bold uppercase tracking-widest px-4 py-2">No Parties Added</span>
+            @endforelse
+        </div>
+    </div>
+
     @if(session('success'))
         <div class="mb-4 bg-green-100 border border-green-500 text-green-700 px-4 py-3 font-bold text-sm">
             {{ session('success') }}

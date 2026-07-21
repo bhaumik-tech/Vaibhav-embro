@@ -112,7 +112,15 @@
 
             <!-- Row 6: Page Permissions -->
             <div>
-                <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Page Permissions</div>
+                <div class="flex justify-between items-end mb-2">
+                    <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Page Permissions</div>
+                    <select id="firm-permission-selector" onchange="togglePermissionTable()" class="border border-slate-300 bg-white text-xs font-bold text-slate-700 p-1.5 px-3 focus:ring-1 focus:ring-indigo-500 outline-none shadow-sm cursor-pointer">
+                        <option value="global">Global (Fallback)</option>
+                        @foreach($firms as $firm)
+                            <option value="{{ $firm->id }}">{{ $firm->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="border border-slate-300 bg-white overflow-hidden shadow-sm">
                     @php
                         $pages = [
@@ -135,40 +143,79 @@
                             'parties' => 'Parties',
                             'machines' => 'Machines',
                             'karigars' => 'Karigars',
+                            'settings' => 'Settings Hub',
+                            'logo' => 'Branding & Logo',
+                            'thread_boxes_setup' => 'Thread Boxes Setup',
+                            'inter_exchange_setup' => 'Inter-Exchange Setup',
+                            'dh_cutting_person' => 'Dh. Cutting Person',
                         ];
                         $pagePerms = old('page_permissions', $user->page_permissions ?? []);
+                        
+                        $isOldFormat = false;
+                        foreach($pagePerms as $k => $v) {
+                            if(array_key_exists($k, $pages)) {
+                                $isOldFormat = true; break;
+                            }
+                        }
+
+                        $firmKeys = ['global'];
+                        foreach($firms as $firm) {
+                            $firmKeys[] = $firm->id;
+                        }
                     @endphp
-                    <table class="w-full text-left border-collapse">
-                        <thead class="bg-slate-100">
-                            <tr>
-                                <th class="p-3 text-xs font-bold text-slate-700 uppercase tracking-widest border-b border-slate-200 border-r border-slate-200">Module / Page</th>
-                                <th class="p-3 text-xs font-bold text-slate-700 uppercase tracking-widest border-b border-slate-200 text-center w-28 border-r border-slate-200">View</th>
-                                <th class="p-3 text-xs font-bold text-slate-700 uppercase tracking-widest border-b border-slate-200 text-center w-28 border-r border-slate-200">Edit / Add</th>
-                                <th class="p-3 text-xs font-bold text-slate-700 uppercase tracking-widest border-b border-slate-200 text-center w-28">Remove</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            @foreach($pages as $key => $label)
-                            @php
-                                $permsForPage = $pagePerms[$key] ?? [];
-                            @endphp
-                            <tr class="hover:bg-slate-50 transition-colors">
-                                <td class="p-3 text-sm font-extrabold text-slate-700 border-r border-slate-200 bg-slate-50/50">{{ $label }}</td>
-                                <td class="p-3 text-center border-r border-slate-200 hover:bg-blue-50/50 transition-colors">
-                                    <input type="checkbox" name="page_permissions[{{ $key }}][]" value="view" class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 cursor-pointer" {{ in_array('view', $permsForPage) ? 'checked' : '' }}>
-                                </td>
-                                <td class="p-3 text-center border-r border-slate-200 hover:bg-indigo-50/50 transition-colors">
-                                    <input type="checkbox" name="page_permissions[{{ $key }}][]" value="edit" class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500 cursor-pointer" {{ in_array('edit', $permsForPage) ? 'checked' : '' }}>
-                                </td>
-                                <td class="p-3 text-center hover:bg-red-50/50 transition-colors">
-                                    <input type="checkbox" name="page_permissions[{{ $key }}][]" value="remove" class="w-4 h-4 text-red-600 border-slate-300 rounded focus:ring-red-500 cursor-pointer" {{ in_array('remove', $permsForPage) ? 'checked' : '' }}>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    
+                    @foreach($firmKeys as $fKey)
+                    <div id="perm-table-{{ $fKey }}" class="perm-table-container {{ $fKey === 'global' ? '' : 'hidden' }}">
+                        <div class="bg-indigo-50 border-b border-slate-200 px-4 py-2 text-xs font-bold text-indigo-800 uppercase tracking-widest text-center">
+                            Permissions for: {{ $fKey === 'global' ? 'Global (Applies if no firm specific permission is set)' : $firms->firstWhere('id', $fKey)->name }}
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead class="bg-slate-100">
+                                    <tr>
+                                        <th class="p-3 text-xs font-bold text-slate-700 uppercase tracking-widest border-b border-slate-200 border-r border-slate-200">Module / Page</th>
+                                        <th class="p-3 text-xs font-bold text-slate-700 uppercase tracking-widest border-b border-slate-200 text-center w-28 border-r border-slate-200">View</th>
+                                        <th class="p-3 text-xs font-bold text-slate-700 uppercase tracking-widest border-b border-slate-200 text-center w-28 border-r border-slate-200">Edit / Add</th>
+                                        <th class="p-3 text-xs font-bold text-slate-700 uppercase tracking-widest border-b border-slate-200 text-center w-28">Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100">
+                                    @foreach($pages as $key => $label)
+                                    @php
+                                        if ($fKey === 'global' && $isOldFormat) {
+                                            $permsForPage = $pagePerms[$key] ?? [];
+                                        } else {
+                                            $permsForPage = $pagePerms[$fKey][$key] ?? [];
+                                        }
+                                    @endphp
+                                    <tr class="hover:bg-slate-50 transition-colors">
+                                        <td class="p-3 text-sm font-extrabold text-slate-700 border-r border-slate-200 bg-slate-50/50">{{ $label }}</td>
+                                        <td class="p-3 text-center border-r border-slate-200 hover:bg-blue-50/50 transition-colors">
+                                            <input type="checkbox" name="page_permissions[{{ $fKey }}][{{ $key }}][]" value="view" class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 cursor-pointer" {{ in_array('view', $permsForPage) ? 'checked' : '' }}>
+                                        </td>
+                                        <td class="p-3 text-center border-r border-slate-200 hover:bg-indigo-50/50 transition-colors">
+                                            <input type="checkbox" name="page_permissions[{{ $fKey }}][{{ $key }}][]" value="edit" class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500 cursor-pointer" {{ in_array('edit', $permsForPage) ? 'checked' : '' }}>
+                                        </td>
+                                        <td class="p-3 text-center hover:bg-red-50/50 transition-colors">
+                                            <input type="checkbox" name="page_permissions[{{ $fKey }}][{{ $key }}][]" value="remove" class="w-4 h-4 text-red-600 border-slate-300 rounded focus:ring-red-500 cursor-pointer" {{ in_array('remove', $permsForPage) ? 'checked' : '' }}>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    @endforeach
                 </div>
             </div>
+
+            <script>
+                function togglePermissionTable() {
+                    const val = document.getElementById('firm-permission-selector').value;
+                    document.querySelectorAll('.perm-table-container').forEach(el => el.classList.add('hidden'));
+                    document.getElementById('perm-table-' + val).classList.remove('hidden');
+                }
+            </script>
 
             <!-- Row 7: Buttons -->
             <div class="flex justify-end gap-4 mt-4">

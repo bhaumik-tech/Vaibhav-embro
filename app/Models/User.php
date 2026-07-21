@@ -87,17 +87,45 @@ class User extends Authenticatable
         return \App\Models\Firm::whereIn('id', $perms)->pluck('name')->toArray();
     }
 
-    /**
-     * Check if user has specific page permission.
-     * If user is admin, they have all permissions.
-     */
-    public function hasPagePermission($page, $action)
+    public function hasPagePermission($page, $action, $firmId = null)
     {
         if ($this->isAdmin()) {
             return true;
         }
 
         $perms = $this->page_permissions ?? [];
-        return isset($perms[$page]) && in_array($action, (array) $perms[$page]);
+
+        if ($firmId) {
+            // Check specific firm
+            if (isset($perms[$firmId][$page])) {
+                if ($action === 'any' && !empty($perms[$firmId][$page])) return true;
+                if (in_array($action, (array) $perms[$firmId][$page])) return true;
+            }
+            
+            // If they don't have it for this specific firm, check if it's in the 'global' fallback
+            if (isset($perms['global'][$page])) {
+                if ($action === 'any' && !empty($perms['global'][$page])) return true;
+                if (in_array($action, (array) $perms['global'][$page])) return true;
+            }
+        }
+
+        // Check if ANY firm (or global, or old format) has this permission (for sidebar visibility)
+        foreach ($perms as $key => $value) {
+            if (is_numeric($key) || $key === 'global') {
+                // New format: $value is an array of pages
+                if (is_array($value) && isset($value[$page])) {
+                    if ($action === 'any' && !empty($value[$page])) return true;
+                    if (in_array($action, (array) $value[$page])) return true;
+                }
+            } else {
+                // Old format: $key is the page name itself
+                if ($key === $page) {
+                    if ($action === 'any' && !empty($value)) return true;
+                    if (in_array($action, (array) $value)) return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

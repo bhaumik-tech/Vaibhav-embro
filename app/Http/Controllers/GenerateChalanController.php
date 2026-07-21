@@ -21,13 +21,19 @@ class GenerateChalanController extends Controller implements HasMiddleware
 
     public function index()
     {
-        $parties = Party::orderBy('name')->get();
+        $parties = Party::getPermitted();
         $query = GenerateChalan::with('items');
         if (request('party_id')) {
             $query->where('party_id', request('party_id'));
         }
-        $generateChalans = $query->latest('date')->get();
+        
         $firms = Firm::getPermitted();
+        $permittedFirmIds = $firms->pluck('id')->toArray();
+        if (!auth()->user()->isAdmin()) {
+            $query->whereIn('firm_id', $permittedFirmIds);
+        }
+        
+        $generateChalans = $query->latest('date')->get();
 
         return view('generate-chalans-index', compact('parties', 'generateChalans', 'firms'));
     }
@@ -113,7 +119,7 @@ class GenerateChalanController extends Controller implements HasMiddleware
     public function edit(GenerateChalan $generateChalan)
     {
         $firms = Firm::getPermitted();
-        $parties = Party::orderBy('name')->get();
+        $parties = Party::getPermitted();
         $generateChalan->load('items');
         return view('generate-chalan-edit', compact('generateChalan', 'firms', 'parties'));
     }

@@ -19,6 +19,8 @@ class CheckPagePermission
             abort(403, 'You do not have permission to ' . $action . ' this page.');
         }
 
+        app()->instance('current_page_permission_key', $page);
+
         return $next($request);
     }
 }

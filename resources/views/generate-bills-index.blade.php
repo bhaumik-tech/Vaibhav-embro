@@ -7,10 +7,26 @@
     <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white p-4 border border-slate-200 shadow-sm shrink-0">
         <h2 class="text-xl font-bold text-slate-800 uppercase tracking-wider">Generate Bills</h2>
         @canpage('generate_bill', 'edit')
-<a href="{{ route('generate-bills.create') }}" class="bg-indigo-600 text-white px-6 py-2 shadow-sm hover:bg-indigo-700 transition-colors uppercase font-bold text-sm">
+        <a href="{{ route('generate-bills.create') }}" class="bg-indigo-600 text-white px-6 py-2 shadow-sm hover:bg-indigo-700 transition-colors uppercase font-bold text-sm">
             + New Bill
         </a>
-@endcanpage
+        @endcanpage
+    </div>
+
+    <!-- Tabs Row -->
+    <div class="flex items-center gap-3 bg-white p-2 border border-slate-200 shadow-sm shrink-0">
+        <div class="flex flex-1 gap-2 overflow-x-auto custom-scrollbar pb-1">
+            <a href="{{ request()->url() }}" class="px-6 py-2 font-bold shadow-sm transition-colors whitespace-nowrap text-sm uppercase tracking-wider border border-slate-200 {{ !request('party_id') ? 'bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700' : 'bg-slate-50 text-slate-700 hover:bg-slate-100' }}">
+                All Parties
+            </a>
+            @forelse($parties as $party)
+                <a href="{{ request()->url() }}?party_id={{ $party->id }}" class="px-6 py-2 font-bold shadow-sm transition-colors whitespace-nowrap text-sm uppercase tracking-wider border border-slate-200 {{ request('party_id') == $party->id ? 'bg-indigo-600 text-white border-indigo-600 hover:bg-indigo-700' : 'bg-slate-50 text-slate-700 hover:bg-slate-100' }}">
+                    {{ $party->name }}
+                </a>
+            @empty
+                <span class="text-slate-400 text-sm font-bold uppercase tracking-widest px-4 py-2">No Parties Added</span>
+            @endforelse
+        </div>
     </div>
 
     <!-- Main Container -->

@@ -6,16 +6,28 @@ use Illuminate\Http\Request;
 
 class RcvdPaymentController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $payments = \App\Models\RcvdPayment::with(['party', 'firm'])->orderBy('date', 'desc')->get();
-        return view('rcvd-payment.index', compact('payments'));
+        $parties = \App\Models\Party::getPermitted();
+        $query = \App\Models\RcvdPayment::with(['party', 'firm']);
+        
+        if ($request->filled('party_id')) {
+            $query->where('party_id', $request->party_id);
+        }
+        
+        $permittedFirmIds = \App\Models\Firm::getPermitted()->pluck('id')->toArray();
+        if (!auth()->user()->isAdmin()) {
+            $query->whereIn('firm_id', $permittedFirmIds);
+        }
+        
+        $payments = $query->orderBy('date', 'desc')->get();
+        return view('rcvd-payment.index', compact('payments', 'parties'));
     }
 
     public function create()
     {
         $firms = \App\Models\Firm::getPermitted();
-        $parties = \App\Models\Party::orderBy('name')->get();
+        $parties = \App\Models\Party::getPermitted();
         return view('rcvd-payment.form', compact('firms', 'parties'));
     }
 
@@ -45,7 +57,7 @@ class RcvdPaymentController extends Controller
     public function edit(\App\Models\RcvdPayment $rcvdPayment)
     {
         $firms = \App\Models\Firm::getPermitted();
-        $parties = \App\Models\Party::orderBy('name')->get();
+        $parties = \App\Models\Party::getPermitted();
         
         return view('rcvd-payment.form', [
             'firms' => $firms,

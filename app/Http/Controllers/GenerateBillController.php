@@ -19,13 +19,21 @@ class GenerateBillController extends Controller implements HasMiddleware
         ];
     }
 
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $parties = Party::orderBy('name')->get();
+        $parties = Party::getPermitted();
         $query = GenerateBill::with(['items', 'firm', 'party']);
-        if (request('party_id')) {
-            $query->where('party_id', request('party_id'));
+        
+        if ($request->filled('party_id')) {
+            $query->where('party_id', $request->party_id);
         }
+        
+        $firms = Firm::getPermitted();
+        $permittedFirmIds = $firms->pluck('id')->toArray();
+        if (!auth()->user()->isAdmin()) {
+            $query->whereIn('firm_id', $permittedFirmIds);
+        }
+        
         $generateBills = $query->latest('date')->get();
         $firms = Firm::getPermitted();
 
@@ -35,7 +43,7 @@ class GenerateBillController extends Controller implements HasMiddleware
     public function create()
     {
         $firms = Firm::getPermitted();
-        $parties = Party::orderBy('name')->get();
+        $parties = Party::getPermitted();
         return view('generate-bill', compact('firms', 'parties'));
     }
 
@@ -88,7 +96,7 @@ class GenerateBillController extends Controller implements HasMiddleware
     public function edit(GenerateBill $generateBill)
     {
         $firms = Firm::getPermitted();
-        $parties = Party::orderBy('name')->get();
+        $parties = Party::getPermitted();
         $generateBill->load('items');
         return view('generate-bill-edit', compact('generateBill', 'firms', 'parties'));
     }

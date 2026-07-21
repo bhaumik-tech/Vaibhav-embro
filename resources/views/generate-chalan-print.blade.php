@@ -64,10 +64,10 @@
         @for($copy = 1; $copy <= 2; $copy++)
         
         <!-- Main Challan Container -->
-        <div class="flex-1 bg-white border-[3px] border-primary p-[2px] print:border-[2px] print:shadow-none shadow-xl flex flex-col" style="min-height: 195mm;">
+        <div class="flex-1 bg-white border-[3px] border-primary p-[2px] print:border-[2px] print:shadow-none shadow-xl flex flex-col ml-2 print:ml-6" style="min-height: 195mm;">
             
             <!-- Outer Wrapper with 1px border inside the 3px border -->
-            <div class="border-[1.5px] border-primary flex-1 flex flex-col relative">
+            <div class="border-[1.5px] border-primary flex-1 flex flex-col relative" style="padding-left: 2px;">
                 
                 <!-- Delivery Challan Badge -->
                 <div class="absolute top-0 right-0 bg-primary px-2 py-0.5 font-bold text-[10px] tracking-wider border-b-[1.5px] border-l-[1.5px] border-primary">
@@ -88,12 +88,12 @@
                         <div class="flex items-center">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center justify-center mr-3">
-                                <img src="{{ asset('print-logo.png') }}" alt="Logo" class="w-[75px] h-[65px] object-contain">
+                                <img src="{{ asset('print-logo.png') }}" alt="Logo" class="w-[75px] h-[78px] object-contain">
                             </div>
                             
                             <!-- Company Name -->
                             <div class="flex flex-col justify-center">
-                                <h1 class="text-2xl font-bold text-primary tracking-wide leading-tight" style="font-family: 'Times New Roman', Times, serif; text-align: center;">
+                                <h1 class="text-3xl font-bold text-primary tracking-wide leading-tight" style="font-family: 'Times New Roman', Times, serif; text-align: center;">
                                     {{ $generateChalan->firm->name }}
                                 </h1>
                                 <p class="text-primary text-[10px] leading-tight" style="text-align: center;">{{ $generateChalan->firm->address }}</p>
@@ -103,12 +103,12 @@
                 </div>
 
                 <!-- Party & Bill Info Section -->
-                <div class="flex border-b-[1.5px] border-primary">
+                <div class="flex border-b-[1.5px] border-black">
                     <!-- Left: Party Info -->
-                    <div class="flex-[3] border-r-[1.5px] border-primary p-1.5 flex flex-col text-primary">
+                    <div class="flex-[3] border-r-[1.5px] border-black p-1.5 flex flex-col text-black">
                         <div class="flex items-end mb-2">
                             <span class="font-bold text-[12px] mr-1 pb-0.5">M/s.</span>
-                            <span class="font-bold text-[14px] uppercase flex-1 border-b-[1px] border-light border-solid pb-0.5">
+                            <span class="font-bold text-[14px] uppercase flex-1 border-b-[1px] border-slate-300 border-solid pb-0.5">
                                 {{ $generateChalan->party->name }}
                             </span>
                         </div>
@@ -129,25 +129,25 @@
                     </div>
 
                     <!-- Right: Bill Info -->
-                    <div class="flex-[2] flex flex-col text-primary text-[12px] font-bold">
-                        <div class="flex-1 flex items-center px-2 border-b-[1px] border-light">
+                    <div class="flex-[2] flex flex-col text-black text-[12px] font-bold">
+                        <div class="flex-1 flex items-center px-2 border-b-[1px] border-slate-300">
                             <span class="w-[75px]">Date :</span>
                             <span class="flex-1">{{ \Carbon\Carbon::parse($generateChalan->date)->format('d/m/Y') }}</span>
                         </div>
                         <div class="flex-1 flex items-center px-2">
-                            <span class="w-[75px]">D.ch. No. :</span>
+                            <span class="w-[75px]">Ch.No:</span>
                             <span class="flex-1">{{ $generateChalan->chalan_no }}</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- Table Header -->
-                <div class="bg-primary grid-table text-[10px] font-bold">
-                    <div class="py-1 text-center border-r-[1px] border-white flex items-center justify-center">No.</div>
-                    <div class="py-1 text-center border-r-[1px] border-white flex items-center justify-center">Ch.No</div>
-                    <div class="py-1 text-center border-r-[1px] border-white flex items-center justify-center">Description</div>
-                    <div class="py-1 text-center border-r-[1px] border-white leading-tight flex items-center justify-center">Pcs.</div>
-                    <div class="py-1 text-center border-r-[1px] border-white leading-tight flex items-center justify-center">Rate Per pcs.</div>
+                <div class="bg-gray-200 grid-table text-[10px] font-bold text-black border-b-[1.5px] border-black">
+                    <div class="py-1 text-center border-r-[1px] border-slate-300 flex items-center justify-center">No.</div>
+                    <div class="py-1 text-center border-r-[1px] border-slate-300 flex items-center justify-center">Ch.No</div>
+                    <div class="py-1 text-center border-r-[1px] border-slate-300 flex items-center justify-center">Description</div>
+                    <div class="py-1 text-center border-r-[1px] border-slate-300 leading-tight flex items-center justify-center">Pcs.</div>
+                    <div class="py-1 text-center border-r-[1px] border-slate-300 leading-tight flex items-center justify-center">Rate Per pcs.</div>
                     <div class="py-1 text-center leading-tight flex items-center justify-center">Amount Ps.</div>
                 </div>
 
@@ -160,35 +160,35 @@
                     @endphp
                     
                     @for($i = 0; $i < $rowCount; $i++)
-                        <div class="grid-table border-b-[1px] border-light text-primary text-[11px] font-medium min-h-[22px]">
+                        <div class="grid-table border-b-[1px] border-slate-300 text-black text-[11px] font-medium min-h-[22px]">
                             @if(isset($generateChalan->items[$i]))
                                 @php 
                                     $item = $generateChalan->items[$i];
                                     $totalAmount += $item->amount;
                                     $totalPcs += $item->pcs;
                                 @endphp
-                                <div class="px-1 py-0.5 text-center border-r-[1px] border-light text-[#9ca3af]">{{ $i + 1 }}</div>
-                                <div class="px-1 py-0.5 text-center border-r-[1px] border-light font-bold text-gray-700">{{ $item->ch_no ?: '-' }}</div>
+                                <div class="px-1 py-0.5 text-center border-r-[1px] border-slate-300 text-[#9ca3af]">{{ $i + 1 }}</div>
+                                <div class="px-1 py-0.5 text-center border-r-[1px] border-slate-300 font-bold text-gray-700">{{ $item->ch_no ?: '-' }}</div>
                                 
-                                <div class="border-r-[1px] border-light flex uppercase">
-                                    <div class="w-[70%] px-1 py-0.5 border-r-[1px] border-light truncate text-left">{{ $item->bundle ?: '-' }}</div>
-                                    <div class="w-[30%] px-1 py-0.5 truncate text-center">{{ $item->code ?: '-' }}</div>
+                                <div class="border-r-[1px] border-slate-300 flex uppercase">
+                                    <div class="w-[30%] px-1 py-0.5 border-r-[1px] border-slate-300 truncate text-left">{{ $item->bundle ?: '-' }}</div>
+                                    <div class="w-[70%] px-1 py-0.5 truncate text-left pl-2">{{ $item->code ?: '-' }}</div>
                                 </div>
                                 
-                                <div class="px-1 py-0.5 text-center border-r-[1px] border-light font-bold">{{ $item->pcs }}</div>
-                                <div class="px-1 py-0.5 text-right pr-2 border-r-[1px] border-light">{{ str_replace('.00', '', number_format($item->rate, 2)) }}</div>
+                                <div class="px-1 py-0.5 text-center border-r-[1px] border-slate-300 font-bold">{{ $item->pcs }}</div>
+                                <div class="px-1 py-0.5 text-right pr-2 border-r-[1px] border-slate-300">{{ str_replace('.00', '', number_format($item->rate, 2)) }}</div>
                                 <div class="px-1 py-0.5 text-right pr-2 font-bold">{{ str_replace('.00', '', number_format($item->amount, 2)) }}</div>
                             @else
-                                <div class="border-r-[1px] border-light"></div>
-                                <div class="border-r-[1px] border-light"></div>
+                                <div class="border-r-[1px] border-slate-300"></div>
+                                <div class="border-r-[1px] border-slate-300"></div>
                                 
-                                <div class="border-r-[1px] border-light flex">
-                                    <div class="w-[70%] border-r-[1px] border-light"></div>
-                                    <div class="w-[30%]"></div>
+                                <div class="border-r-[1px] border-slate-300 flex">
+                                    <div class="w-[30%] border-r-[1px] border-slate-300"></div>
+                                    <div class="w-[70%]"></div>
                                 </div>
                                 
-                                <div class="border-r-[1px] border-light"></div>
-                                <div class="border-r-[1px] border-light"></div>
+                                <div class="border-r-[1px] border-slate-300"></div>
+                                <div class="border-r-[1px] border-slate-300"></div>
                                 <div></div>
                             @endif
                         </div>
@@ -196,24 +196,24 @@
                 </div>
 
                 <!-- Table Totals -->
-                <div class="grid-table border-t-[1.5px] border-b-[1.5px] border-primary bg-light-blue text-primary font-bold text-[11px]">
-                    <div class="col-span-3 py-1 pr-2 text-right border-r-[1.5px] border-primary">Total :</div>
-                    <div class="py-1 text-center border-r-[1.5px] border-primary">{{ $totalPcs }}</div>
-                    <div class="py-1 border-r-[1.5px] border-primary"></div>
+                <div class="grid-table border-t-[1.5px] border-b-[1.5px] border-black bg-gray-100 text-black font-bold text-[11px]">
+                    <div class="col-span-3 py-1 pr-2 text-right border-r-[1.5px] border-black">Total :</div>
+                    <div class="py-1 text-center border-r-[1.5px] border-black">{{ $totalPcs }}</div>
+                    <div class="py-1 border-r-[1.5px] border-black"></div>
                     <div class="py-1 text-right pr-2">{{ str_replace('.00', '', number_format($totalAmount, 2)) }}</div>
                 </div>
 
                 <!-- Taxes & Final Total -->
-                <div class="flex border-b-[1.5px] border-primary text-primary">
+                <div class="flex border-b-[1.5px] border-black text-black">
                     <!-- Left: Taxes -->
-                    <div class="flex-[3.5] border-r-[1.5px] border-primary p-1.5 flex flex-col justify-center">
-                        <div class="font-bold text-[9px] mb-0.5">GST NO. {{ $generateChalan->firm->gst ?: '24AXXXXXX1Z1' }}</div>
+                    <div class="flex-[3.5] border-r-[1.5px] border-black p-1.5 flex flex-col justify-center">
+                        <div class="font-bold text-[9px] mb-0.5">GST NO. {{ $generateChalan->firm->gst_number ?: '24AXXXXXX1Z1' }}</div>
                         <div class="font-bold text-[9px]">HSNCODE. :988821</div>
                     </div>
                     
                     <!-- Right: TOTAL Box -->
                     <div class="flex-[1.5] flex">
-                        <div class="bg-light-blue w-[60px] flex items-center justify-center font-bold text-[11px] border-r-[1.5px] border-primary">
+                        <div class="bg-gray-100 w-[60px] flex items-center justify-center font-bold text-[11px] border-r-[1.5px] border-black">
                             TOTAL
                         </div>
                         <div class="flex-1 flex items-center justify-center font-bold text-[15px] tracking-wide">
@@ -223,7 +223,7 @@
                 </div>
 
                 <!-- Amount in Words -->
-                <div class="border-b-[1.5px] border-primary p-1 text-primary text-[10px] font-bold">
+                <div class="border-b-[1.5px] border-black p-1 text-black text-[10px] font-bold">
                     <span class="mr-1">Rs.</span>
                     <span class="uppercase">
                         @php
@@ -272,9 +272,9 @@
                 </div>
 
                 <!-- Footer: Terms & Signature -->
-                <div class="flex flex-1 min-h-[70px] text-primary">
+                <div class="flex flex-1 min-h-[70px] text-black">
                     <!-- Terms -->
-                    <div class="flex-[3.5] border-r-[1.5px] border-primary p-1.5">
+                    <div class="flex-[3.5] border-r-[1.5px] border-black p-1.5">
                         <div class="font-bold text-[9px] mb-1">TERMS :</div>
                         <div class="text-[8px] leading-tight font-medium">
                             <p class="mb-0.5">(1) Inters at 2% per month will be charged amount remaining unpaid from the date of bill.</p>
@@ -286,7 +286,7 @@
                     <!-- Signature -->
                     <div class="flex-[1.5] p-1.5 flex flex-col justify-between items-center text-center">
                         <div class="font-bold text-[10px]">For, {{ $generateChalan->firm->name }}</div>
-                        <div class="w-full border-t-[1px] border-primary mt-8 pt-0.5 font-bold text-[8px]">
+                        <div class="w-full border-t-[1px] border-black mt-8 pt-0.5 font-bold text-[8px]">
                             Authorized Signature
                         </div>
                     </div>
@@ -294,6 +294,16 @@
 
             </div>
         </div>
+        
+        @if($copy == 1)
+        <!-- Cutting Line -->
+        <div class="flex flex-col items-center justify-center h-full relative" style="min-height: 195mm;">
+            <div class="h-full border-r-[1.5px] border-dashed border-gray-400"></div>
+            <div class="absolute bg-gray-100 print:bg-white rounded-full p-0.5" style="top: 50%; transform: translateY(-50%);">
+                <svg class="w-4 h-4 text-gray-400 transform -rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"></path></svg>
+            </div>
+        </div>
+        @endif
         @endfor
     </div>
 

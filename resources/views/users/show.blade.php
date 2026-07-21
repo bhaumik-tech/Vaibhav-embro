@@ -84,11 +84,25 @@
                             Page Permissions
                         </h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            @foreach($user->page_permissions as $page => $actions)
+                            @php
+                                $firms = \App\Models\Firm::pluck('name', 'id');
+                                $normalizedPerms = [];
+                                foreach($user->page_permissions as $key => $value) {
+                                    if (is_numeric($key) || $key === 'global') {
+                                        $firmLabel = $key === 'global' ? 'Global' : ($firms[$key] ?? 'Firm #'.$key);
+                                        foreach($value as $p => $acts) {
+                                            $normalizedPerms[$firmLabel . ' - ' . $p] = $acts;
+                                        }
+                                    } else {
+                                        $normalizedPerms['Legacy - ' . $key] = $value;
+                                    }
+                                }
+                            @endphp
+                            @foreach($normalizedPerms as $label => $actions)
                                 <div class="bg-white border border-slate-200 p-3 shadow-sm">
-                                    <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wider block border-b border-slate-100 pb-1 mb-2">{{ str_replace('_', ' ', $page) }}</span>
+                                    <span class="text-xs font-extrabold text-slate-800 uppercase tracking-wider block border-b border-slate-100 pb-1 mb-2">{{ str_replace('_', ' ', $label) }}</span>
                                     <div class="flex flex-wrap gap-2">
-                                        @foreach($actions as $action)
+                                        @foreach((array)$actions as $action)
                                             @php
                                                 $color = match($action) {
                                                     'view' => 'blue',

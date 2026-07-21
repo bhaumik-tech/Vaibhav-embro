@@ -157,7 +157,7 @@
         tr.innerHTML = `
             <td class="px-2 py-2 font-medium text-slate-900 text-center border-r border-slate-200 row-number align-top pt-4">${rowCount}</td>
             <td class="px-2 py-2 border-r border-slate-200 align-top">
-                <input type="text" name="items[${rowCount}][ch_no]" class="w-full border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center mt-1">
+                <input type="text" name="items[${rowCount}][ch_no]" onblur="fetchChalanDetails(this)" class="w-full border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center mt-1">
             </td>
             <td class="px-4 py-2 border-r border-slate-200 align-top">
                 <div class="flex flex-col gap-2 details-container mt-1" data-row="${rowCount}" data-detail-count="0">
@@ -170,7 +170,7 @@
                                 <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">T-B-D</li>
                             </ul>
                         </div>
-                        <input type="text" name="items[${rowCount}][details][0][value]" placeholder="#..." class="flex-1 border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center min-w-0">
+                        <input type="text" name="items[${rowCount}][details][0][value]" value="#" class="flex-1 border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center min-w-0">
                         <button type="button" onclick="addDetailRow(this)" class="text-slate-500 hover:text-indigo-600 p-1.5 bg-slate-100 hover:bg-indigo-50 border border-slate-200 shrink-0 transition-colors" title="Add Detail">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                         </button>
@@ -281,6 +281,70 @@
             total += parseFloat(input.value) || 0;
         });
         document.getElementById('grand-total').innerText = total.toFixed(2);
+    }
+
+    function fetchChalanDetails(input) {
+        const chNo = input.value;
+        const partyId = document.getElementById('party-select').value;
+        if (!chNo || !partyId) return;
+
+        fetch(`/api/generate-chalans/by-no/${chNo}?party_id=${partyId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.items && data.items.length > 0) {
+                    const tr = input.closest('tr');
+                    const rIndex = tr.querySelector('.row-number').innerText;
+                    
+                    // Clear existing details
+                    const container = tr.querySelector('.details-container');
+                    container.innerHTML = '';
+                    container.setAttribute('data-detail-count', -1);
+                    
+                    let totalPcs = 0;
+                    
+                    data.items.forEach((item, index) => {
+                        let dIndex = parseInt(container.getAttribute('data-detail-count')) + 1;
+                        container.setAttribute('data-detail-count', dIndex);
+                        
+                        const newRow = document.createElement('div');
+                        newRow.className = "flex gap-2 items-center mt-1";
+                        newRow.innerHTML = `
+                            <div class="relative combo-container w-1/3 shrink-0">
+                                <input type="text" name="items[${rIndex}][details][${dIndex}][bundle]" value="${item.bundle || 'bundles'}" class="combo-input w-full border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center" onclick="this.nextElementSibling.classList.toggle('hidden')" oninput="filterCombo(this)">
+                                <ul class="combo-list hidden absolute z-10 w-full bg-white border border-slate-200 shadow-lg max-h-40 overflow-y-auto mt-1 text-left">
+                                    <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">Top</li>
+                                    <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">T-D</li>
+                                    <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">T-B-D</li>
+                                </ul>
+                            </div>
+                            <input type="text" name="items[${rIndex}][details][${dIndex}][value]" value="${item.code || ''}" placeholder="#..." class="flex-1 border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center min-w-0">
+                            ${dIndex === 0 ? `<button type="button" onclick="addDetailRow(this)" class="text-slate-500 hover:text-indigo-600 p-1.5 bg-slate-100 hover:bg-indigo-50 border border-slate-200 shrink-0 transition-colors" title="Add Detail">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                            </button>` : `<button type="button" onclick="this.closest('.flex').remove()" class="text-slate-500 hover:text-red-600 p-1.5 bg-slate-100 hover:bg-red-50 border border-slate-200 shrink-0 transition-colors" title="Remove Detail">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
+                            </button>`}
+                        `;
+                        container.appendChild(newRow);
+                        
+                        totalPcs += parseFloat(item.pcs) || 0;
+                    });
+                    
+                    const pcsInput = tr.querySelector('input[name*="[pcs]"]');
+                    if (pcsInput) {
+                        pcsInput.value = totalPcs;
+                        calculateRowAmount(pcsInput);
+                    }
+                    
+                    if (data.items[0] && data.items[0].rate) {
+                        const rateInput = tr.querySelector('input[name*="[rate]"]');
+                        if (rateInput && !rateInput.value) { // only if empty or we should overwrite? we can overwrite
+                            rateInput.value = data.items[0].rate;
+                            calculateRowAmount(rateInput);
+                        }
+                    }
+                }
+            })
+            .catch(err => console.error(err));
     }
 
     // Initialize first row

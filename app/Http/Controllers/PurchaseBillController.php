@@ -19,16 +19,28 @@ class PurchaseBillController extends Controller implements HasMiddleware
         ];
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $purchaseBills = PurchaseBill::with(['firm', 'party'])->latest('bill_date')->get();
-        return view('purchase-bills-index', compact('purchaseBills'));
+        $parties = Party::getPermitted();
+        $query = PurchaseBill::with(['firm', 'party']);
+        
+        if ($request->filled('party_id')) {
+            $query->where('party_id', $request->party_id);
+        }
+        
+        $permittedFirmIds = Firm::getPermitted()->pluck('id')->toArray();
+        if (!auth()->user()->isAdmin()) {
+            $query->whereIn('firm_id', $permittedFirmIds);
+        }
+        
+        $purchaseBills = $query->latest('bill_date')->get();
+        return view('purchase-bills-index', compact('purchaseBills', 'parties'));
     }
 
     public function create()
     {
         $firms = Firm::getPermitted();
-        $parties = Party::orderBy('name')->get();
+        $parties = Party::getPermitted();
         return view('purchase-bill', compact('firms', 'parties'));
     }
 
@@ -54,7 +66,7 @@ class PurchaseBillController extends Controller implements HasMiddleware
     public function edit(PurchaseBill $purchaseBill)
     {
         $firms = Firm::getPermitted();
-        $parties = Party::orderBy('name')->get();
+        $parties = Party::getPermitted();
         return view('purchase-bill', compact('purchaseBill', 'firms', 'parties'));
     }
 

@@ -63,7 +63,11 @@
                         </div>
                         <div class="flex-1">
                             <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">Top / Dup</label>
-                            <input type="text" name="top_dup" placeholder="Type" class="w-full border border-slate-300 p-2 text-sm font-bold text-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-center">
+                            <select name="top_dup" class="w-full border border-slate-300 p-2 text-sm font-bold text-slate-700 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 text-center appearance-none">
+                                <option value="">Select Type</option>
+                                <option value="TOP">TOP</option>
+                                <option value="DUP">DUP</option>
+                            </select>
                         </div>
                     </div>
 
@@ -78,7 +82,6 @@
                                 Bonus on production
                             </div>
                             <div class="flex items-center">
-                                <span class="bg-slate-200 border border-slate-300 border-r-0 px-2 py-1.5 text-sm font-bold text-slate-500">₹</span>
                                 <input type="number" step="0.01" name="bonus_production_value" value="300" class="w-20 border border-slate-300 p-1.5 text-sm font-bold text-slate-700 text-center focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                             </div>
                         </div>
@@ -90,7 +93,6 @@
                                 Bonus on % (Frame)
                             </div>
                             <div class="flex items-center">
-                                <span class="bg-slate-200 border border-slate-300 border-r-0 px-2 py-1.5 text-sm font-bold text-slate-500">₹</span>
                                 <input type="number" step="0.01" name="bonus_frame_value" value="100" class="w-20 border border-slate-300 p-1.5 text-sm font-bold text-slate-700 text-center focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500">
                             </div>
                         </div>

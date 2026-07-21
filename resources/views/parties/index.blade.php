@@ -8,8 +8,16 @@
         <a href="{{ route('settings.index') }}" class="h-10 w-10 bg-white border border-slate-300 flex items-center justify-center text-slate-500 hover:bg-slate-50 hover:text-indigo-600 transition-colors shadow-sm">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
         </a>
-        <div class="bg-slate-100 border border-slate-300 py-2.5 px-6 font-bold text-slate-700 text-sm uppercase tracking-wider shadow-sm flex-1">
-            Party Management
+        <div class="bg-slate-100 border border-slate-300 py-2 px-6 font-bold text-slate-700 text-sm uppercase tracking-wider shadow-sm flex-1 flex items-center justify-between">
+            <span>Party Management</span>
+            <form method="GET" action="{{ route('parties.index') }}" class="flex items-center gap-2 m-0">
+                <select name="firm_id" onchange="this.form.submit()" class="border border-slate-300 p-1.5 text-xs font-bold text-slate-700 uppercase focus:outline-none focus:border-indigo-500 bg-white cursor-pointer">
+                    <option value="">All Firms</option>
+                    @foreach($firms as $firm)
+                        <option value="{{ $firm->id }}" {{ request('firm_id') == $firm->id ? 'selected' : '' }}>{{ $firm->name }}</option>
+                    @endforeach
+                </select>
+            </form>
         </div>
         @canpage('parties', 'edit')
         @canpage('parties', 'edit')
@@ -34,6 +42,7 @@
                     <tr class="bg-slate-100 border-b border-slate-300">
                         <th class="p-4 text-xs font-bold text-slate-700 uppercase tracking-widest border-r border-slate-300">#</th>
                         <th class="p-4 text-xs font-bold text-slate-700 uppercase tracking-widest border-r border-slate-300">Party Name</th>
+                        <th class="p-4 text-xs font-bold text-slate-700 uppercase tracking-widest border-r border-slate-300">Firm</th>
                         <th class="p-4 text-xs font-bold text-slate-700 uppercase tracking-widest border-r border-slate-300">Address</th>
                         <th class="p-4 text-xs font-bold text-slate-700 uppercase tracking-widest border-r border-slate-300">GST Number</th>
                         <th class="p-4 text-xs font-bold text-slate-700 uppercase tracking-widest text-center">Actions</th>
@@ -44,6 +53,17 @@
                         <tr class="border-b border-slate-200 hover:bg-slate-50 transition-colors">
                             <td class="p-4 text-sm font-semibold text-slate-500 border-r border-slate-200">{{ $loop->iteration }}</td>
                             <td class="p-4 text-sm font-bold text-slate-800 border-r border-slate-200">{{ $party->name }}</td>
+                            <td class="p-4 text-sm font-semibold text-indigo-600 border-r border-slate-200">
+                                @if($party->firms->count() > 0)
+                                    <div class="flex flex-wrap gap-1">
+                                        @foreach($party->firms as $firm)
+                                            <span class="bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-sm text-[10px] uppercase">{{ $firm->name }}</span>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    -
+                                @endif
+                            </td>
                             <td class="p-4 text-sm font-medium text-slate-600 border-r border-slate-200">{{ $party->address ?: '-' }}</td>
                             <td class="p-4 text-sm font-bold text-slate-600 border-r border-slate-200 tracking-wider uppercase">{{ $party->gst_number ?: '-' }}</td>
                             <td class="p-4 flex items-center justify-center gap-3">
@@ -72,7 +92,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="p-8 text-center text-slate-500 font-bold uppercase tracking-widest text-sm">
+                            <td colspan="6" class="p-8 text-center text-slate-500 font-bold uppercase tracking-widest text-sm">
                                 No Parties Found
                             </td>
                         </tr>

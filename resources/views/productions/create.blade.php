@@ -13,7 +13,7 @@
         </div>
 
         <div class="p-6 bg-white">
-            <form action="{{ route('productions.store') }}" method="POST" class="flex flex-col gap-6" id="productionForm">
+            <form action="{{ route('productions.store') }}" method="POST" class="flex flex-col gap-6" id="productionForm" data-no-autosave="true">
                 @csrf
                 
                 <!-- Row 1: Karigar & Date -->
@@ -157,9 +157,11 @@
                             <div class="relative w-24">
                                 <select name="m2_type" class="w-full border border-slate-300 p-2.5 text-xs font-bold text-slate-700 appearance-none text-center bg-white uppercase tracking-widest focus:border-indigo-500 focus:ring-0">
                                     <option value="top/dup">top/dup</option>
+                                    <option value="top">top</option>
+                                    <option value="dup">dup</option>
                                 </select>
                             </div>
-                            <input type="number" step="0.01" name="m2_total_pct" placeholder="Total %" class="flex-1 border border-slate-300 p-2.5 text-xs font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 bg-white uppercase tracking-widest">
+                            <input type="number" step="0.01" name="m2_production" placeholder="Production" class="flex-1 border border-slate-300 p-2.5 text-xs font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 bg-white uppercase tracking-widest">
                             <input type="number" step="0.01" name="m2_amount" placeholder="Amount" class="flex-1 border border-slate-300 p-2.5 text-xs font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 bg-white uppercase tracking-widest">
                             <input type="number" step="0.01" name="m2_bonus" placeholder="Bonus" class="flex-1 border border-slate-300 p-2.5 text-xs font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 bg-white uppercase tracking-widest">
                         </div>
@@ -234,6 +236,8 @@
                             <div class="relative w-24">
                                 <select name="m3_type" class="w-full border border-slate-300 p-2.5 text-xs font-bold text-slate-700 appearance-none text-center bg-white uppercase tracking-widest focus:border-indigo-500 focus:ring-0">
                                     <option value="top/dup">top/dup</option>
+                                    <option value="top">top</option>
+                                    <option value="dup">dup</option>
                                 </select>
                             </div>
                             <input type="number" step="0.01" name="m3_production" placeholder="Production" class="flex-1 border border-slate-300 p-2.5 text-xs font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 bg-white uppercase tracking-widest">
@@ -347,6 +351,8 @@
             <div class="relative w-24">
                 <select name="m_type[]" class="w-full border border-slate-300 p-2.5 text-xs font-bold text-slate-700 appearance-none text-center bg-white uppercase tracking-widest focus:border-indigo-500 focus:ring-0">
                     <option value="top/dup">top/dup</option>
+                    <option value="top">top</option>
+                    <option value="dup">dup</option>
                 </select>
             </div>
             <input type="number" step="0.01" name="m_production[]" placeholder="Production" class="flex-1 border border-slate-300 p-2.5 text-xs font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 bg-white uppercase tracking-widest">
@@ -485,5 +491,222 @@
             topMateContent.classList.remove('flex');
         }
     }
+    
+    // Auto calculate Top & Dup Production Bonus and Amount
+    document.addEventListener('DOMContentLoaded', function() {
+        const karigarsData = @json($karigars);
+        const machinesContainer = document.getElementById('machinesContainer');
+        const karigarSelect = document.getElementById('karigar_id');
+
+        machinesContainer.addEventListener('input', function(e) {
+            const row = e.target.closest('.machine-row');
+            if (!row) return;
+            
+            const karigarId = karigarSelect.value;
+            const karigar = karigarsData.find(k => k.id == karigarId);
+
+            // --- Top Mate Calculation ---
+            if (e.target.name === 'm1_production' || e.target.name === 'm2_production' || e.target.name === 'm3_production' || e.target.name === 'm_production[]') {
+                const production = parseFloat(e.target.value) || 0;
+                let bonusInput, amountInput, rate = 0;
+
+                if (e.target.name === 'm1_production') {
+                    bonusInput = row.querySelector('[name="m1_bonus"]');
+                    amountInput = row.querySelector('[name="m1_amount"]');
+                    if (karigar) rate = parseFloat(karigar.machine_1_top_rs) || 0;
+                } else if (e.target.name === 'm2_production') {
+                    bonusInput = row.querySelector('[name="m2_bonus"]');
+                    amountInput = row.querySelector('[name="m2_amount"]');
+                    if (karigar) rate = parseFloat(karigar.machine_2_top_rs) || 0;
+                } else if (e.target.name === 'm3_production') {
+                    bonusInput = row.querySelector('[name="m3_bonus"]');
+                    amountInput = row.querySelector('[name="m3_amount"]');
+                    if (karigar) rate = parseFloat(karigar.machine_3_top_rs) || 0;
+                } else {
+                    bonusInput = row.querySelector('[name="m_bonus[]"]');
+                    amountInput = row.querySelector('[name="m_amount[]"]');
+                    // Dynamic fallback
+                    if (karigar) rate = parseFloat(karigar.machine_1_top_rs) || 0;
+                }
+
+                if (production >= 300) {
+                    if (bonusInput) bonusInput.value = 100;
+                    if (rate > 0 && amountInput) amountInput.value = rate.toFixed(2);
+                } else if (production > 0) {
+                    if (bonusInput) bonusInput.value = '';
+                    if (amountInput) amountInput.value = Math.floor(production * 1.5).toFixed(2);
+                } else {
+                    if (bonusInput) bonusInput.value = '';
+                    if (amountInput) amountInput.value = '';
+                }
+            }
+
+            // --- Dup Mate Calculation ---
+            if (e.target.name && e.target.name.includes('dup_')) {
+                let rate = 0;
+                let isM1 = row.id === 'machine-1';
+                let isM2 = row.id === 'machine-2';
+                let isM3 = row.id === 'machine-3';
+                
+                if (karigar) {
+                    if (isM1) rate = parseFloat(karigar.machine_1_dup_rs) || 0;
+                    else if (isM2) rate = parseFloat(karigar.machine_2_dup_rs) || 0;
+                    else if (isM3) rate = parseFloat(karigar.machine_3_dup_rs) || 0;
+                    else rate = parseFloat(karigar.machine_1_dup_rs) || 0; // Dynamic fallback
+                }
+
+                let totalPct = 0;
+                
+                // Calculate percentage from up to 3 designs
+                for (let i = 1; i <= 3; i++) {
+                    // Match inputs for this specific row (works for both static and dynamic name formats)
+                    let proFrameInput = row.querySelector(`.content-dup-mate input[name*="pro_frame_${i}"]`);
+                    let kamInput = row.querySelector(`.content-dup-mate input[name*="kam_${i}"]`);
+                    
+                    if (proFrameInput && kamInput) {
+                        let pro = parseFloat(proFrameInput.value) || 0;
+                        let kam = parseFloat(kamInput.value) || 0;
+                        if (pro > 0) {
+                            totalPct += (kam / pro) * 100;
+                        }
+                    }
+                }
+
+                // Get result inputs
+                let dupTotalPctInput = row.querySelector('.content-dup-mate input[name*="total_pct"]');
+                let dupAmountInput = row.querySelector('.content-dup-mate input[name*="amount"]');
+                let dupBonusInput = row.querySelector('.content-dup-mate input[name*="bonus"]');
+
+                if (dupTotalPctInput) {
+                    dupTotalPctInput.value = totalPct > 0 ? totalPct.toFixed(1) : '';
+                }
+                
+                if (dupAmountInput && rate > 0 && totalPct > 0) {
+                    // If total >= 100%, give full rate (assuming normal shift capping), else pro-rata
+                    let amount = totalPct >= 100 ? rate : Math.floor(rate * (totalPct / 100));
+                    dupAmountInput.value = amount;
+                } else if (dupAmountInput) {
+                    dupAmountInput.value = '';
+                }
+                
+                if (dupBonusInput) {
+                    if (totalPct >= 100) {
+                        dupBonusInput.value = 100;
+                    } else {
+                        dupBonusInput.value = '';
+                    }
+                }
+            }
+        });
+    });
+    // --- DUAL AUTO-SAVE SYSTEM ---
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('productionForm');
+        const draftKey = 'production_draft';
+        let autoSaveTimer;
+
+        // Load Draft from Local Storage
+        const savedDraft = localStorage.getItem(draftKey);
+        if (savedDraft) {
+            try {
+                const data = JSON.parse(savedDraft);
+                
+                // Re-create dynamic machines if needed
+                const dynCount = data['dynamic_machine_count'] || 0;
+                for(let i=0; i<dynCount; i++) {
+                    document.getElementById('addMachineBtn').click();
+                }
+
+                setTimeout(() => {
+                    for (const key in data) {
+                        if (key === 'dynamic_machine_count' || key === '_token') continue;
+                        const value = data[key];
+                        const inputs = form.querySelectorAll(`[name="${key}"]`);
+                        
+                        if (inputs.length === 1) {
+                            if (inputs[0].type === 'checkbox') {
+                                inputs[0].checked = value;
+                            } else {
+                                inputs[0].value = value;
+                            }
+                        } else if (inputs.length > 1 && Array.isArray(value)) {
+                            inputs.forEach((input, index) => {
+                                if (input.type === 'checkbox') {
+                                    input.checked = value[index];
+                                } else {
+                                    input.value = value[index] !== undefined ? value[index] : '';
+                                }
+                            });
+                        }
+                    }
+                }, 500); // Wait for Karigar select side-effects to settle
+            } catch(e) { console.error('Error loading draft', e); }
+        }
+
+        // On Input: Save to Local Storage & Queue DB Save
+        form.addEventListener('input', function(e) {
+            clearTimeout(autoSaveTimer);
+            
+            // 1. Local Storage Auto-Save (Instant)
+            // Calculate dynamic count by looking at how many machine-row exist minus the 3 static ones
+            const rowCount = document.querySelectorAll('.machine-row').length;
+            const data = { dynamic_machine_count: Math.max(0, rowCount - 3) };
+            const inputs = form.querySelectorAll('input, select, textarea');
+            
+            inputs.forEach(input => {
+                if (!input.name) return;
+                
+                if (input.name.endsWith('[]')) {
+                    if (!data[input.name]) data[input.name] = [];
+                    if (input.type === 'checkbox') {
+                        data[input.name].push(input.checked);
+                    } else {
+                        data[input.name].push(input.value);
+                    }
+                } else {
+                    if (input.type === 'checkbox') {
+                        data[input.name] = input.checked;
+                    } else {
+                        data[input.name] = input.value;
+                    }
+                }
+            });
+            localStorage.setItem(draftKey, JSON.stringify(data));
+
+            // 2. DB Auto-Save via AJAX (Delayed)
+            autoSaveTimer = setTimeout(() => {
+                const karigar = document.getElementById('karigar_id').value;
+                const date = document.querySelector('[name="date"]').value;
+                if (karigar && date) {
+                    const formData = new FormData(form);
+                    fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    }).then(res => res.json())
+                    .then(resData => {
+                        let indicator = document.getElementById('autoSaveIndicator');
+                        if (!indicator) {
+                            indicator = document.createElement('div');
+                            indicator.id = 'autoSaveIndicator';
+                            indicator.className = 'fixed bottom-4 right-4 bg-indigo-50 text-indigo-700 px-4 py-2 text-xs font-bold border border-indigo-200 shadow-sm transition-opacity duration-500 rounded-sm z-50 uppercase tracking-widest';
+                            document.body.appendChild(indicator);
+                        }
+                        indicator.textContent = 'Auto-saved to database';
+                        indicator.style.opacity = '1';
+                        setTimeout(() => indicator.style.opacity = '0', 3000);
+                    }).catch(err => console.error(err));
+                }
+            }, 2000); // 2 seconds after user stops typing
+        });
+
+        // Clear Draft on explicit Submit (Enter button)
+        form.addEventListener('submit', function() {
+            localStorage.removeItem(draftKey);
+        });
+    });
 </script>
 @endsection

@@ -135,8 +135,9 @@
                     $startDate = \Carbon\Carbon::createFromDate($year, $month, 1)->startOfMonth()->format('d/m/Y');
                     $endDate = \Carbon\Carbon::createFromDate($year, $month, 1)->endOfMonth()->format('d/m/Y');
                 @endphp
-                <div class="flex-[2] border border-slate-300 bg-slate-100 p-3 text-center text-sm font-bold text-slate-700 uppercase tracking-widest shadow-sm">
-                    {{ $startDate }} To {{ $endDate }}
+                <div class="flex-[2] border border-slate-300 bg-slate-100 p-3 text-center text-sm font-bold text-slate-700 uppercase tracking-widest shadow-sm flex items-center justify-between px-6">
+                    <span>{{ $startDate }} To {{ $endDate }}</span>
+                    <span class="text-[11px] text-slate-500 font-bold bg-white px-2 py-1 border border-slate-200">Last Entry: <span class="text-indigo-600">{{ $lastAddedDateFormatted }}</span></span>
                 </div>
                 <div class="flex-1 border border-slate-300 bg-slate-100 p-3 text-center text-sm font-bold text-slate-700 shadow-sm flex items-center justify-center gap-2">
                     <span class="text-xs uppercase text-slate-500">Total Work Rs</span>

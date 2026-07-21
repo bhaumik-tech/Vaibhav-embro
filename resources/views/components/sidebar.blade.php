@@ -31,12 +31,22 @@
             ],
             'PRODUCTION' => [
                 ['name' => 'production', 'url' => '/productions', 'icon' => 'M12 14l9-5-9-5-9 5 9 5z M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z', 'permission_key' => 'production'],
+                ['name' => 'Add Production', 'url' => '/productions/create', 'icon' => 'M12 4v16m8-8H4', 'permission_key' => 'production'],
                 ['name' => 'Thread Boxes', 'url' => '/thread-boxes', 'icon' => 'M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4', 'permission_key' => 'thread_boxes'],
                 ['name' => 'Inter Exchange', 'url' => '/inter-exchange', 'icon' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4', 'permission_key' => 'inter_exchange'],
                 ['name' => 'Dhaga cutting', 'url' => '/dhaga-cuttings', 'icon' => 'M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z', 'permission_key' => 'dh_cutting'],
             ],
-            'OTHER' => [
-                ['name' => 'Settings', 'url' => '/settings', 'icon' => 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z', 'permission_key' => 'users'],
+            'SETTINGS' => [
+                ['name' => 'Settings Hub', 'url' => '/settings', 'icon' => 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z', 'permission_key' => 'settings'],
+                ['name' => 'Users', 'url' => '/settings/users', 'icon' => 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z', 'permission_key' => 'users'],
+                ['name' => 'Firms', 'url' => '/settings/firms', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4', 'permission_key' => 'firms'],
+                ['name' => 'Parties', 'url' => '/settings/parties', 'icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z', 'permission_key' => 'parties'],
+                ['name' => 'Machines', 'url' => '/settings/machines', 'icon' => 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z', 'permission_key' => 'machines'],
+                ['name' => 'Karigars', 'url' => '/settings/karigars', 'icon' => 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z', 'permission_key' => 'karigars'],
+                ['name' => 'Branding & Logo', 'url' => '/settings/logo', 'icon' => 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z', 'permission_key' => 'logo'],
+                ['name' => 'Thread Boxes Setup', 'url' => '/settings/thread-boxes-company', 'icon' => 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4', 'permission_key' => 'thread_boxes_setup'],
+                ['name' => 'Inter-Exchange Setup', 'url' => '/settings/inter-exchange-company', 'icon' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4', 'permission_key' => 'inter_exchange_setup'],
+                ['name' => 'Dh. Cutting Person', 'url' => '/settings/dh-cutting-people', 'icon' => 'M12 4v16m8-8H4', 'permission_key' => 'dh_cutting_person'],
             ],
         ];
         $currentPath = request()->path();
@@ -46,17 +56,36 @@
         @php
             $visibleItems = [];
             foreach ($items as $item) {
-                if (empty($item['permission_key']) || (auth()->check() && auth()->user()->hasPagePermission($item['permission_key'], 'view'))) {
+                if (empty($item['permission_key']) || (auth()->check() && auth()->user()->hasPagePermission($item['permission_key'], 'any'))) {
                     $visibleItems[] = $item;
                 }
             }
         @endphp
 
         @if(count($visibleItems) > 0)
-            <div class="mt-6 mb-2 px-6 sidebar-nav-title">
-                <span class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{{ $groupName }}</span>
-            </div>
-            <nav class="flex flex-col">
+            @php
+                $isGroupActive = false;
+                foreach($visibleItems as $item) {
+                    if ($currentPath === ltrim($item['url'], '/') || ($currentPath === '/' && $item['url'] === '/')) {
+                        $isGroupActive = true;
+                        break;
+                    }
+                }
+            @endphp
+            
+            @if($groupName === 'SETTINGS')
+                @php $dropdownId = 'dropdown-' . Str::slug($groupName); @endphp
+                <div class="mt-6 mb-2 px-6 sidebar-nav-title flex justify-between items-center cursor-pointer group" onclick="document.getElementById('{{ $dropdownId }}').classList.toggle('hidden'); document.getElementById('icon-{{ $dropdownId }}').classList.toggle('rotate-180')">
+                    <span class="text-[11px] font-bold text-slate-500 uppercase tracking-widest group-hover:text-indigo-600 transition-colors">{{ $groupName }}</span>
+                    <svg id="icon-{{ $dropdownId }}" class="w-4 h-4 text-slate-400 transition-transform duration-200 {{ $isGroupActive ? 'rotate-180' : '' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </div>
+                <nav id="{{ $dropdownId }}" class="flex flex-col {{ $isGroupActive ? '' : 'hidden' }} transition-all duration-300">
+            @else
+                <div class="mt-6 mb-2 px-6 sidebar-nav-title">
+                    <span class="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{{ $groupName }}</span>
+                </div>
+                <nav class="flex flex-col">
+            @endif
                 @foreach($visibleItems as $item)
                     @php
                         $isActive = $currentPath === ltrim($item['url'], '/') || ($currentPath === '/' && $item['url'] === '/');

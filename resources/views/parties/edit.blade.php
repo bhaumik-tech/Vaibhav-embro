@@ -30,10 +30,25 @@
             
             <div class="grid grid-cols-1 md:grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Name -->
-                <div class="md:col-span-2">
+                <div class="md:col-span-1">
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-widest mb-2">Party Name *</label>
                     <input type="text" name="name" required value="{{ old('name', $party->name) }}"
                         class="w-full border border-slate-300 p-3 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 bg-slate-50 font-bold text-slate-800">
+                </div>
+
+                <!-- Firm -->
+                <div class="md:col-span-1">
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-widest mb-2">Assign Firms (Optional)</label>
+                    <div class="w-full border border-slate-300 bg-slate-50 p-4 max-h-48 overflow-y-auto flex flex-col gap-3 custom-scrollbar">
+                        @foreach($firms as $firm)
+                            <label class="flex items-center gap-3 cursor-pointer group">
+                                <input type="checkbox" name="firm_ids[]" value="{{ $firm->id }}" 
+                                    {{ (is_array(old('firm_ids', $party->firms->pluck('id')->toArray())) && in_array($firm->id, old('firm_ids', $party->firms->pluck('id')->toArray()))) ? 'checked' : '' }}
+                                    class="w-4 h-4 border border-slate-300 text-indigo-600 focus:ring-indigo-500 rounded-none bg-white cursor-pointer transition-colors shadow-sm">
+                                <span class="text-sm font-bold text-slate-700 group-hover:text-indigo-600 transition-colors uppercase">{{ $firm->name }}</span>
+                            </label>
+                        @endforeach
+                    </div>
                 </div>
 
                 <!-- GST Number -->

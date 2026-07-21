@@ -89,7 +89,7 @@ class InputChalanController extends Controller implements HasMiddleware
     public function edit(InputChalan $inputChalan)
     {
         $firms = \App\Models\Firm::getPermitted();
-        $parties = \App\Models\Party::orderBy('name')->get();
+        $parties = \App\Models\Party::getPermitted();
         $inputChalan->load('items');
         return view('input-chalan-edit', compact('inputChalan', 'firms', 'parties'));
     }

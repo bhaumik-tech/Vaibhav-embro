@@ -220,6 +220,73 @@
             }
             setInterval(updateClock, 1000);
             updateClock();
+            // Universal Draft Auto-Save
+            const forms = document.querySelectorAll('form[method="POST"]');
+            forms.forEach(form => {
+                if (form.hasAttribute('data-no-autosave')) return;
+                
+                const draftKey = 'draft_' + window.location.pathname;
+
+                const savedDraft = localStorage.getItem(draftKey);
+                if (savedDraft) {
+                    try {
+                        const data = JSON.parse(savedDraft);
+                        setTimeout(() => {
+                            for (const key in data) {
+                                if (key === '_token') continue;
+                                const value = data[key];
+                                const inputs = form.querySelectorAll(`[name="${key}"]`);
+                                
+                                if (inputs.length === 1) {
+                                    if (inputs[0].type === 'checkbox' || inputs[0].type === 'radio') {
+                                        inputs[0].checked = value;
+                                    } else {
+                                        inputs[0].value = value;
+                                    }
+                                } else if (inputs.length > 1 && Array.isArray(value)) {
+                                    inputs.forEach((input, index) => {
+                                        if (input.type === 'checkbox' || input.type === 'radio') {
+                                            input.checked = value[index] || false;
+                                        } else {
+                                            input.value = value[index] !== undefined ? value[index] : '';
+                                        }
+                                    });
+                                }
+                            }
+                        }, 200);
+                    } catch(e) { console.error('Error loading draft', e); }
+                }
+
+                form.addEventListener('input', function(e) {
+                    const data = {};
+                    const inputs = form.querySelectorAll('input, select, textarea');
+                    
+                    inputs.forEach(input => {
+                        // Skip hidden inputs like _token or method spoofing to keep it clean
+                        if (!input.name || input.type === 'hidden') return;
+                        
+                        if (input.name.endsWith('[]')) {
+                            if (!data[input.name]) data[input.name] = [];
+                            if (input.type === 'checkbox' || input.type === 'radio') {
+                                data[input.name].push(input.checked);
+                            } else {
+                                data[input.name].push(input.value);
+                            }
+                        } else {
+                            if (input.type === 'checkbox' || input.type === 'radio') {
+                                data[input.name] = input.checked;
+                            } else {
+                                data[input.name] = input.value;
+                            }
+                        }
+                    });
+                    localStorage.setItem(draftKey, JSON.stringify(data));
+                });
+
+                form.addEventListener('submit', function() {
+                    localStorage.removeItem(draftKey);
+                });
+            });
         });
     </script>
 </body>

@@ -32,7 +32,7 @@ Route::middleware('auth')->group(function () {
             $query->where('party_id', request('party_id'));
             $outQuery->where('party_id', request('party_id'));
         }
-        
+
         $status = request('status', 'pending');
         if ($status === 'done') {
             $query->where('is_done', 1);
@@ -43,7 +43,7 @@ Route::middleware('auth')->group(function () {
         }
 
         $outputChalans = clone $outQuery;
-        $outputChalans = $outputChalans->latest('date')->get()->map(function($ch) {
+        $outputChalans = $outputChalans->latest('date')->get()->map(function ($ch) {
             $ch->source_type = 'output';
             return $ch;
         });
@@ -57,7 +57,7 @@ Route::middleware('auth')->group(function () {
         } else {
             $genQuery->where('is_done', 0);
         }
-        $genChalans = $genQuery->latest('date')->get()->map(function($ch) {
+        $genChalans = $genQuery->latest('date')->get()->map(function ($ch) {
             $ch->source_type = 'generate';
             $ch->total_pcs = $ch->items->sum('pcs');
             $ch->total_amount = $ch->items->sum('amount');
@@ -82,7 +82,7 @@ Route::middleware('auth')->group(function () {
             $query->where('party_id', request('party_id'));
             $outQuery->where('party_id', request('party_id'));
         }
-        
+
         $status = request('status', 'pending');
         if ($status === 'done') {
             $query->where('is_done', 1);
@@ -93,7 +93,7 @@ Route::middleware('auth')->group(function () {
         }
 
         $outputChalans = clone $outQuery;
-        $outputChalans = $outputChalans->oldest('date')->get()->map(function($ch) {
+        $outputChalans = $outputChalans->oldest('date')->get()->map(function ($ch) {
             $ch->source_type = 'output';
             return $ch;
         });
@@ -107,7 +107,7 @@ Route::middleware('auth')->group(function () {
         } else {
             $genQuery->where('is_done', 0);
         }
-        $genChalans = $genQuery->oldest('date')->get()->map(function($ch) {
+        $genChalans = $genQuery->oldest('date')->get()->map(function ($ch) {
             $ch->source_type = 'generate';
             $ch->total_pcs = clone $ch->items()->sum('pcs');
             $ch->total_pcs = $ch->items->sum('pcs');
@@ -120,7 +120,7 @@ Route::middleware('auth')->group(function () {
 
         $inputChalans = $query->oldest('date')->get();
         $outputChalans = $mergedOutputs;
-        
+
         $party = request('party_id') ? \App\Models\Party::find(request('party_id')) : null;
 
         return view('register-print', compact('inputChalans', 'outputChalans', 'party'));
@@ -131,13 +131,13 @@ Route::middleware('auth')->group(function () {
         $parties = \App\Models\Party::orderBy('name')->get();
         return view('input-chalan', compact('firms', 'parties'));
     })->middleware('page.permission:input_chalan,edit');
-    
+
     Route::post('/input-chalan', [InputChalanController::class, 'store'])->name('input-chalan.store');
     Route::post('/input-chalan/quick-store', [InputChalanController::class, 'quickStore'])->name('input-chalan.quick-store');
     Route::get('/input-chalan/{inputChalan}/edit', [InputChalanController::class, 'edit'])->name('input-chalan.edit');
     Route::put('/input-chalan/{inputChalan}', [InputChalanController::class, 'update'])->name('input-chalan.update');
     Route::delete('/input-chalan/{inputChalan}', [InputChalanController::class, 'destroy'])->name('input-chalan.destroy');
-    Route::post('/input-chalans/{inputChalan}/toggle-done', function(\App\Models\InputChalan $inputChalan) {
+    Route::post('/input-chalans/{inputChalan}/toggle-done', function (\App\Models\InputChalan $inputChalan) {
         $inputChalan->is_done = !$inputChalan->is_done;
         $inputChalan->save();
         return back()->with('success', 'Chalan status updated!');
@@ -153,7 +153,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/generate-chalans/{generateChalan}/edit', [App\Http\Controllers\GenerateChalanController::class, 'edit'])->name('generate-chalans.edit');
     Route::put('/generate-chalans/{generateChalan}', [App\Http\Controllers\GenerateChalanController::class, 'update'])->name('generate-chalans.update');
     Route::delete('/generate-chalans/{generateChalan}', [App\Http\Controllers\GenerateChalanController::class, 'destroy'])->name('generate-chalans.destroy');
-    Route::post('/generate-chalans/{generateChalan}/toggle-done', function(\App\Models\GenerateChalan $generateChalan) {
+    Route::post('/generate-chalans/{generateChalan}/toggle-done', function (\App\Models\GenerateChalan $generateChalan) {
         $generateChalan->is_done = !$generateChalan->is_done;
         $generateChalan->save();
         return back()->with('success', 'Generate Chalan status updated!');
@@ -167,7 +167,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/output-chalans/{outputChalan}/edit', [App\Http\Controllers\OutputChalanController::class, 'edit'])->name('output-chalans.edit');
     Route::put('/output-chalans/{outputChalan}', [App\Http\Controllers\OutputChalanController::class, 'update'])->name('output-chalans.update');
     Route::delete('/output-chalans/{outputChalan}', [App\Http\Controllers\OutputChalanController::class, 'destroy'])->name('output-chalans.destroy');
-    Route::post('/output-chalans/{outputChalan}/toggle-done', function(\App\Models\OutputChalan $outputChalan) {
+    Route::post('/output-chalans/{outputChalan}/toggle-done', function (\App\Models\OutputChalan $outputChalan) {
         $outputChalan->is_done = !$outputChalan->is_done;
         $outputChalan->save();
         return back()->with('success', 'Output Chalan status updated!');
@@ -180,6 +180,18 @@ Route::middleware('auth')->group(function () {
         }
         return response()->json(['error' => 'Not found'], 404);
     })->middleware('page.permission:output_chalan,view');
+
+    Route::get('/api/generate-chalans/by-no/{chalan_no}', function ($chalan_no) {
+        $chalan = \App\Models\GenerateChalan::with(['items', 'party'])->where('chalan_no', $chalan_no);
+        if (request('party_id')) {
+            $chalan->where('party_id', request('party_id'));
+        }
+        $chalan = $chalan->first();
+        if ($chalan) {
+            return response()->json($chalan);
+        }
+        return response()->json(['error' => 'Not found'], 404);
+    })->middleware('page.permission:generate_bill,view');
 
     Route::get('/generate-bills', [App\Http\Controllers\GenerateBillController::class, 'index'])->name('generate-bills.index')->middleware('page.permission:generate_bill,view');
     Route::get('/generate-bill', [App\Http\Controllers\GenerateBillController::class, 'create'])->name('generate-bills.create')->middleware('page.permission:generate_bill,edit');
@@ -251,15 +263,15 @@ Route::middleware('auth')->group(function () {
         Route::resource('users', UserController::class);
         Route::resource('firms', FirmController::class);
         Route::resource('parties', PartyController::class);
-        
+
         Route::get('thread-boxes-company', [\App\Http\Controllers\ThreadBoxSetupController::class, 'index'])->name('settings.thread-boxes-company')->middleware('page.permission:thread_boxes,view');
         Route::post('thread-boxes-company', [\App\Http\Controllers\ThreadBoxSetupController::class, 'store'])->name('settings.thread-boxes-company.store');
         Route::delete('thread-boxes-company/{companyName}', [\App\Http\Controllers\ThreadBoxSetupController::class, 'destroy'])->name('settings.thread-boxes-company.destroy');
-        
+
         Route::get('inter-exchange-company', [\App\Http\Controllers\InterExchangeSetupController::class, 'index'])->name('settings.inter-exchange-company')->middleware('page.permission:inter_exchange,view');
         Route::post('inter-exchange-company', [\App\Http\Controllers\InterExchangeSetupController::class, 'store'])->name('settings.inter-exchange-company.store');
         Route::delete('inter-exchange-company/{companyName}', [\App\Http\Controllers\InterExchangeSetupController::class, 'destroy'])->name('settings.inter-exchange-company.destroy');
-        
+
         // Logo Settings
         Route::get('logo', [LogoController::class, 'index'])->name('settings.logo');
         Route::post('logo', [LogoController::class, 'update'])->name('settings.logo.update');
