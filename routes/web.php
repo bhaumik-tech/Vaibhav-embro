@@ -16,6 +16,10 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
+Route::get('/run-migrations', function () {
+    \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+    return "Migrations executed successfully! Output: " . \Illuminate\Support\Facades\Artisan::output();
+});
 // Protected Routes
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
@@ -33,6 +37,16 @@ Route::middleware('auth')->group(function () {
             $outQuery->where('party_id', request('party_id'));
         }
 
+        if (request('filter_firm_id')) {
+            $query->where('firm_id', request('filter_firm_id'));
+            $outQuery->where('firm_id', request('filter_firm_id'));
+        }
+
+        if (request('filter_date')) {
+            $query->whereDate('date', request('filter_date'));
+            $outQuery->whereDate('date', request('filter_date'));
+        }
+
         $status = request('status', 'pending');
         if ($status === 'done') {
             $query->where('is_done', 1);
@@ -40,6 +54,19 @@ Route::middleware('auth')->group(function () {
         } else {
             $query->where('is_done', 0);
             $outQuery->where('is_done', 0);
+        }
+
+        $timeframe = request('timeframe');
+        if ($timeframe === 'current_month') {
+            $start = \Carbon\Carbon::now()->startOfMonth()->toDateString();
+            $end = \Carbon\Carbon::now()->endOfMonth()->toDateString();
+            $query->whereBetween('date', [$start, $end]);
+            $outQuery->whereBetween('date', [$start, $end]);
+        } elseif ($timeframe === 'last_month') {
+            $start = \Carbon\Carbon::now()->subMonth()->startOfMonth()->toDateString();
+            $end = \Carbon\Carbon::now()->subMonth()->endOfMonth()->toDateString();
+            $query->whereBetween('date', [$start, $end]);
+            $outQuery->whereBetween('date', [$start, $end]);
         }
 
         $outputChalans = clone $outQuery;
@@ -52,10 +79,20 @@ Route::middleware('auth')->group(function () {
         if (request('party_id')) {
             $genQuery->where('party_id', request('party_id'));
         }
+        if (request('filter_firm_id')) {
+            $genQuery->where('firm_id', request('filter_firm_id'));
+        }
+        if (request('filter_date')) {
+            $genQuery->whereDate('date', request('filter_date'));
+        }
+
         if ($status === 'done') {
             $genQuery->where('is_done', 1);
         } else {
             $genQuery->where('is_done', 0);
+        }
+        if ($timeframe === 'current_month' || $timeframe === 'last_month') {
+            $genQuery->whereBetween('date', [$start, $end]);
         }
         $genChalans = $genQuery->latest('date')->get()->map(function ($ch) {
             $ch->source_type = 'generate';
@@ -83,6 +120,16 @@ Route::middleware('auth')->group(function () {
             $outQuery->where('party_id', request('party_id'));
         }
 
+        if (request('filter_firm_id')) {
+            $query->where('firm_id', request('filter_firm_id'));
+            $outQuery->where('firm_id', request('filter_firm_id'));
+        }
+
+        if (request('filter_date')) {
+            $query->whereDate('date', request('filter_date'));
+            $outQuery->whereDate('date', request('filter_date'));
+        }
+
         $status = request('status', 'pending');
         if ($status === 'done') {
             $query->where('is_done', 1);
@@ -90,6 +137,19 @@ Route::middleware('auth')->group(function () {
         } else {
             $query->where('is_done', 0);
             $outQuery->where('is_done', 0);
+        }
+
+        $timeframe = request('timeframe');
+        if ($timeframe === 'current_month') {
+            $start = \Carbon\Carbon::now()->startOfMonth()->toDateString();
+            $end = \Carbon\Carbon::now()->endOfMonth()->toDateString();
+            $query->whereBetween('date', [$start, $end]);
+            $outQuery->whereBetween('date', [$start, $end]);
+        } elseif ($timeframe === 'last_month') {
+            $start = \Carbon\Carbon::now()->subMonth()->startOfMonth()->toDateString();
+            $end = \Carbon\Carbon::now()->subMonth()->endOfMonth()->toDateString();
+            $query->whereBetween('date', [$start, $end]);
+            $outQuery->whereBetween('date', [$start, $end]);
         }
 
         $outputChalans = clone $outQuery;
@@ -102,14 +162,23 @@ Route::middleware('auth')->group(function () {
         if (request('party_id')) {
             $genQuery->where('party_id', request('party_id'));
         }
+        if (request('filter_firm_id')) {
+            $genQuery->where('firm_id', request('filter_firm_id'));
+        }
+        if (request('filter_date')) {
+            $genQuery->whereDate('date', request('filter_date'));
+        }
+
         if ($status === 'done') {
             $genQuery->where('is_done', 1);
         } else {
             $genQuery->where('is_done', 0);
         }
+        if ($timeframe === 'current_month' || $timeframe === 'last_month') {
+            $genQuery->whereBetween('date', [$start, $end]);
+        }
         $genChalans = $genQuery->oldest('date')->get()->map(function ($ch) {
             $ch->source_type = 'generate';
-            $ch->total_pcs = clone $ch->items()->sum('pcs');
             $ch->total_pcs = $ch->items->sum('pcs');
             $ch->total_amount = $ch->items->sum('amount');
             $ch->party_chalan_no = $ch->party_ch;
@@ -129,7 +198,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/input-chalan', function () {
         $firms = \App\Models\Firm::getPermitted();
         $parties = \App\Models\Party::orderBy('name')->get();
-        return view('input-chalan', compact('firms', 'parties'));
+        $dropdownOptions = \App\Models\DropdownOption::all()->groupBy('column_name');
+        return view('input-chalan', compact('firms', 'parties', 'dropdownOptions'));
     })->middleware('page.permission:input_chalan,edit');
 
     Route::post('/input-chalan', [InputChalanController::class, 'store'])->name('input-chalan.store');
@@ -158,6 +228,7 @@ Route::middleware('auth')->group(function () {
         $generateChalan->save();
         return back()->with('success', 'Generate Chalan status updated!');
     })->name('generate-chalans.toggle-done')->middleware('page.permission:generate_chalan,edit');
+    Route::post('/generate-chalans/print-bulk', [App\Http\Controllers\GenerateChalanController::class, 'printBulk'])->name('generate-chalans.print-bulk')->middleware('page.permission:generate_chalan,view');
     Route::get('/generate-chalans/{generateChalan}/print', [App\Http\Controllers\GenerateChalanController::class, 'print'])->name('generate-chalans.print')->middleware('page.permission:generate_chalan,view');
 
     // Output Chalans (Register Side & Separate Page)
@@ -233,6 +304,7 @@ Route::middleware('auth')->group(function () {
     })->middleware('page.permission:thread_boxes,view');
 
     Route::get('/dhaga-cuttings', [\App\Http\Controllers\DhagaCuttingController::class, 'index'])->name('dhaga-cuttings.index')->middleware('page.permission:dh_cutting,view');
+    Route::get('/dhaga-cuttings/print', [\App\Http\Controllers\DhagaCuttingController::class, 'print'])->name('dhaga-cuttings.print')->middleware('page.permission:dh_cutting,view');
     Route::get('/dhaga-cuttings/create', [\App\Http\Controllers\DhagaCuttingController::class, 'create'])->name('dhaga-cuttings.create')->middleware('page.permission:dh_cutting,edit');
     Route::post('/dhaga-cuttings', [\App\Http\Controllers\DhagaCuttingController::class, 'store'])->name('dhaga-cuttings.store');
     Route::get('/dhaga-cuttings/{dhagaCutting}/edit', [\App\Http\Controllers\DhagaCuttingController::class, 'edit'])->name('dhaga-cuttings.edit');
@@ -252,6 +324,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/chat/send', [\App\Http\Controllers\ChatController::class, 'sendMessage'])->name('chat.send');
 
     // Production
+    Route::get('/productions/print', [\App\Http\Controllers\ProductionController::class, 'print'])->name('productions.print')->middleware('page.permission:production,view');
     Route::resource('productions', \App\Http\Controllers\ProductionController::class)->middleware('page.permission:production,edit');
 
     // Settings Pages
@@ -284,5 +357,10 @@ Route::middleware('auth')->group(function () {
 
         // Karigar Settings
         Route::resource('karigars', \App\Http\Controllers\KarigarController::class);
+
+        // Chalan Dropdown Options
+        Route::get('dropdown-options', [\App\Http\Controllers\DropdownOptionController::class, 'index'])->name('settings.dropdown-options');
+        Route::post('dropdown-options', [\App\Http\Controllers\DropdownOptionController::class, 'store'])->name('settings.dropdown-options.store');
+        Route::delete('dropdown-options/{dropdownOption}', [\App\Http\Controllers\DropdownOptionController::class, 'destroy'])->name('settings.dropdown-options.destroy');
     });
 });
