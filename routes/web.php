@@ -30,6 +30,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/register', function () {
         $parties = \App\Models\Party::orderBy('name')->get();
+        if (!request('party_id') && $parties->count() > 0) {
+            return redirect()->route('register.index', array_merge(request()->query(), ['party_id' => $parties->first()->id]));
+        }
+
         $query = \App\Models\InputChalan::with(['items', 'firm']);
         $outQuery = \App\Models\OutputChalan::with(['firm']);
         if (request('party_id')) {
