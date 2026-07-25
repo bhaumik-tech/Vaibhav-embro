@@ -107,16 +107,16 @@ Route::middleware('auth')->group(function () {
             return $ch;
         });
 
-        $mergedOutputs = collect()->concat($outputChalans)->concat($genChalans)->sortBy(function($item) {
+        $genChalans = $genChalans->sortBy(function($item) {
             return (int) preg_replace('/[^0-9]/', '', $item->chalan_no);
         })->values();
+
         $inputChalans = $query->get()->sortBy(function($item) {
             return (int) preg_replace('/[^0-9]/', '', $item->chalan_no);
         })->values();
-        $outputChalans = $mergedOutputs;
 
-        // Fetch associated bills for these output chalans
-        $chalanNos = $outputChalans->pluck('chalan_no')->unique()->filter()->toArray();
+        // Fetch associated bills for generate chalans
+        $chalanNos = $genChalans->pluck('chalan_no')->unique()->filter()->toArray();
         $billItems = \App\Models\GenerateBillItem::with('generateBill.firm')
                         ->whereIn('ch_no', $chalanNos)
                         ->get();
@@ -126,7 +126,7 @@ Route::middleware('auth')->group(function () {
                 $chalanBillMap[$bItem->ch_no] = $bItem->generateBill;
             }
         }
-        foreach ($outputChalans as $ch) {
+        foreach ($genChalans as $ch) {
             $ch->linked_bill = $chalanBillMap[$ch->chalan_no] ?? null;
         }
 
@@ -148,7 +148,7 @@ Route::middleware('auth')->group(function () {
 
         $firms = \App\Models\Firm::getPermitted();
 
-        return view('register', compact('parties', 'inputChalans', 'outputChalans', 'registerBills', 'firms'));
+        return view('register', compact('parties', 'inputChalans', 'outputChalans', 'genChalans', 'firms'));
     })->name('register.index')->middleware('page.permission:registers,view');
 
     Route::get('/register/print', function () {

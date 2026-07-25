@@ -308,7 +308,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($outputChalans as $oChalan)
+                            @forelse($genChalans as $oChalan)
                                 <tr class="border-b border-slate-100 hover:bg-slate-50/50 {{ $oChalan->is_done ? 'bg-indigo-50/30' : '' }}">
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center font-medium">{{ \Carbon\Carbon::parse($oChalan->date)->format('d-m-Y') }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center font-medium text-slate-700 whitespace-nowrap">{{ $oChalan->firm->name ?? '-' }}</td>
@@ -319,45 +319,24 @@
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold text-indigo-700">{{ $oChalan->linked_bill ? $oChalan->linked_bill->bill_no : '-' }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-600">{{ $oChalan->linked_bill ? $oChalan->linked_bill->firm->name : '-' }}</td>
                                     <td class="px-2 py-1.5 text-center flex gap-1 justify-center items-center h-full min-h-[36px]">
-                                        @if($oChalan->source_type === 'output')
-                                            <form action="{{ route('output-chalans.toggle-done', $oChalan->id) }}" method="POST" class="inline m-0 flex">
-                                                @csrf
-                                                <input type="checkbox" onchange="this.form.submit()" {{ $oChalan->is_done ? 'checked' : '' }} title="Mark as Done" class="w-4 h-4 text-indigo-600 bg-slate-100 border-slate-300 rounded focus:ring-indigo-500 cursor-pointer self-center">
-                                            </form>
-                                            @canpage('output_chalan', 'edit')
-<a href="{{ route('output-chalans.edit', ['outputChalan' => $oChalan->id, 'return_to' => request()->fullUrl()]) }}" class="bg-indigo-500 text-white rounded p-1 hover:bg-indigo-600 shadow-sm shrink-0 flex items-center justify-center" title="Edit">
-                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                            </a>
-@endcanpage
-                                            @canpage('output_chalan', 'remove')
-<form action="{{ route('output-chalans.destroy', $oChalan->id) }}" method="POST" class="inline m-0 flex" onsubmit="return confirm('Delete Output Chalan?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="bg-red-500 text-white rounded p-1 hover:bg-red-600 shadow-sm shrink-0 flex items-center justify-center">
-                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                                </button>
-                                            </form>
-@endcanpage
-                                        @else
-                                            <form action="{{ route('generate-chalans.toggle-done', $oChalan->id) }}" method="POST" class="inline m-0 flex">
-                                                @csrf
-                                                <input type="checkbox" onchange="this.form.submit()" {{ $oChalan->is_done ? 'checked' : '' }} title="Mark as Done" class="w-4 h-4 text-indigo-600 bg-slate-100 border-slate-300 rounded focus:ring-indigo-500 cursor-pointer self-center">
-                                            </form>
-                                            @canpage('generate_chalan', 'edit')
+                                        <form action="{{ route('generate-chalans.toggle-done', $oChalan->id) }}" method="POST" class="inline m-0 flex">
+                                            @csrf
+                                            <input type="checkbox" onchange="this.form.submit()" {{ $oChalan->is_done ? 'checked' : '' }} title="Mark as Done" class="w-4 h-4 text-indigo-600 bg-slate-100 border-slate-300 rounded focus:ring-indigo-500 cursor-pointer self-center">
+                                        </form>
+                                        @canpage('generate_chalan', 'edit')
 <a href="{{ route('generate-chalans.edit', ['generateChalan' => $oChalan->id, 'return_to' => request()->fullUrl()]) }}" class="bg-indigo-500 text-white rounded p-1 hover:bg-indigo-600 shadow-sm shrink-0 flex items-center justify-center" title="Edit">
-                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                            </a>
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                        </a>
 @endcanpage
-                                            @canpage('generate_chalan', 'remove')
+                                        @canpage('generate_chalan', 'remove')
 <form action="{{ route('generate-chalans.destroy', $oChalan->id) }}" method="POST" class="inline m-0 flex" onsubmit="return confirm('Delete Generate Chalan?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="bg-red-500 text-white rounded p-1 hover:bg-red-600 shadow-sm shrink-0 flex items-center justify-center">
-                                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                                </button>
-                                            </form>
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="bg-red-500 text-white rounded p-1 hover:bg-red-600 shadow-sm shrink-0 flex items-center justify-center">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                            </button>
+                                        </form>
 @endcanpage
-                                        @endif
                                     </td>
                                 </tr>
                             @empty
@@ -372,10 +351,10 @@
                             <tr>
                                 <td colspan="4" class="px-2 py-2 text-right border-r border-slate-200 uppercase tracking-widest text-xs text-slate-500">Total:</td>
                                 <td class="px-2 py-2 text-center border-r border-slate-200 text-indigo-700">
-                                    {{ $outputChalans->sum('total_pcs') }}
+                                    {{ $genChalans->sum('total_pcs') }}
                                 </td>
                                 <td class="px-2 py-2 text-center border-r border-slate-200 text-indigo-700">
-                                    {{ number_format($outputChalans->sum('total_amount'), 2, '.', '') }}
+                                    {{ number_format($genChalans->sum('total_amount'), 2, '.', '') }}
                                 </td>
                                 <td colspan="3" class="px-2 py-2 border-r border-slate-200"></td>
                             </tr>
@@ -387,24 +366,60 @@
                             <tr>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Date</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Firm Name</th>
-                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Bill No</th>
-                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Party Name</th>
-                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Total Amount</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Ch. No</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Party Ch.</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Total Pic</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Total Amt</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">GST Amt</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Net Amt</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Pmt Cheq Dt</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Cheq Number</th>
                                 <th class="px-2 py-3 font-semibold w-8 text-center">Act</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($registerBills as $bill)
-                                <tr class="border-b border-slate-100 hover:bg-slate-50/50">
+                            @forelse($outputChalans as $bill)
+                                @php
+                                    $gstStr = trim($bill->gst);
+                                    $gstAmount = 0;
+                                    if (is_numeric($gstStr)) {
+                                        $gstAmount = (float)$gstStr;
+                                    } elseif (str_ends_with($gstStr, '%')) {
+                                        $percent = (float)rtrim($gstStr, '%');
+                                        $gstAmount = ($bill->total_amount * $percent) / 100;
+                                    }
+                                    $netAmount = $bill->total_amount + $gstAmount;
+                                @endphp
+                                <tr class="border-b border-slate-100 hover:bg-slate-50/50 {{ $bill->is_done ? 'bg-indigo-50/30' : '' }}">
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center font-medium">{{ \Carbon\Carbon::parse($bill->date)->format('d-m-Y') }}</td>
-                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700">{{ $bill->firm->name ?? '-' }}</td>
-                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold text-indigo-700">{{ $bill->bill_no }}</td>
-                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700">{{ $bill->party->name ?? '-' }}</td>
-                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold">{{ number_format($bill->items->sum('amount'), 2, '.', '') }}</td>
-                                    <td class="px-2 py-1.5 text-center flex justify-center items-center h-full min-h-[36px]">
-                                        <a href="{{ route('generate-bills.print', $bill) }}" target="_blank" class="bg-slate-500 text-white rounded p-1 hover:bg-slate-600 shadow-sm shrink-0 flex items-center justify-center" title="Print Bill">
-                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700 whitespace-nowrap">{{ $bill->firm->name ?? '-' }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold text-indigo-700 whitespace-nowrap">{{ $bill->chalan_no }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700 whitespace-nowrap">{{ $bill->party_chalan_no ?: '-' }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold">{{ $bill->total_pcs }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center">{{ number_format($bill->total_amount, 2, '.', '') }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center">{{ $gstStr ?: '-' }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold text-indigo-700">{{ number_format($netAmount, 2, '.', '') }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center">{{ $bill->payment_date ? \Carbon\Carbon::parse($bill->payment_date)->format('d-m-Y') : '-' }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-600">{{ $bill->payment_detail ?: '-' }}</td>
+                                    <td class="px-2 py-1.5 text-center flex gap-1 justify-center items-center h-full min-h-[36px]">
+                                        <form action="{{ route('output-chalans.toggle-done', $bill->id) }}" method="POST" class="inline m-0 flex">
+                                            @csrf
+                                            <input type="checkbox" onchange="this.form.submit()" {{ $bill->is_done ? 'checked' : '' }} title="Mark as Done" class="w-4 h-4 text-indigo-600 bg-slate-100 border-slate-300 rounded focus:ring-indigo-500 cursor-pointer self-center">
+                                        </form>
+                                        @canpage('output_chalan', 'edit')
+                                        <a href="{{ route('output-chalans.edit', ['outputChalan' => $bill->id, 'return_to' => request()->fullUrl()]) }}" class="bg-indigo-500 text-white rounded p-1 hover:bg-indigo-600 shadow-sm shrink-0 flex items-center justify-center" title="Edit">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                         </a>
+                                        @endcanpage
+                                        @canpage('output_chalan', 'remove')
+                                        <form action="{{ route('output-chalans.destroy', $bill->id) }}" method="POST" class="inline m-0 flex" onsubmit="return confirm('Delete Output Bill?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="bg-red-500 text-white rounded p-1 hover:bg-red-600 shadow-sm shrink-0 flex items-center justify-center">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                            </button>
+                                        </form>
+                                        @endcanpage
                                     </td>
                                 </tr>
                             @empty
@@ -419,9 +434,12 @@
                             <tr>
                                 <td colspan="4" class="px-2 py-2 text-right border-r border-slate-200 uppercase tracking-widest text-xs text-slate-500">Total:</td>
                                 <td class="px-2 py-2 text-center border-r border-slate-200 text-indigo-700">
-                                    {{ number_format($registerBills->sum(function($b) { return $b->items->sum('amount'); }), 2, '.', '') }}
+                                    {{ $outputChalans->sum('total_pcs') }}
                                 </td>
-                                <td class="px-2 py-2 border-r border-slate-200"></td>
+                                <td class="px-2 py-2 text-center border-r border-slate-200 text-indigo-700">
+                                    {{ number_format($outputChalans->sum('total_amount'), 2, '.', '') }}
+                                </td>
+                                <td colspan="5" class="px-2 py-2 border-r border-slate-200"></td>
                             </tr>
                         </tfoot>
                     </table>
