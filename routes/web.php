@@ -30,7 +30,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/register', function () {
         $parties = \App\Models\Party::orderBy('name')->get();
-        if (!request('party_id') && $parties->count() > 0) {
+        
+        if (!request('party_id') && $parties->isNotEmpty()) {
             return redirect()->route('register.index', array_merge(request()->query(), ['party_id' => $parties->first()->id]));
         }
 
@@ -121,6 +122,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/register/print', function () {
         $parties = \App\Models\Party::orderBy('name')->get();
+        
+        if (!request('party_id') && $parties->isNotEmpty()) {
+            return redirect()->route('register.print', array_merge(request()->query(), ['party_id' => $parties->first()->id]));
+        }
+
         $query = \App\Models\InputChalan::with(['items', 'firm']);
         $outQuery = \App\Models\OutputChalan::with(['firm']);
         if (request('party_id')) {
