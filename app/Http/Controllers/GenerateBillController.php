@@ -56,6 +56,41 @@ class GenerateBillController extends Controller implements HasMiddleware
             'items' => 'required|array',
         ]);
 
+        if ($request->has('preview')) {
+            $generateBill = new GenerateBill([
+                'firm_id' => $request->firm_id,
+                'party_id' => $request->party_id,
+                'bill_no' => $request->bill_no ?? 'AUTO',
+                'date' => $request->date,
+                'name' => $request->name,
+                'add' => $request->add,
+                'gst' => $request->gst,
+                'vatav_percent' => $request->vatav_percent ?? 5.00,
+                'sgst_percent' => $request->sgst_percent ?? 2.50,
+                'cgst_percent' => $request->cgst_percent ?? 2.50,
+                'tds_percent' => $request->tds_percent ?? 1.00,
+            ]);
+            $generateBill->setRelation('firm', Firm::find($request->firm_id));
+            $generateBill->setRelation('party', Party::find($request->party_id));
+            
+            $items = collect();
+            foreach ($request->items as $item) {
+                if (!empty($item['ch_no']) || !empty($item['pcs'])) {
+                    $items->push(new \App\Models\GenerateBillItem([
+                        'sr_no' => $item['sr_no'] ?? null,
+                        'ch_no' => $item['ch_no'] ?? null,
+                        'details' => $item['details'] ?? [],
+                        'pcs' => $item['pcs'] ?? 0,
+                        'rate' => $item['rate'] ?? 0,
+                        'amount' => $item['amount'] ?? 0,
+                    ]));
+                }
+            }
+            $generateBill->setRelation('items', $items);
+            
+            return view('generate-bill-print', compact('generateBill'));
+        }
+
         $latestBill = GenerateBill::latest('id')->first();
         $nextId = $latestBill ? $latestBill->id + 1 : 1;
         $billNo = $request->bill_no ?? str_pad($nextId, 4, '0', STR_PAD_LEFT);
@@ -110,6 +145,42 @@ class GenerateBillController extends Controller implements HasMiddleware
             'date' => 'required|date',
             'items' => 'required|array',
         ]);
+
+        if ($request->has('preview')) {
+            $previewBill = new GenerateBill([
+                'firm_id' => $request->firm_id,
+                'party_id' => $request->party_id,
+                'bill_no' => $request->bill_no ?? $generateBill->bill_no,
+                'date' => $request->date,
+                'name' => $request->name,
+                'add' => $request->add,
+                'gst' => $request->gst,
+                'vatav_percent' => $request->vatav_percent ?? 5.00,
+                'sgst_percent' => $request->sgst_percent ?? 2.50,
+                'cgst_percent' => $request->cgst_percent ?? 2.50,
+                'tds_percent' => $request->tds_percent ?? 1.00,
+            ]);
+            $previewBill->id = $generateBill->id;
+            $previewBill->setRelation('firm', Firm::find($request->firm_id));
+            $previewBill->setRelation('party', Party::find($request->party_id));
+            
+            $items = collect();
+            foreach ($request->items as $item) {
+                if (!empty($item['ch_no']) || !empty($item['pcs'])) {
+                    $items->push(new \App\Models\GenerateBillItem([
+                        'sr_no' => $item['sr_no'] ?? null,
+                        'ch_no' => $item['ch_no'] ?? null,
+                        'details' => $item['details'] ?? [],
+                        'pcs' => $item['pcs'] ?? 0,
+                        'rate' => $item['rate'] ?? 0,
+                        'amount' => $item['amount'] ?? 0,
+                    ]));
+                }
+            }
+            $previewBill->setRelation('items', $items);
+            
+            return view('generate-bill-print', ['generateBill' => $previewBill]);
+        }
 
         $generateBill->update([
             'firm_id' => $request->firm_id,

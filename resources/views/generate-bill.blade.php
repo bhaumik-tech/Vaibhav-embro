@@ -132,6 +132,9 @@
             <button type="submit" name="print" value="1" class="px-6 py-2 bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors shadow-sm">
                 Save+Print
             </button>
+            <button type="submit" formtarget="_blank" name="preview" value="1" class="px-6 py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 transition-colors shadow-sm">
+                Show Bill
+            </button>
             <a href="{{ route('generate-bills.index') }}" class="px-6 py-2 bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors shadow-sm flex items-center justify-center">
                 Cancel
             </a>

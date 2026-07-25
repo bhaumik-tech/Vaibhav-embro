@@ -196,14 +196,14 @@
             Total Amount: <span id="grand-total" class="text-indigo-600">0.00</span>
         </div>
         <div class="flex gap-3">
-            <a href="{{ route('generate-bills.print', $generateBill->id) }}" target="_blank" class="px-6 py-2 bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition-colors shadow-sm flex items-center justify-center">
-                Preview Bill
-            </a>
             <button type="submit" class="px-6 py-2 bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors shadow-sm">
                 Save Changes
             </button>
             <button type="submit" name="print" value="1" class="px-6 py-2 bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors shadow-sm">
                 Save+Print
+            </button>
+            <button type="submit" formtarget="_blank" name="preview" value="1" class="px-6 py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 transition-colors shadow-sm">
+                Show Bill
             </button>
             <a href="{{ route('generate-bills.index') }}" class="px-6 py-2 bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors shadow-sm flex items-center justify-center">
                 Cancel
