@@ -196,6 +196,9 @@
             Total Amount: <span id="grand-total" class="text-indigo-600">0.00</span>
         </div>
         <div class="flex gap-3">
+            <a href="{{ route('generate-bills.print', $generateBill->id) }}" target="_blank" class="px-6 py-2 bg-emerald-600 text-white font-medium hover:bg-emerald-700 transition-colors shadow-sm flex items-center justify-center">
+                Preview Bill
+            </a>
             <button type="submit" class="px-6 py-2 bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors shadow-sm">
                 Save Changes
             </button>
