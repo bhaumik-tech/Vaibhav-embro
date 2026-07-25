@@ -162,6 +162,10 @@ class InputChalanController extends Controller implements HasMiddleware
             }
         }
 
+        if ($request->has('return_to')) {
+            return redirect($request->return_to)->with('success', 'Input Chalan updated successfully!');
+        }
+
         return redirect()->route('register.index')->with('success', 'Input Chalan updated successfully!');
     }
 

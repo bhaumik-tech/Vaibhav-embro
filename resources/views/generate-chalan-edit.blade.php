@@ -5,6 +5,9 @@
 <form action="{{ route('generate-chalans.update', $generateChalan) }}" method="POST" class="bg-white shadow-sm border border-slate-200 overflow-hidden h-full flex flex-col">
     @csrf
     @method('PUT')
+    @if(request()->has('return_to'))
+        <input type="hidden" name="return_to" value="{{ request('return_to') }}">
+    @endif
     <!-- Form Header -->
     <div class="p-4 border-b border-slate-200 bg-slate-50 flex flex-col gap-4 shrink-0">
         <!-- Top Row: Firm Dropdown -->
@@ -121,7 +124,7 @@
         <button type="submit" name="print" value="1" class="px-6 py-2 bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors shadow-sm">
             Save & Print
         </button>
-        <a href="{{ route('generate-chalans.index') }}" class="px-6 py-2 bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors shadow-sm flex items-center justify-center">
+        <a href="{{ request('return_to', route('generate-chalans.index')) }}" class="px-6 py-2 bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors shadow-sm flex items-center justify-center">
             Cancel
         </a>
     </div>

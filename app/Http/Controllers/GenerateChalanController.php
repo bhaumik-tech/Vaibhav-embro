@@ -162,6 +162,10 @@ class GenerateChalanController extends Controller implements HasMiddleware
             return redirect()->route('generate-chalans.print', $generateChalan->id);
         }
 
+        if ($request->has('return_to')) {
+            return redirect($request->return_to)->with('success', 'Generate Chalan updated successfully!');
+        }
+
         return redirect()->route('generate-chalans.index')->with('success', 'Generate Chalan updated successfully!');
     }
 

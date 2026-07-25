@@ -147,6 +147,10 @@ class OutputChalanController extends Controller implements HasMiddleware
             }
         }
 
+        if ($request->has('return_to')) {
+            return redirect($request->return_to)->with('success', 'Output Chalan updated successfully!');
+        }
+
         return redirect()->route('register.index')->with('success', 'Output Chalan updated successfully!');
     }
 

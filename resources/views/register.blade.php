@@ -135,7 +135,7 @@
                                     </td>
                                     <td class="px-2 py-1.5 text-center flex gap-1 justify-center items-center h-full min-h-[36px]">
                                         @canpage('input_chalan', 'edit')
-<a href="{{ route('input-chalan.edit', $chalan) }}" class="bg-indigo-500 text-white rounded p-1 hover:bg-indigo-600 shadow-sm shrink-0 flex items-center justify-center">
+<a href="{{ route('input-chalan.edit', ['inputChalan' => $chalan, 'return_to' => request()->fullUrl()]) }}" class="bg-indigo-500 text-white rounded p-1 hover:bg-indigo-600 shadow-sm shrink-0 flex items-center justify-center">
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                         </a>
 @endcanpage
@@ -334,7 +334,7 @@
                                                 <input type="checkbox" onchange="this.form.submit()" {{ $oChalan->is_done ? 'checked' : '' }} title="Mark as Done" class="w-4 h-4 text-indigo-600 bg-slate-100 border-slate-300 rounded focus:ring-indigo-500 cursor-pointer self-center">
                                             </form>
                                             @canpage('output_chalan', 'edit')
-<a href="{{ route('output-chalans.edit', $oChalan->id) }}" class="bg-indigo-500 text-white rounded p-1 hover:bg-indigo-600 shadow-sm shrink-0 flex items-center justify-center" title="Edit">
+<a href="{{ route('output-chalans.edit', ['outputChalan' => $oChalan->id, 'return_to' => request()->fullUrl()]) }}" class="bg-indigo-500 text-white rounded p-1 hover:bg-indigo-600 shadow-sm shrink-0 flex items-center justify-center" title="Edit">
                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                             </a>
 @endcanpage
@@ -353,7 +353,7 @@
                                                 <input type="checkbox" onchange="this.form.submit()" {{ $oChalan->is_done ? 'checked' : '' }} title="Mark as Done" class="w-4 h-4 text-indigo-600 bg-slate-100 border-slate-300 rounded focus:ring-indigo-500 cursor-pointer self-center">
                                             </form>
                                             @canpage('generate_chalan', 'edit')
-<a href="{{ route('generate-chalans.edit', $oChalan->id) }}" class="bg-indigo-500 text-white rounded p-1 hover:bg-indigo-600 shadow-sm shrink-0 flex items-center justify-center" title="Edit">
+<a href="{{ route('generate-chalans.edit', ['generateChalan' => $oChalan->id, 'return_to' => request()->fullUrl()]) }}" class="bg-indigo-500 text-white rounded p-1 hover:bg-indigo-600 shadow-sm shrink-0 flex items-center justify-center" title="Edit">
                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                             </a>
 @endcanpage
