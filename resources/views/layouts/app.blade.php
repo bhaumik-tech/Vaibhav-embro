@@ -122,11 +122,87 @@
                     <span id="global-unread-badge" class="absolute top-1 right-1 bg-red-500 text-white text-[9px] font-bold h-4 w-4 rounded-full flex items-center justify-center border-2 border-white shadow-sm" style="display: none;">0</span>
                 </a>
 
-                <!-- Notification -->
-                <button class="relative p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors focus:outline-none border border-transparent hover:border-indigo-200 hidden md:block shadow-sm" title="Notifications">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                    <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
-                </button>
+                <!-- Notification / Role Info -->
+                <div class="relative group hidden md:block">
+                    <button class="relative p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors focus:outline-none border border-transparent hover:border-indigo-200 shadow-sm cursor-pointer" title="Role & Permissions">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+                        <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-indigo-500"></span>
+                    </button>
+                    <!-- Dropdown Content -->
+                    <div class="absolute right-0 mt-1 w-80 bg-white border border-slate-200 shadow-xl hidden group-hover:block group-focus-within:block z-50 rounded-md overflow-hidden">
+                        <div class="p-3 border-b border-slate-200 bg-slate-50">
+                            <div class="font-bold text-slate-800 uppercase tracking-widest text-[11px]">Role & Access Information</div>
+                        </div>
+                        <div class="p-4 max-h-[70vh] overflow-y-auto">
+                            <div class="mb-4">
+                                <div class="text-[10px] text-slate-500 font-bold uppercase mb-1">Your Role</div>
+                                <div class="font-bold text-indigo-700 text-sm">{{ auth()->user()->post ?? 'User' }}</div>
+                            </div>
+                            <div class="mb-4">
+                                <div class="text-[10px] text-slate-500 font-bold uppercase mb-1">Permitted Firms</div>
+                                <div class="flex flex-wrap gap-1">
+                                    @php
+                                        $firmPerms = auth()->user()->getPermissionNames();
+                                    @endphp
+                                    @if(empty($firmPerms))
+                                        <span class="text-slate-400 text-xs italic">No firms assigned</span>
+                                    @else
+                                        @foreach($firmPerms as $firmName)
+                                            <span class="bg-blue-50 text-blue-700 border border-blue-200 px-2 py-1 text-[10px] font-bold uppercase rounded-sm">{{ $firmName }}</span>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-[10px] text-slate-500 font-bold uppercase mb-1">Page Access</div>
+                                <div class="flex flex-col gap-2">
+                                    @php
+                                        $pagePerms = auth()->user()->page_permissions ?? [];
+                                    @endphp
+                                    @if(auth()->user()->isAdmin())
+                                        <div class="bg-indigo-50 text-indigo-700 border border-indigo-200 px-2 py-1 text-xs font-bold rounded-sm text-center">Full System Access (Admin)</div>
+                                    @elseif(empty($pagePerms))
+                                        <span class="text-slate-400 text-xs italic">No specific page permissions</span>
+                                    @else
+                                        @foreach($pagePerms as $firmIdOrKey => $pages)
+                                            @if(!is_array($pages))
+                                                <!-- Old format fallback (if any) -->
+                                                <div class="bg-slate-50 border border-slate-200 p-2 rounded-sm">
+                                                    <div class="font-bold text-slate-700 text-[10px] uppercase mb-1">{{ str_replace('_', ' ', $firmIdOrKey) }}</div>
+                                                    <div class="flex flex-wrap gap-1">
+                                                        @foreach((array)$pages as $action)
+                                                            <span class="bg-slate-200 text-slate-700 px-1.5 py-0.5 text-[9px] font-bold uppercase rounded-sm">{{ $action }}</span>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <div class="bg-slate-50 border border-slate-200 p-2 rounded-sm relative">
+                                                    @if($firmIdOrKey === 'global')
+                                                        <div class="absolute top-0 right-0 bg-slate-800 text-white text-[8px] px-1 font-bold uppercase rounded-bl-sm">Global</div>
+                                                    @else
+                                                        <div class="absolute top-0 right-0 bg-slate-300 text-slate-800 text-[8px] px-1 font-bold uppercase rounded-bl-sm">Firm ID: {{ $firmIdOrKey }}</div>
+                                                    @endif
+                                                    @foreach($pages as $pageName => $actions)
+                                                        @if(!empty($actions))
+                                                        <div class="mb-1.5 last:mb-0 mt-1">
+                                                            <div class="font-bold text-slate-700 text-[10px] uppercase mb-1">{{ str_replace('_', ' ', $pageName) }}</div>
+                                                            <div class="flex flex-wrap gap-1">
+                                                                @foreach((array)$actions as $action)
+                                                                    <span class="bg-slate-200 text-slate-700 px-1.5 py-0.5 text-[9px] font-bold uppercase rounded-sm">{{ $action }}</span>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                        @endif
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="h-6 w-px bg-slate-200 hidden sm:block mx-1"></div>
 
