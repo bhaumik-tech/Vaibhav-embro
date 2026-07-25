@@ -72,9 +72,9 @@
                 <div class="p-3 border-b border-slate-200 bg-slate-50 flex justify-between items-center shrink-0">
                     <h3 class="font-bold text-slate-800 text-lg">Input chalan Register</h3>
                     @canpage('input_chalan', 'edit')
-                    <button type="button" onclick="document.getElementById('quick-add-row').classList.toggle('hidden')" class="bg-indigo-600 text-white rounded p-1 hover:bg-indigo-700 shadow-sm" title="Quick Add">
+                    <a href="{{ url('/input-chalan') }}" class="bg-indigo-600 text-white rounded p-1 hover:bg-indigo-700 shadow-sm inline-flex items-center justify-center" title="Add Input Chalan">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    </button>
+                    </a>
                     @endcanpage
                 </div>
                 <div class="flex-1 overflow-auto">
@@ -285,9 +285,9 @@
                 <div class="p-3 border-b border-slate-200 bg-slate-50 flex justify-between items-center shrink-0">
                     <h3 class="font-bold text-slate-800 text-lg">Output chalan Register</h3>
                     @canpage('output_chalan', 'edit')
-                    <button type="button" onclick="document.getElementById('quick-add-out-row').classList.toggle('hidden')" class="bg-indigo-600 text-white rounded p-1 hover:bg-indigo-700 shadow-sm" title="Quick Add">
+                    <a href="{{ url('/output-chalans') }}" class="bg-indigo-600 text-white rounded p-1 hover:bg-indigo-700 shadow-sm inline-flex items-center justify-center" title="Add Output Chalan">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                    </button>
+                    </a>
                     @endcanpage
                 </div>
                 <div class="flex-1 overflow-auto">
