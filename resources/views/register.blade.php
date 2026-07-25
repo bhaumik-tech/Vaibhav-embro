@@ -289,9 +289,9 @@
                         <button type="button" onclick="this.nextElementSibling.classList.toggle('hidden')" class="bg-indigo-600 text-white rounded p-1 hover:bg-indigo-700 shadow-sm inline-flex items-center justify-center focus:outline-none" title="Add Output Document">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                         </button>
-                        <div class="dropdown-menu absolute right-0 mt-1 w-44 bg-white border border-slate-200 rounded shadow-lg z-[60] hidden overflow-hidden">
-                            <a href="{{ url('/generate-chalans') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 font-medium transition-colors">Generate Challan</a>
-                            <a href="{{ url('/generate-bills') }}" class="block px-4 py-2 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 font-medium border-t border-slate-100 transition-colors">Generate Bill</a>
+                        <div class="dropdown-menu absolute right-0 mt-1 w-48 bg-white border border-slate-200 rounded-md shadow-lg z-[60] hidden overflow-hidden">
+                            <a href="{{ url('/generate-chalans') }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 font-medium transition-colors whitespace-nowrap">Generate Challan</a>
+                            <a href="{{ url('/generate-bills') }}" class="block px-4 py-2.5 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 font-medium border-t border-slate-100 transition-colors whitespace-nowrap">Generate Bill</a>
                         </div>
                     </div>
                     @endcanpage
