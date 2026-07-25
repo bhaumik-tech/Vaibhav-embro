@@ -167,36 +167,36 @@
     <!-- Footer (Taxes & Actions) -->
     <div class="shrink-0 sticky bottom-0 z-20 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)]">
         <!-- Taxes / Percentages -->
-        <div class="p-3 border-t border-slate-200 bg-white flex flex-wrap justify-end gap-4">
-            <div class="flex items-center gap-3 border border-slate-200 px-3 py-1.5 rounded bg-slate-50">
+        <div class="p-3 border-t border-slate-200 bg-white flex flex-wrap justify-between gap-4">
+            <div class="flex items-center justify-between gap-3 border border-slate-200 px-3 py-1.5 rounded bg-slate-50 flex-1 min-w-[200px]">
                 <label class="font-bold text-xs text-slate-600 uppercase whitespace-nowrap">Vatav %</label>
                 <div class="flex items-center gap-2">
                     <span id="vatav-amt" class="text-sm font-bold text-slate-600 min-w-[70px] text-right">0.00</span>
                     <input type="number" step="0.01" name="vatav_percent" value="{{ $generateBill->vatav_percent ?? 5.00 }}" class="w-16 border border-slate-300 p-1 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded text-sm">
                 </div>
             </div>
-            <div class="flex items-center gap-3 border border-slate-200 px-3 py-1.5 rounded bg-slate-50">
+            <div class="flex items-center justify-between gap-3 border border-slate-200 px-3 py-1.5 rounded bg-slate-50 flex-1 min-w-[200px]">
                 <label class="font-bold text-xs text-slate-600 uppercase whitespace-nowrap">SGST %</label>
                 <div class="flex items-center gap-2">
                     <span id="sgst-amt" class="text-sm font-bold text-slate-600 min-w-[70px] text-right">0.00</span>
                     <input type="number" step="0.01" name="sgst_percent" value="{{ $generateBill->sgst_percent ?? 2.50 }}" class="w-16 border border-slate-300 p-1 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded text-sm">
                 </div>
             </div>
-            <div class="flex items-center gap-3 border border-slate-200 px-3 py-1.5 rounded bg-slate-50">
+            <div class="flex items-center justify-between gap-3 border border-slate-200 px-3 py-1.5 rounded bg-slate-50 flex-1 min-w-[200px]">
                 <label class="font-bold text-xs text-slate-600 uppercase whitespace-nowrap">CGST %</label>
                 <div class="flex items-center gap-2">
                     <span id="cgst-amt" class="text-sm font-bold text-slate-600 min-w-[70px] text-right">0.00</span>
                     <input type="number" step="0.01" name="cgst_percent" value="{{ $generateBill->cgst_percent ?? 2.50 }}" class="w-16 border border-slate-300 p-1 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded text-sm">
                 </div>
             </div>
-            <div class="flex items-center gap-3 border border-slate-200 px-3 py-1.5 rounded bg-slate-50">
+            <div class="flex items-center justify-between gap-3 border border-slate-200 px-3 py-1.5 rounded bg-slate-50 flex-1 min-w-[200px]">
                 <label class="font-bold text-xs text-slate-600 uppercase whitespace-nowrap">TDS %</label>
                 <div class="flex items-center gap-2">
                     <span id="tds-amt" class="text-sm font-bold text-slate-600 min-w-[70px] text-right">0.00</span>
                     <input type="number" step="0.01" name="tds_percent" value="{{ $generateBill->tds_percent ?? 1.00 }}" class="w-16 border border-slate-300 p-1 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded text-sm">
                 </div>
             </div>
-            <div class="flex items-center gap-3 border border-emerald-300 px-3 py-1.5 rounded bg-emerald-50">
+            <div class="flex items-center justify-between gap-3 border border-emerald-300 px-3 py-1.5 rounded bg-emerald-50 flex-1 min-w-[200px]">
                 <label class="font-bold text-xs text-slate-700 uppercase whitespace-nowrap">Net Amount</label>
                 <span id="net-total" class="min-w-[80px] p-1 text-right font-black text-emerald-700 bg-white shadow-sm rounded border border-emerald-200 text-base">0.00</span>
             </div>
