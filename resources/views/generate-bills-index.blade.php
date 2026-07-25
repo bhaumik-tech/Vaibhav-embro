@@ -29,6 +29,39 @@
         </div>
     </div>
 
+    <!-- Filter Bar -->
+    <div class="bg-white p-2 border border-slate-200 shadow-sm shrink-0 flex flex-wrap gap-4 items-center">
+        <form action="{{ url()->current() }}" method="GET" class="flex flex-wrap items-center gap-4 m-0 w-full">
+            @if(request('party_id'))
+                <input type="hidden" name="party_id" value="{{ request('party_id') }}">
+            @endif
+            
+            <div class="flex items-center gap-2">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Search:</label>
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Bill No..." class="border-slate-300 rounded p-1.5 text-xs text-slate-700 focus:ring-indigo-500 focus:border-indigo-500 w-32" onkeydown="if(event.key === 'Enter') this.form.submit()">
+            </div>
+
+            <div class="flex items-center gap-2">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Date:</label>
+                <input type="date" name="filter_date" value="{{ request('filter_date') }}" class="border-slate-300 rounded p-1.5 text-xs text-slate-700 focus:ring-indigo-500 focus:border-indigo-500 w-32" onchange="this.form.submit()">
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Firm:</label>
+                <select name="filter_firm_id" class="border-slate-300 rounded p-1.5 text-xs text-slate-700 focus:ring-indigo-500 focus:border-indigo-500 w-40" onchange="this.form.submit()">
+                    <option value="">All Firms</option>
+                    @foreach($firms as $firm)
+                        <option value="{{ $firm->id }}" {{ request('filter_firm_id') == $firm->id ? 'selected' : '' }}>{{ $firm->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            
+            @if(request('search') || request('filter_date') || request('filter_firm_id'))
+                <a href="{{ request()->fullUrlWithQuery(['search' => null, 'filter_date' => null, 'filter_firm_id' => null]) }}" class="text-xs font-bold text-red-500 hover:text-red-700 uppercase tracking-wider">Clear Filters</a>
+            @endif
+        </form>
+    </div>
+
     <!-- Main Container -->
     <div class="flex-1 bg-white shadow-sm border border-slate-200 flex flex-col overflow-hidden">
         <div class="flex-1 overflow-auto">

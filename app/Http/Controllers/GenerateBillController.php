@@ -28,6 +28,18 @@ class GenerateBillController extends Controller implements HasMiddleware
             $query->where('party_id', $request->party_id);
         }
         
+        if ($request->filled('filter_firm_id')) {
+            $query->where('firm_id', $request->filter_firm_id);
+        }
+
+        if ($request->filled('filter_date')) {
+            $query->whereDate('date', $request->filter_date);
+        }
+
+        if ($request->filled('search')) {
+            $query->where('bill_no', 'like', '%' . $request->search . '%');
+        }
+        
         $firms = Firm::getPermitted();
         $permittedFirmIds = $firms->pluck('id')->toArray();
         if (!auth()->user()->isAdmin()) {
