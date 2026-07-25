@@ -402,6 +402,11 @@
                         partySelect.dispatchEvent(event);
                     }
 
+                    const firmSelect = document.querySelector('select[name="firm_id"]');
+                    if (!firmSelect.value && data.firm_id) {
+                        firmSelect.value = data.firm_id;
+                    }
+
                     const tr = input.closest('tr');
                     
                     const match = input.name.match(/items\[(\d+)\]/);
