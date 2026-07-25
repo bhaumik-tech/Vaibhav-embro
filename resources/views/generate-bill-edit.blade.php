@@ -475,33 +475,28 @@
                 return res.json();
             })
             .then(data => {
-                if (data && data.length > 0) {
-                    const firstChalan = data[0];
-                    if (!partyId && firstChalan.party_id) {
+                if (data && data.items && data.items.length > 0) {
+                    if (!partyId && data.party_id) {
                         const partySelect = document.getElementById('party-select');
-                        partySelect.value = firstChalan.party_id;
+                        partySelect.value = data.party_id;
                         const event = new Event('change');
                         partySelect.dispatchEvent(event);
                     }
 
                     const firmSelect = document.querySelector('select[name="firm_id"]');
-                    if (firstChalan.firm_id) {
-                        firmSelect.value = firstChalan.firm_id;
+                    if (data.firm_id) {
+                        firmSelect.value = data.firm_id;
                     }
 
                     let allItems = [];
-                    data.forEach(chalan => {
-                        if (chalan.items) {
-                            chalan.items.forEach(item => {
-                                allItems.push({
-                                    chalan_no: chalan.chalan_no,
-                                    bundle: item.bundle,
-                                    code: item.code,
-                                    pcs: item.pcs,
-                                    rate: item.rate
-                                });
-                            });
-                        }
+                    data.items.forEach(item => {
+                        allItems.push({
+                            chalan_no: data.chalan_no,
+                            bundle: item.bundle,
+                            code: item.code,
+                            pcs: item.pcs,
+                            rate: item.rate
+                        });
                     });
 
                     if (allItems.length > 0) {
