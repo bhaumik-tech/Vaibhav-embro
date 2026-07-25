@@ -86,7 +86,6 @@
                             <tr>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Dt.</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Ch. No</th>
-                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Firm</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">chart</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">detail</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Mtr.</th>
@@ -113,7 +112,6 @@
                                 <tr class="border-b border-slate-100 hover:bg-slate-50/50 {{ $chalan->is_done ? 'bg-indigo-50/30' : '' }}">
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700 font-medium whitespace-nowrap">{{ \Carbon\Carbon::parse($chalan->date)->format('d-m-Y') }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold text-indigo-700 whitespace-nowrap">{{ $chalan->chalan_no }}</td>
-                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700 font-medium whitespace-nowrap">{{ $chalan->firm->name }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700">{{ $item->chart ?: '-' }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700">{{ $item->detail ?: '-' }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700">{{ $item->mtr ?: '-' }}</td>
@@ -161,7 +159,7 @@
                         </tbody>
                         <tfoot class="bg-indigo-50/50 border-t border-slate-200 font-bold text-slate-800">
                             <tr>
-                                <td colspan="7" class="px-2 py-2 text-right border-r border-slate-200 uppercase tracking-widest text-xs text-slate-500">Total:</td>
+                                <td colspan="6" class="px-2 py-2 text-right border-r border-slate-200 uppercase tracking-widest text-xs text-slate-500">Total:</td>
                                 <td class="px-2 py-2 text-center border-r border-slate-200 text-indigo-700">
                                     {{ $inputChalans->sum(function($ch) { return $ch->items->sum('pcs'); }) }}
                                 </td>
@@ -185,14 +183,6 @@
                                 </td>
                                 <td class="px-1 py-1.5 border-r border-slate-200 text-center text-slate-400 text-xs">
                                     Auto
-                                </td>
-                                <td class="px-1 py-1.5 border-r border-slate-200">
-                                    <select form="quick-add-form" name="firm_id" required class="w-full border-slate-300 rounded-none p-1 text-xs text-center focus:ring-1 focus:ring-indigo-500 min-w-[4rem] bg-white">
-                                        <option value="" disabled selected>Firm...</option>
-                                        @foreach($firms as $firm)
-                                            <option value="{{ $firm->id }}">{{ $firm->name }}</option>
-                                        @endforeach
-                                    </select>
                                 </td>
                                 <td class="px-1 py-1.5 border-r border-slate-200">
                                     <div class="relative combo-container">
@@ -305,7 +295,6 @@
                             <tr>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Dt.</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Ch. No</th>
-                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Firm</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Party Ch.</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">T. Pcs</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">T. Rs</th>
@@ -320,7 +309,6 @@
                                 <tr class="border-b border-slate-100 hover:bg-slate-50/50 {{ $oChalan->is_done ? 'bg-indigo-50/30' : '' }}">
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center font-medium">{{ \Carbon\Carbon::parse($oChalan->date)->format('d-m-Y') }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold text-indigo-700 whitespace-nowrap">{{ $oChalan->chalan_no }}</td>
-                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700 font-medium whitespace-nowrap">{{ $oChalan->firm->name }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700 whitespace-nowrap">{{ $oChalan->party_chalan_no ?: '-' }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold">{{ $oChalan->total_pcs }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center">{{ $oChalan->total_amount }}</td>
@@ -379,7 +367,7 @@
                         </tbody>
                         <tfoot class="bg-indigo-50/50 border-t border-slate-200 font-bold text-slate-800">
                             <tr>
-                                <td colspan="4" class="px-2 py-2 text-right border-r border-slate-200 uppercase tracking-widest text-xs text-slate-500">Total:</td>
+                                <td colspan="3" class="px-2 py-2 text-right border-r border-slate-200 uppercase tracking-widest text-xs text-slate-500">Total:</td>
                                 <td class="px-2 py-2 text-center border-r border-slate-200 text-indigo-700">
                                     {{ $outputChalans->sum('total_pcs') }}
                                 </td>
@@ -396,14 +384,6 @@
                                 </td>
                                 <td class="px-1 py-1.5 border-r border-slate-200">
                                     <input form="quick-add-out-form" name="chalan_no" type="text" placeholder="Ch. No" class="w-full border-slate-300 rounded-none p-1 text-xs focus:ring-1 focus:ring-indigo-500 text-center bg-white min-w-[3rem]">
-                                </td>
-                                <td class="px-1 py-1.5 border-r border-slate-200">
-                                    <select form="quick-add-out-form" name="firm_id" required class="w-full border-slate-300 rounded-none p-1 text-xs text-center focus:ring-1 focus:ring-indigo-500 bg-white">
-                                        <option value="" disabled selected>Firm...</option>
-                                        @foreach($firms as $firm)
-                                            <option value="{{ $firm->id }}">{{ $firm->name }}</option>
-                                        @endforeach
-                                    </select>
                                 </td>
                                 <td class="px-1 py-1.5 border-r border-slate-200">
                                     <input form="quick-add-out-form" name="party_ch" type="text" placeholder="Party Ch." class="w-full border-slate-300 rounded-none p-1 text-xs focus:ring-1 focus:ring-indigo-500 text-center bg-white min-w-[4rem]">
