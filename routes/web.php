@@ -115,9 +115,40 @@ Route::middleware('auth')->group(function () {
         })->values();
         $outputChalans = $mergedOutputs;
 
+        // Fetch associated bills for these output chalans
+        $chalanNos = $outputChalans->pluck('chalan_no')->unique()->filter()->toArray();
+        $billItems = \App\Models\GenerateBillItem::with('generateBill.firm')
+                        ->whereIn('ch_no', $chalanNos)
+                        ->get();
+        $chalanBillMap = [];
+        foreach ($billItems as $bItem) {
+            if ($bItem->generateBill) {
+                $chalanBillMap[$bItem->ch_no] = $bItem->generateBill;
+            }
+        }
+        foreach ($outputChalans as $ch) {
+            $ch->linked_bill = $chalanBillMap[$ch->chalan_no] ?? null;
+        }
+
+        // Fetch bills for the Bills tab
+        $billsQuery = \App\Models\GenerateBill::with(['firm', 'party']);
+        if (request('party_id')) {
+            $billsQuery->where('party_id', request('party_id'));
+        }
+        if (request('filter_firm_id')) {
+            $billsQuery->where('firm_id', request('filter_firm_id'));
+        }
+        if (request('filter_date')) {
+            $billsQuery->whereDate('date', request('filter_date'));
+        }
+        if ($timeframe === 'current_month' || $timeframe === 'last_month') {
+            $billsQuery->whereBetween('date', [$start, $end]);
+        }
+        $registerBills = $billsQuery->latest('date')->get();
+
         $firms = \App\Models\Firm::getPermitted();
 
-        return view('register', compact('parties', 'inputChalans', 'outputChalans', 'firms'));
+        return view('register', compact('parties', 'inputChalans', 'outputChalans', 'registerBills', 'firms'));
     })->name('register.index')->middleware('page.permission:registers,view');
 
     Route::get('/register/print', function () {

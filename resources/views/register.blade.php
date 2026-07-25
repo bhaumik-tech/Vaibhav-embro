@@ -273,7 +273,10 @@
             <!-- Right Ledger Card -->
             <div class="flex-1 bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col overflow-hidden">
                 <div class="p-3 border-b border-slate-200 bg-slate-50 flex justify-between items-center shrink-0">
-                    <h3 class="font-bold text-slate-800 text-lg">Output chalan Register</h3>
+                    <div class="flex items-center gap-6">
+                        <button onclick="toggleOutputTab('challan')" id="tab-btn-challan" class="font-bold text-lg whitespace-nowrap text-indigo-700 border-b-2 border-indigo-700 transition-colors uppercase tracking-wider pb-1">Challans</button>
+                        <button onclick="toggleOutputTab('bill')" id="tab-btn-bill" class="font-bold text-lg whitespace-nowrap text-slate-400 hover:text-slate-600 border-b-2 border-transparent transition-colors uppercase tracking-wider pb-1">Bills</button>
+                    </div>
                     @canpage('output_chalan', 'edit')
                     <div class="relative" onmouseleave="this.querySelector('.dropdown-menu').classList.add('hidden')">
                         <button type="button" onclick="this.nextElementSibling.classList.toggle('hidden')" class="bg-indigo-600 text-white rounded p-1 hover:bg-indigo-700 shadow-sm inline-flex items-center justify-center focus:outline-none" title="Add Output Document">
@@ -290,31 +293,31 @@
                     <form id="quick-add-out-form" action="{{ route('output-chalans.quick-store') }}" method="POST">
                         @csrf
                     </form>
-                    <table class="w-full text-xs text-left whitespace-nowrap">
-                        <thead class="text-slate-500 bg-white sticky top-0 border-b border-slate-200 shadow-sm">
+                    <table id="table-challans" class="w-full text-xs text-left whitespace-nowrap">
+                        <thead class="text-slate-500 bg-white sticky top-0 border-b border-slate-200 shadow-sm z-10">
                             <tr>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Dt.</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Firm Name</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Ch. No</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Party Ch.</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">T. Pcs</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">T. Rs</th>
-                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">GST(%)</th>
-                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">P.date</th>
-                                <th class="px-2 py-3 font-semibold text-center">P. Dtl</th>
-                                <th class="px-2 py-3 font-semibold w-8"></th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Bill No</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Bill Firm</th>
+                                <th class="px-2 py-3 font-semibold text-center w-8">Act</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($outputChalans as $oChalan)
                                 <tr class="border-b border-slate-100 hover:bg-slate-50/50 {{ $oChalan->is_done ? 'bg-indigo-50/30' : '' }}">
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center font-medium">{{ \Carbon\Carbon::parse($oChalan->date)->format('d-m-Y') }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center font-medium text-slate-700 whitespace-nowrap">{{ $oChalan->firm->name ?? '-' }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold text-indigo-700 whitespace-nowrap">{{ $oChalan->chalan_no }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700 whitespace-nowrap">{{ $oChalan->party_chalan_no ?: '-' }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold">{{ $oChalan->total_pcs }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center">{{ $oChalan->total_amount }}</td>
-                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center">{{ $oChalan->gst ?: '-' }}</td>
-                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center">{{ $oChalan->payment_date ? \Carbon\Carbon::parse($oChalan->payment_date)->format('d-m-Y') : '-' }}</td>
-                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center">{{ $oChalan->payment_detail ?: '-' }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold text-indigo-700">{{ $oChalan->linked_bill ? $oChalan->linked_bill->bill_no : '-' }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-600">{{ $oChalan->linked_bill ? $oChalan->linked_bill->firm->name : '-' }}</td>
                                     <td class="px-2 py-1.5 text-center flex gap-1 justify-center items-center h-full min-h-[36px]">
                                         @if($oChalan->source_type === 'output')
                                             <form action="{{ route('output-chalans.toggle-done', $oChalan->id) }}" method="POST" class="inline m-0 flex">
@@ -367,58 +370,58 @@
                         </tbody>
                         <tfoot class="bg-indigo-50/50 border-t border-slate-200 font-bold text-slate-800">
                             <tr>
-                                <td colspan="3" class="px-2 py-2 text-right border-r border-slate-200 uppercase tracking-widest text-xs text-slate-500">Total:</td>
+                                <td colspan="4" class="px-2 py-2 text-right border-r border-slate-200 uppercase tracking-widest text-xs text-slate-500">Total:</td>
                                 <td class="px-2 py-2 text-center border-r border-slate-200 text-indigo-700">
                                     {{ $outputChalans->sum('total_pcs') }}
                                 </td>
                                 <td class="px-2 py-2 text-center border-r border-slate-200 text-indigo-700">
                                     {{ number_format($outputChalans->sum('total_amount'), 2, '.', '') }}
                                 </td>
-                                <td colspan="4" class="px-2 py-2 border-r border-slate-200"></td>
+                                <td colspan="3" class="px-2 py-2 border-r border-slate-200"></td>
                             </tr>
                         </tfoot>
-                        <tfoot id="quick-add-out-row" class="hidden bg-indigo-50 sticky bottom-0 border-t border-slate-200 shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+                    </table>
+
+                    <table id="table-bills" class="w-full text-xs text-left whitespace-nowrap hidden">
+                        <thead class="text-slate-500 bg-white sticky top-0 border-b border-slate-200 shadow-sm z-10">
                             <tr>
-                                <td class="px-1 py-1.5 border-r border-slate-200">
-                                    <input form="quick-add-out-form" name="date" type="date" value="{{ date('Y-m-d') }}" class="w-full border-slate-300 rounded-none p-1 text-xs focus:ring-1 focus:ring-indigo-500 text-center bg-white min-w-[5rem]">
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Date</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Firm Name</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Bill No</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Party Name</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Total Amount</th>
+                                <th class="px-2 py-3 font-semibold w-8 text-center">Act</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($registerBills as $bill)
+                                <tr class="border-b border-slate-100 hover:bg-slate-50/50">
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center font-medium">{{ \Carbon\Carbon::parse($bill->date)->format('d-m-Y') }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700">{{ $bill->firm->name ?? '-' }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold text-indigo-700">{{ $bill->bill_no }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700">{{ $bill->party->name ?? '-' }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold">{{ number_format($bill->items->sum('amount'), 2, '.', '') }}</td>
+                                    <td class="px-2 py-1.5 text-center flex justify-center items-center h-full min-h-[36px]">
+                                        <a href="{{ route('generate-bills.print', $bill) }}" target="_blank" class="bg-slate-500 text-white rounded p-1 hover:bg-slate-600 shadow-sm shrink-0 flex items-center justify-center" title="Print Bill">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="p-8 text-center text-slate-500 font-bold uppercase tracking-widest text-sm">
+                                        No Bills Found
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                        <tfoot class="bg-indigo-50/50 border-t border-slate-200 font-bold text-slate-800">
+                            <tr>
+                                <td colspan="4" class="px-2 py-2 text-right border-r border-slate-200 uppercase tracking-widest text-xs text-slate-500">Total:</td>
+                                <td class="px-2 py-2 text-center border-r border-slate-200 text-indigo-700">
+                                    {{ number_format($registerBills->sum(function($b) { return $b->items->sum('amount'); }), 2, '.', '') }}
                                 </td>
-                                <td class="px-1 py-1.5 border-r border-slate-200">
-                                    <input form="quick-add-out-form" name="chalan_no" type="text" placeholder="Ch. No" class="w-full border-slate-300 rounded-none p-1 text-xs focus:ring-1 focus:ring-indigo-500 text-center bg-white min-w-[3rem]">
-                                </td>
-                                <td class="px-1 py-1.5 border-r border-slate-200">
-                                    <input form="quick-add-out-form" name="party_ch" type="text" placeholder="Party Ch." class="w-full border-slate-300 rounded-none p-1 text-xs focus:ring-1 focus:ring-indigo-500 text-center bg-white min-w-[4rem]">
-                                </td>
-                                <td class="px-1 py-1.5 border-r border-slate-200">
-                                    <input form="quick-add-out-form" name="t_pcs" type="number" placeholder="T. Pcs" class="w-full border-slate-300 rounded-none p-1 text-xs focus:ring-1 focus:ring-indigo-500 text-center bg-white min-w-[3rem] font-bold">
-                                </td>
-                                <td class="px-1 py-1.5 border-r border-slate-200">
-                                    <input form="quick-add-out-form" name="t_rs" type="number" step="0.01" placeholder="T. Rs" class="w-full border-slate-300 rounded-none p-1 text-xs focus:ring-1 focus:ring-indigo-500 text-center bg-white min-w-[4rem]">
-                                </td>
-                                <td class="px-1 py-1.5 border-r border-slate-200">
-                                    <input form="quick-add-out-form" name="gst" type="text" placeholder="GST" class="w-full border-slate-300 rounded-none p-1 text-xs focus:ring-1 focus:ring-indigo-500 text-center bg-white min-w-[3rem]">
-                                </td>
-                                <td class="px-1 py-1.5 border-r border-slate-200">
-                                    <input form="quick-add-out-form" name="payment_date" type="date" class="w-full border-slate-300 rounded-none p-1 text-xs focus:ring-1 focus:ring-indigo-500 text-center bg-white min-w-[5rem]">
-                                </td>
-                                <td class="px-1 py-1.5 border-r border-slate-200">
-                                    <input form="quick-add-out-form" name="payment_detail" type="text" placeholder="Detail" class="w-full border-slate-300 rounded-none p-1 text-xs focus:ring-1 focus:ring-indigo-500 text-center bg-white min-w-[4rem]">
-                                    @if(request('party_id'))
-                                        <input form="quick-add-out-form" type="hidden" name="party_id" value="{{ request('party_id') }}">
-                                    @else
-                                        <!-- If no party is selected, we need them to select it. For now, since the left side forces a dropdown if no party, we will just use a hidden input of the first party as fallback, or show a tiny dropdown. -->
-                                        <select form="quick-add-out-form" name="party_id" required class="mt-1 w-full border-slate-300 rounded-none p-1 text-xs text-center focus:ring-1 focus:ring-indigo-500 bg-white">
-                                            <option value="" disabled selected>Party...</option>
-                                            @foreach($parties as $party)
-                                                <option value="{{ $party->id }}">{{ $party->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    @endif
-                                </td>
-                                <td class="px-1 py-1.5 text-center">
-                                    <button form="quick-add-out-form" type="submit" class="bg-indigo-600 text-white rounded-none p-1 hover:bg-indigo-700 shadow-sm w-full font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1 h-full min-h-[30px]">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4"/></svg>
-                                    </button>
-                                </td>
+                                <td class="px-2 py-2 border-r border-slate-200"></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -461,6 +464,34 @@
 </div>
 
 <script>
+    function toggleOutputTab(tab) {
+        const tableChallans = document.getElementById('table-challans');
+        const tableBills = document.getElementById('table-bills');
+        const btnChallan = document.getElementById('tab-btn-challan');
+        const btnBill = document.getElementById('tab-btn-bill');
+
+        if (tab === 'challan') {
+            tableChallans.classList.remove('hidden');
+            tableBills.classList.add('hidden');
+            
+            btnChallan.classList.remove('text-slate-400', 'border-transparent');
+            btnChallan.classList.add('text-indigo-700', 'border-indigo-700');
+            
+            btnBill.classList.remove('text-indigo-700', 'border-indigo-700');
+            btnBill.classList.add('text-slate-400', 'border-transparent');
+        } else {
+            tableBills.classList.remove('hidden');
+            tableChallans.classList.add('hidden');
+            
+            btnBill.classList.remove('text-slate-400', 'border-transparent');
+            btnBill.classList.add('text-indigo-700', 'border-indigo-700');
+            
+            btnChallan.classList.remove('text-indigo-700', 'border-indigo-700');
+            btnChallan.classList.add('text-slate-400', 'border-transparent');
+        }
+    }
+
+    // Existing print functionality...
     function filterCombo(input) {
         const filter = input.value.toLowerCase();
         const list = input.nextElementSibling;
