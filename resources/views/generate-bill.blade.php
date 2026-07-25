@@ -97,20 +97,33 @@
     <div class="p-4 border-t border-slate-200 bg-white flex justify-end shrink-0">
         <div class="w-64 flex flex-col gap-2">
             <div class="flex items-center justify-between gap-2 border border-slate-200 p-2 rounded bg-slate-50">
-                <label class="font-bold text-sm text-slate-700">Vatav %</label>
-                <input type="number" step="0.01" name="vatav_percent" value="5.00" class="w-24 border-none p-1 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded">
+            <div class="flex items-center justify-between gap-2 border border-slate-200 p-2 rounded bg-slate-50">
+                <label class="font-bold text-sm text-slate-700 whitespace-nowrap">Vatav %</label>
+                <div class="flex items-center gap-2">
+                    <span id="vatav-amt" class="text-xs font-bold text-slate-500 w-16 text-right">0.00</span>
+                    <input type="number" step="0.01" name="vatav_percent" value="5.00" class="w-16 border-none p-1 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded">
+                </div>
             </div>
             <div class="flex items-center justify-between gap-2 border border-slate-200 p-2 rounded bg-slate-50">
-                <label class="font-bold text-sm text-slate-700">SGST %</label>
-                <input type="number" step="0.01" name="sgst_percent" value="2.50" class="w-24 border-none p-1 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded">
+                <label class="font-bold text-sm text-slate-700 whitespace-nowrap">SGST %</label>
+                <div class="flex items-center gap-2">
+                    <span id="sgst-amt" class="text-xs font-bold text-slate-500 w-16 text-right">0.00</span>
+                    <input type="number" step="0.01" name="sgst_percent" value="2.50" class="w-16 border-none p-1 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded">
+                </div>
             </div>
             <div class="flex items-center justify-between gap-2 border border-slate-200 p-2 rounded bg-slate-50">
-                <label class="font-bold text-sm text-slate-700">CGST %</label>
-                <input type="number" step="0.01" name="cgst_percent" value="2.50" class="w-24 border-none p-1 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded">
+                <label class="font-bold text-sm text-slate-700 whitespace-nowrap">CGST %</label>
+                <div class="flex items-center gap-2">
+                    <span id="cgst-amt" class="text-xs font-bold text-slate-500 w-16 text-right">0.00</span>
+                    <input type="number" step="0.01" name="cgst_percent" value="2.50" class="w-16 border-none p-1 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded">
+                </div>
             </div>
             <div class="flex items-center justify-between gap-2 border border-slate-200 p-2 rounded bg-slate-50">
-                <label class="font-bold text-sm text-slate-700">TDS %</label>
-                <input type="number" step="0.01" name="tds_percent" value="1.00" class="w-24 border-none p-1 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded">
+                <label class="font-bold text-sm text-slate-700 whitespace-nowrap">TDS %</label>
+                <div class="flex items-center gap-2">
+                    <span id="tds-amt" class="text-xs font-bold text-slate-500 w-16 text-right">0.00</span>
+                    <input type="number" step="0.01" name="tds_percent" value="1.00" class="w-16 border-none p-1 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded">
+                </div>
             </div>
             <div class="flex items-center justify-between gap-2 border border-emerald-200 p-2 rounded bg-emerald-50">
                 <label class="font-bold text-sm text-slate-700">Net Amount</label>
@@ -357,6 +370,11 @@
         const cgstAmount = taxableAmount * (cgstPercent / 100);
         const tdsAmount = taxableAmount * (tdsPercent / 100);
         const netAmount = Math.round(taxableAmount + sgstAmount + cgstAmount - tdsAmount);
+
+        document.getElementById('vatav-amt').innerText = vatavAmount.toFixed(2);
+        document.getElementById('sgst-amt').innerText = sgstAmount.toFixed(2);
+        document.getElementById('cgst-amt').innerText = cgstAmount.toFixed(2);
+        document.getElementById('tds-amt').innerText = tdsAmount.toFixed(2);
 
         document.getElementById('grand-total').innerText = total.toFixed(2);
         document.getElementById('net-total').innerText = netAmount.toFixed(2);
