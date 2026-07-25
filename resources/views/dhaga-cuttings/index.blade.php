@@ -154,9 +154,9 @@
             </div>
             
             <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4">
-                <button type="button" class="bg-white text-slate-700 border border-slate-300 px-8 py-3 text-sm font-bold hover:bg-slate-50 transition-colors shadow-sm uppercase tracking-widest">
+                <a href="{{ route('dhaga-cuttings.print', request()->query()) }}" target="_blank" class="bg-white text-slate-700 border border-slate-300 px-8 py-3 text-sm font-bold hover:bg-slate-50 transition-colors shadow-sm uppercase tracking-widest text-center inline-block flex items-center justify-center">
                     Print
-                </button>
+                </a>
                 <button type="button" class="bg-white text-slate-700 border border-slate-300 px-8 py-3 text-sm font-bold hover:bg-slate-50 transition-colors shadow-sm uppercase tracking-widest">
                     Enter
                 </button>

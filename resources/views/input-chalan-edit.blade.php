@@ -77,11 +77,11 @@
 </form>
 
 <script>
-    const chartOptions = ['camric', 'print', 'jaam'];
-    const detailOptions = ['Pc/B', 'C X C', 'Surat', 'Ahamdabad'];
-    const mtrOptions = ['1.90', '2.10', '2.15', '2.20'];
-    const noteOptions = ['dark', 'light', 'fruit'];
-    const bundleOptions = ['Top', 'T-D', 'T-B-D'];
+    const chartOptions = {!! json_encode(isset($dropdownOptions['chart']) ? $dropdownOptions['chart']->pluck('value') : []) !!};
+    const detailOptions = {!! json_encode(isset($dropdownOptions['detail']) ? $dropdownOptions['detail']->pluck('value') : []) !!};
+    const mtrOptions = {!! json_encode(isset($dropdownOptions['mtr']) ? $dropdownOptions['mtr']->pluck('value') : []) !!};
+    const noteOptions = {!! json_encode(isset($dropdownOptions['note']) ? $dropdownOptions['note']->pluck('value') : []) !!};
+    const bundleOptions = {!! json_encode(isset($dropdownOptions['bundles']) ? $dropdownOptions['bundles']->pluck('value') : []) !!};
     let rowCount = 0;
 
     function createCombo(options, placeholder, fieldName, value = '') {

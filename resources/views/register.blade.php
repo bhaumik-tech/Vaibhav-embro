@@ -1,5 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Registers')
+@section('main_padding', 'p-4')
+@section('container_width', 'w-full')
 
 @section('content')
 @php
@@ -13,9 +15,6 @@
     <!-- Tabs Row -->
     <div class="flex items-center gap-3 bg-white p-2 border border-slate-200 shadow-sm shrink-0">
         <div class="flex flex-1 gap-2 overflow-x-auto">
-            <a href="/register" class="flex items-center justify-center border border-slate-200 px-6 py-2 font-bold shadow-sm transition-colors whitespace-nowrap text-sm uppercase tracking-wider {{ !request('party_id') ? 'bg-indigo-600 text-white border-indigo-700' : 'bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-indigo-600' }}">
-                All Parties
-            </a>
             @foreach($parties as $party)
                 <a href="?party_id={{ $party->id }}" class="flex items-center justify-center border border-slate-200 px-6 py-2 font-bold shadow-sm transition-colors whitespace-nowrap text-sm uppercase tracking-wider {{ request('party_id') == $party->id ? 'bg-indigo-600 text-white border-indigo-700' : 'bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-indigo-600' }}">
                     {{ $party->name }}
@@ -24,11 +23,44 @@
         </div>
     </div>
 
+    @if(request('party_id'))
+    <!-- Filter Bar -->
+    <div class="bg-white p-2 border border-slate-200 shadow-sm shrink-0 flex gap-4 items-center mb-0">
+        <form action="{{ url()->current() }}" method="GET" class="flex items-center gap-4 m-0 w-full">
+            <input type="hidden" name="party_id" value="{{ request('party_id') }}">
+            @if(request('status'))
+                <input type="hidden" name="status" value="{{ request('status') }}">
+            @endif
+            @if(request('timeframe'))
+                <input type="hidden" name="timeframe" value="{{ request('timeframe') }}">
+            @endif
+            
+            <div class="flex items-center gap-2">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Date:</label>
+                <input type="date" name="filter_date" value="{{ request('filter_date') }}" class="border-slate-300 rounded p-1.5 text-xs text-slate-700 focus:ring-indigo-500 focus:border-indigo-500 w-32" onchange="this.form.submit()">
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <label class="text-xs font-bold text-slate-500 uppercase tracking-wider">Firm:</label>
+                <select name="filter_firm_id" class="border-slate-300 rounded p-1.5 text-xs text-slate-700 focus:ring-indigo-500 focus:border-indigo-500 w-40" onchange="this.form.submit()">
+                    <option value="">All Firms</option>
+                    @foreach($firms as $firm)
+                        <option value="{{ $firm->id }}" {{ request('filter_firm_id') == $firm->id ? 'selected' : '' }}>{{ $firm->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+            
+            @if(request('filter_date') || request('filter_firm_id'))
+                <a href="{{ request()->fullUrlWithQuery(['filter_date' => null, 'filter_firm_id' => null]) }}" class="text-xs font-bold text-red-500 hover:text-red-700 uppercase tracking-wider">Clear Filters</a>
+            @endif
+        </form>
+    </div>
+
     <!-- Main Container -->
     <div class="flex-1 flex gap-4 overflow-hidden">
         
         <!-- Left Side: Input Chalan -->
-        <div class="flex-1 flex flex-col gap-3 min-w-0 w-1/2">
+        <div id="input-panel" onclick="expandPanel('input', event)" class="flex-1 flex flex-col gap-3 min-w-0 transition-all duration-500 ease-in-out">
             <!-- Left Sub-Tabs -->
             <div class="flex gap-2 shrink-0">
                 <a href="{{ request()->fullUrlWithQuery(['status' => 'pending']) }}" class="flex-1 text-center bg-white border border-slate-200 py-1.5 text-sm font-medium shadow-sm hover:bg-slate-50 {{ request('status', 'pending') === 'pending' ? 'text-indigo-600 border-b-2 border-b-indigo-500' : 'text-slate-600' }}">All Current Details</a>
@@ -53,7 +85,8 @@
                         <thead class="text-slate-500 bg-white sticky top-0 border-b border-slate-200 shadow-sm z-10">
                             <tr>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Dt.</th>
-                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Ch. No / Firm</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Ch. No</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Firm</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">chart</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">detail</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Mtr.</th>
@@ -79,7 +112,8 @@
                                 @foreach($chalan->items as $item)
                                 <tr class="border-b border-slate-100 hover:bg-slate-50/50 {{ $chalan->is_done ? 'bg-indigo-50/30' : '' }}">
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700 font-medium whitespace-nowrap">{{ \Carbon\Carbon::parse($chalan->date)->format('d-m-Y') }}</td>
-                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center text-indigo-700 font-bold whitespace-nowrap" title="{{ $chalan->firm->name }}">{{ $chalan->chalan_no }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold text-indigo-700 whitespace-nowrap">{{ $chalan->chalan_no }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700 font-medium whitespace-nowrap">{{ $chalan->firm->name }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700">{{ $item->chart ?: '-' }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700">{{ $item->detail ?: '-' }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700">{{ $item->mtr ?: '-' }}</td>
@@ -119,7 +153,7 @@
                                 @endforeach
                             @empty
                                 <tr>
-                                    <td colspan="13" class="p-8 text-center text-slate-500 font-bold uppercase tracking-widest text-sm">
+                                    <td colspan="14" class="p-8 text-center text-slate-500 font-bold uppercase tracking-widest text-sm">
                                         No Chalans Found
                                     </td>
                                 </tr>
@@ -127,7 +161,7 @@
                         </tbody>
                         <tfoot class="bg-indigo-50/50 border-t border-slate-200 font-bold text-slate-800">
                             <tr>
-                                <td colspan="6" class="px-2 py-2 text-right border-r border-slate-200 uppercase tracking-widest text-xs text-slate-500">Total:</td>
+                                <td colspan="7" class="px-2 py-2 text-right border-r border-slate-200 uppercase tracking-widest text-xs text-slate-500">Total:</td>
                                 <td class="px-2 py-2 text-center border-r border-slate-200 text-indigo-700">
                                     {{ $inputChalans->sum(function($ch) { return $ch->items->sum('pcs'); }) }}
                                 </td>
@@ -148,6 +182,9 @@
                                             @endforeach
                                         </select>
                                     @endif
+                                </td>
+                                <td class="px-1 py-1.5 border-r border-slate-200 text-center text-slate-400 text-xs">
+                                    Auto
                                 </td>
                                 <td class="px-1 py-1.5 border-r border-slate-200">
                                     <select form="quick-add-form" name="firm_id" required class="w-full border-slate-300 rounded-none p-1 text-xs text-center focus:ring-1 focus:ring-indigo-500 min-w-[4rem] bg-white">
@@ -225,18 +262,18 @@
                 
                 <!-- Left Footer Actions -->
                 <div class="p-3 border-t border-slate-200 bg-slate-50 flex gap-4 justify-center shrink-0">
-                    <button class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors shadow-sm">
+                    <a href="{{ request()->fullUrlWithQuery(['status' => 'done', 'timeframe' => 'all']) }}" class="px-4 py-2 bg-white border border-slate-300 {{ request('status') == 'done' && !request('timeframe') ? 'text-indigo-600 bg-indigo-50 border-indigo-300' : 'text-slate-700' }} rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors shadow-sm inline-block">
                         completed chalan ++
-                    </button>
-                    <button class="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors shadow-sm">
+                    </a>
+                    <a href="{{ request()->fullUrlWithQuery(['status' => 'done', 'timeframe' => 'last_month']) }}" class="px-4 py-2 bg-white border border-slate-300 {{ request('status') == 'done' && request('timeframe') == 'last_month' ? 'text-indigo-600 bg-indigo-50 border-indigo-300' : 'text-slate-700' }} rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors shadow-sm inline-block">
                         Last month completed chalan ++
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
 
         <!-- Right Side: Output Chalan -->
-        <div class="flex-1 flex flex-col gap-3 min-w-0 w-1/2">
+        <div id="output-panel" onclick="expandPanel('output', event)" class="flex-1 flex flex-col gap-3 min-w-0 transition-all duration-500 ease-in-out">
             <!-- Right Sub-Tabs -->
             <div class="flex gap-2 shrink-0">
                 <a href="{{ request()->fullUrlWithQuery(['status' => 'pending']) }}" class="flex-1 text-center bg-white border border-slate-200 py-1.5 text-sm font-medium shadow-sm hover:bg-slate-50 {{ request('status', 'pending') === 'pending' ? 'text-indigo-600 border-b-2 border-b-indigo-500' : 'text-slate-600' }}">All Current Details</a>
@@ -262,6 +299,8 @@
                             <tr>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Dt.</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Ch. No</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Firm</th>
+                                <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">Party Ch.</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">T. Pcs</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">T. Rs</th>
                                 <th class="px-2 py-3 font-semibold text-center border-r border-slate-100">GST(%)</th>
@@ -274,7 +313,9 @@
                             @forelse($outputChalans as $oChalan)
                                 <tr class="border-b border-slate-100 hover:bg-slate-50/50 {{ $oChalan->is_done ? 'bg-indigo-50/30' : '' }}">
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center font-medium">{{ \Carbon\Carbon::parse($oChalan->date)->format('d-m-Y') }}</td>
-                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold text-indigo-700" title="{{ $oChalan->firm->name }}">{{ $oChalan->chalan_no }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold text-indigo-700 whitespace-nowrap">{{ $oChalan->chalan_no }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700 font-medium whitespace-nowrap">{{ $oChalan->firm->name }}</td>
+                                    <td class="px-2 py-1.5 border-r border-slate-100 text-center text-slate-700 whitespace-nowrap">{{ $oChalan->party_chalan_no ?: '-' }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center font-bold">{{ $oChalan->total_pcs }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center">{{ $oChalan->total_amount }}</td>
                                     <td class="px-2 py-1.5 border-r border-slate-100 text-center">{{ $oChalan->gst ?: '-' }}</td>
@@ -332,7 +373,7 @@
                         </tbody>
                         <tfoot class="bg-indigo-50/50 border-t border-slate-200 font-bold text-slate-800">
                             <tr>
-                                <td colspan="3" class="px-2 py-2 text-right border-r border-slate-200 uppercase tracking-widest text-xs text-slate-500">Total:</td>
+                                <td colspan="4" class="px-2 py-2 text-right border-r border-slate-200 uppercase tracking-widest text-xs text-slate-500">Total:</td>
                                 <td class="px-2 py-2 text-center border-r border-slate-200 text-indigo-700">
                                     {{ $outputChalans->sum('total_pcs') }}
                                 </td>
@@ -349,6 +390,14 @@
                                 </td>
                                 <td class="px-1 py-1.5 border-r border-slate-200">
                                     <input form="quick-add-out-form" name="chalan_no" type="text" placeholder="Ch. No" class="w-full border-slate-300 rounded-none p-1 text-xs focus:ring-1 focus:ring-indigo-500 text-center bg-white min-w-[3rem]">
+                                </td>
+                                <td class="px-1 py-1.5 border-r border-slate-200">
+                                    <select form="quick-add-out-form" name="firm_id" required class="w-full border-slate-300 rounded-none p-1 text-xs text-center focus:ring-1 focus:ring-indigo-500 bg-white">
+                                        <option value="" disabled selected>Firm...</option>
+                                        @foreach($firms as $firm)
+                                            <option value="{{ $firm->id }}">{{ $firm->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </td>
                                 <td class="px-1 py-1.5 border-r border-slate-200">
                                     <input form="quick-add-out-form" name="party_ch" type="text" placeholder="Party Ch." class="w-full border-slate-300 rounded-none p-1 text-xs focus:ring-1 focus:ring-indigo-500 text-center bg-white min-w-[4rem]">
@@ -378,12 +427,6 @@
                                             @endforeach
                                         </select>
                                     @endif
-                                    <select form="quick-add-out-form" name="firm_id" required class="mt-1 w-full border-slate-300 rounded-none p-1 text-xs text-center focus:ring-1 focus:ring-indigo-500 bg-white">
-                                        <option value="" disabled selected>Firm...</option>
-                                        @foreach($firms as $firm)
-                                            <option value="{{ $firm->id }}">{{ $firm->name }}</option>
-                                        @endforeach
-                                    </select>
                                 </td>
                                 <td class="px-1 py-1.5 text-center">
                                     <button form="quick-add-out-form" type="submit" class="bg-indigo-600 text-white rounded-none p-1 hover:bg-indigo-700 shadow-sm w-full font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1 h-full min-h-[30px]">
@@ -397,15 +440,15 @@
                 
                 <!-- Right Footer Actions -->
                 <div class="p-3 border-t border-slate-200 bg-slate-50 flex gap-2 justify-center shrink-0">
-                    <button class="px-3 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors shadow-sm whitespace-nowrap">
+                    <a href="{{ request()->fullUrlWithQuery(['timeframe' => 'current_month']) }}" class="px-3 py-2 bg-white border border-slate-300 {{ request('timeframe') == 'current_month' ? 'text-indigo-600 bg-indigo-50 border-indigo-300' : 'text-slate-700' }} rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors shadow-sm whitespace-nowrap inline-block">
                         Current Month Work
-                    </button>
-                    <button class="px-3 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors shadow-sm whitespace-nowrap">
+                    </a>
+                    <a href="{{ request()->fullUrlWithQuery(['timeframe' => 'last_month']) }}" class="px-3 py-2 bg-white border border-slate-300 {{ request('timeframe') == 'last_month' ? 'text-indigo-600 bg-indigo-50 border-indigo-300' : 'text-slate-700' }} rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors shadow-sm whitespace-nowrap inline-block">
                         last Month Work
-                    </button>
-                    <button class="px-3 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors shadow-sm whitespace-nowrap">
+                    </a>
+                    <a href="{{ route('rcvd-payment.index', ['party_id' => request('party_id')]) }}" class="px-3 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors shadow-sm whitespace-nowrap inline-block">
                         Recived Payment Details
-                    </button>
+                    </a>
                 </div>
             </div>
             
@@ -419,6 +462,16 @@
             Print Ledger
         </a>
     </div>
+    @else
+    <!-- Placeholder when no party is selected -->
+    <div class="flex-1 flex items-center justify-center bg-white border border-slate-200 rounded-xl shadow-sm">
+        <div class="text-center p-8">
+            <svg class="w-16 h-16 mx-auto text-slate-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+            <h3 class="text-lg font-bold text-slate-700 uppercase tracking-widest mb-2">Select a Party</h3>
+            <p class="text-sm text-slate-500 font-medium">Please click on a party tab above to view their input and output chalans.</p>
+        </div>
+    </div>
+    @endif
 </div>
 
 <script>
@@ -448,5 +501,42 @@
             document.querySelectorAll('.combo-list').forEach(list => list.classList.add('hidden'));
         }
     });
+
+    let expandedPanel = null;
+    function expandPanel(panelName, event) {
+        // Do not toggle if clicking on an interactive element
+        if (event.target.closest('button, a, input, select, form, label')) {
+            return;
+        }
+
+        const inputPanel = document.getElementById('input-panel');
+        const outputPanel = document.getElementById('output-panel');
+
+        if (panelName === 'input') {
+            if (expandedPanel === 'input') {
+                // Reset
+                inputPanel.style.flex = '1 1 0%';
+                outputPanel.style.flex = '1 1 0%';
+                expandedPanel = null;
+            } else {
+                // Expand Input
+                inputPanel.style.flex = '3 1 0%';
+                outputPanel.style.flex = '1 1 0%';
+                expandedPanel = 'input';
+            }
+        } else if (panelName === 'output') {
+            if (expandedPanel === 'output') {
+                // Reset
+                inputPanel.style.flex = '1 1 0%';
+                outputPanel.style.flex = '1 1 0%';
+                expandedPanel = null;
+            } else {
+                // Expand Output
+                inputPanel.style.flex = '1 1 0%';
+                outputPanel.style.flex = '3 1 0%';
+                expandedPanel = 'output';
+            }
+        }
+    }
 </script>
 @endsection

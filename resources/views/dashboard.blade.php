@@ -1,5 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Dashboard')
+@section('main_padding', 'p-4')
+@section('container_width', 'w-full')
 
 @section('content')
 <div class="flex flex-col h-full gap-4 overflow-hidden">
@@ -27,18 +29,9 @@
         <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 overflow-visible lg:overflow-y-auto content-start pb-4 pr-2">
             
             @foreach($firms as $firm)
-                <div onclick="openFirmModal({{ $firm->id }})" class="bg-white border border-slate-200 p-4 flex flex-col shadow-sm min-h-[140px] hover:shadow-md hover:border-indigo-300 transition-all cursor-pointer h-full group relative">
+                <div onclick="openFirmModal({{ $firm->id }})" class="bg-white border border-slate-200 p-6 flex items-center justify-center shadow-sm hover:shadow-md hover:border-indigo-300 transition-all cursor-pointer h-32 group relative">
                     <div class="absolute inset-0 bg-indigo-50/50 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
-                    <div class="relative z-10 flex flex-col h-full">
-                    <h3 class="font-extrabold text-center text-slate-800 mb-2 truncate uppercase tracking-widest text-[13px]">{{ $firm->name }}</h3>
-                    <div class="text-center text-xs font-bold text-slate-600 space-y-1 bg-slate-50 py-3 border border-slate-200 flex-1 flex flex-col justify-center max-h-[200px] overflow-y-auto">
-                        @forelse($firm->machines as $machine)
-                            <div>M={{ $machine->machine_no }}_</div>
-                        @empty
-                            <div class="text-[10px] text-slate-400 tracking-widest uppercase">No Machines</div>
-                        @endforelse
-                    </div>
-                    </div>
+                    <h3 class="relative z-10 font-extrabold text-center text-slate-800 uppercase tracking-widest text-sm group-hover:text-indigo-700 transition-colors">{{ $firm->name }}</h3>
                 </div>
             @endforeach
 

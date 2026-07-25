@@ -26,9 +26,22 @@ class InputChalanController extends Controller implements HasMiddleware
             'items' => 'required|array',
         ]);
 
-        $latestChalan = InputChalan::latest('id')->first();
-        $nextId = $latestChalan ? $latestChalan->id + 1 : 1;
-        $chalanNo = $request->chalan_no ?? str_pad($nextId, 4, '0', STR_PAD_LEFT);
+        $chalanNo = $request->chalan_no;
+        if (!$chalanNo) {
+            $latestChalan = InputChalan::where('party_id', $request->party_id)
+                ->where('firm_id', $request->firm_id)
+                ->orderByRaw('CAST(chalan_no AS UNSIGNED) DESC')
+                ->first();
+            $nextId = $latestChalan ? (intval($latestChalan->chalan_no) + 1) : 1;
+            $chalanNo = str_pad($nextId, 3, '0', STR_PAD_LEFT);
+        }
+
+        if (InputChalan::where('party_id', $request->party_id)
+            ->where('firm_id', $request->firm_id)
+            ->where('chalan_no', $chalanNo)
+            ->exists()) {
+            return back()->with('error', 'Duplicate Entry: Chalan No ' . $chalanNo . ' already exists for this Party and Firm!')->withInput();
+        }
 
         $inputChalan = InputChalan::create([
             'party_id' => $request->party_id,
@@ -63,9 +76,22 @@ class InputChalanController extends Controller implements HasMiddleware
             'pcs' => 'required|numeric'
         ]);
 
-        $latestChalan = InputChalan::latest('id')->first();
-        $nextId = $latestChalan ? $latestChalan->id + 1 : 1;
-        $chalanNo = str_pad($nextId, 4, '0', STR_PAD_LEFT);
+        $chalanNo = $request->chalan_no;
+        if (!$chalanNo) {
+            $latestChalan = InputChalan::where('party_id', $request->party_id)
+                ->where('firm_id', $request->firm_id)
+                ->orderByRaw('CAST(chalan_no AS UNSIGNED) DESC')
+                ->first();
+            $nextId = $latestChalan ? (intval($latestChalan->chalan_no) + 1) : 1;
+            $chalanNo = str_pad($nextId, 3, '0', STR_PAD_LEFT);
+        }
+
+        if (InputChalan::where('party_id', $request->party_id)
+            ->where('firm_id', $request->firm_id)
+            ->where('chalan_no', $chalanNo)
+            ->exists()) {
+            return back()->with('error', 'Duplicate Entry: Chalan No ' . $chalanNo . ' already exists for this Party and Firm!')->withInput();
+        }
 
         $inputChalan = InputChalan::create([
             'party_id' => $request->party_id,
@@ -90,8 +116,9 @@ class InputChalanController extends Controller implements HasMiddleware
     {
         $firms = \App\Models\Firm::getPermitted();
         $parties = \App\Models\Party::getPermitted();
+        $dropdownOptions = \App\Models\DropdownOption::all()->groupBy('column_name');
         $inputChalan->load('items');
-        return view('input-chalan-edit', compact('inputChalan', 'firms', 'parties'));
+        return view('input-chalan-edit', compact('inputChalan', 'firms', 'parties', 'dropdownOptions'));
     }
 
     public function update(Request $request, InputChalan $inputChalan)
@@ -103,11 +130,21 @@ class InputChalanController extends Controller implements HasMiddleware
             'items' => 'required|array',
         ]);
 
+        $chalanNo = $request->chalan_no ?? $inputChalan->chalan_no;
+        
+        if (InputChalan::where('party_id', $request->party_id)
+            ->where('firm_id', $request->firm_id)
+            ->where('chalan_no', $chalanNo)
+            ->where('id', '!=', $inputChalan->id)
+            ->exists()) {
+            return back()->with('error', 'Duplicate Entry: Chalan No ' . $chalanNo . ' already exists for this Party and Firm!')->withInput();
+        }
+
         $inputChalan->update([
             'party_id' => $request->party_id,
             'firm_id' => $request->firm_id,
             'date' => $request->date,
-            'chalan_no' => $request->chalan_no ?? $inputChalan->chalan_no,
+            'chalan_no' => $chalanNo,
         ]);
 
         $inputChalan->items()->delete();

@@ -76,7 +76,7 @@
         <!-- Receipt Wrapper -->
         <div class="border-[2px] border-black bg-white flex flex-col print:shadow-none print:p-0">
             <div class="flex flex-col relative h-full">
-
+                
                 <!-- Top Header Section -->
                 <div class="flex flex-col border-b-[2px] border-black text-ink-blue">
                     <!-- TAX INVOICE & TITLE -->
@@ -85,7 +85,7 @@
                         <div class="text-[12px] font-bold tracking-widest text-ink-blue">|| SHREE GANESHAY NAMAH ||</div>
                         <div class="w-[100px]"></div> <!-- Spacer to balance flex layout -->
                     </div>
-
+                    
                     <div class="flex items-center pb-2 relative">
                         <div class="absolute left-2 top-0 flex justify-center">
                             <img src="{{ asset('print-logo.png') }}" alt="Logo" class="w-[78px] h-[78px] object-contain">
@@ -159,12 +159,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php
+                            @php 
                                                                 $totalAmount = 0;
                                 $totalPcs = 0;
                             @endphp
                             @foreach($generateBill->items as $index => $item)
-                                @php
+                                @php 
                                                                     $totalAmount += $item->amount;
                                     $totalPcs += $item->pcs;
                                     $descStr = "";
@@ -202,9 +202,9 @@
                                     <td class="px-2 py-0.5 text-right tabular-nums whitespace-nowrap">{{ number_format($item->amount, 0) }}</td>
                                 </tr>
                             @endforeach
-
+                            
                             <!-- Blank rows to fill space -->
-                            @for($i = count($generateBill->items); $i <=15; $i++)
+                            @for($i = count($generateBill->items); $i < 15; $i++)
                                 <tr class="border-b-[2px] border-black h-[24px]">
                                     <td class="border-r-[2px] border-black"></td>
                                     <td class="border-r-[2px] border-black"></td>
@@ -284,7 +284,7 @@
 
                 <!-- Remaining Bottom Rows -->
                 <div class="flex bg-white font-bold text-[13px] min-h-[190px]">
-
+                    
                     <!-- Left Area (65%) -->
                     <div class="w-[65%] flex flex-col border-r-[2px] border-black">
                         <div class="flex border-b-[2px] border-black h-[38px]">
@@ -402,7 +402,7 @@
                                 {{ number_format($netAmount, 0) }}
                             </div>
                         </div>
-
+                        
                         <!-- Signature Area -->
                         <div class="flex-1 flex flex-col justify-between p-2 text-center bg-white min-h-[75px]">
                             <div class="mt-2 underline text-[13px] uppercase">For, {{ $generateBill->firm->name }}</div>

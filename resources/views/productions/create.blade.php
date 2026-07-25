@@ -45,8 +45,7 @@
                                 <span class="bg-indigo-600 text-white px-3 py-1 text-[11px] font-bold uppercase tracking-widest">1st machine</span>
                             </div>
                             <div class="flex items-center gap-6">
-                                <span class="tab-top-mate text-[11px] font-bold text-indigo-700 border-b-2 border-indigo-700 pb-0.5 cursor-pointer uppercase tracking-widest transition-colors" onclick="switchMate(this, 'top')">Top mate</span>
-                                <span class="tab-dup-mate text-[11px] font-bold text-slate-400 border-b-2 border-transparent pb-0.5 cursor-pointer uppercase tracking-widest hover:text-indigo-500 transition-colors" onclick="switchMate(this, 'dup')">Dup mate</span>
+
                             </div>
                         </div>
                         
@@ -55,6 +54,9 @@
                             <div class="relative w-28">
                                 <select name="machine_1_id" class="machine-select-1 w-full border border-slate-300 p-2.5 text-xs font-bold text-slate-700 appearance-none text-center bg-white uppercase tracking-widest focus:border-indigo-500 focus:ring-0">
                                     <option value="">- -</option>
+                                    @foreach($machines as $machine)
+                                        <option value="{{ $machine->id }}">{{ $machine->machine_no }}</option>
+                                    @endforeach
                                 </select>
                                 <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none text-slate-400">
                                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
@@ -76,30 +78,28 @@
                         <div class="content-dup-mate hidden flex-col gap-3 p-4 bg-white border border-slate-300 mt-2">
                             <!-- Row 1 -->
                             <div class="flex gap-4">
-                                <input type="number" step="0.01" name="dup_pro_frame_1" placeholder="Pro. frame" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
-                                <input type="number" step="0.01" name="dup_bonus_frame_1" placeholder="Bonus frame" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
-                                <input type="number" step="0.01" name="dup_kam_1" placeholder="% kam" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
+                                <input type="number" step="0.01" name="dup_m1_pro_frame_1" placeholder="Pro. frame" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
+                                <input type="number" step="0.01" name="dup_m1_bonus_frame_1" placeholder="Bonus frame" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
+                                <input type="number" step="0.01" name="dup_m1_kam_1" placeholder="% kam" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
                             </div>
                             <!-- Row 2 -->
                             <div class="flex gap-4">
-                                <input type="number" step="0.01" name="dup_pro_frame_2" placeholder="Pro. frame" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
-                                <input type="number" step="0.01" name="dup_bonus_frame_2" placeholder="Bonus frame" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
-                                <input type="number" step="0.01" name="dup_kam_2" placeholder="% kam" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
+                                <input type="number" step="0.01" name="dup_m1_pro_frame_2" placeholder="Pro. frame" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
+                                <input type="number" step="0.01" name="dup_m1_bonus_frame_2" placeholder="Bonus frame" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
+                                <input type="number" step="0.01" name="dup_m1_kam_2" placeholder="% kam" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
                             </div>
                             <!-- Row 3 -->
                             <div class="flex gap-4">
-                                <input type="number" step="0.01" name="dup_pro_frame_3" placeholder="Pro. frame" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
-                                <input type="number" step="0.01" name="dup_bonus_frame_3" placeholder="Bonus frame" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
-                                <input type="number" step="0.01" name="dup_kam_3" placeholder="% kam" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
+                                <input type="number" step="0.01" name="dup_m1_pro_frame_3" placeholder="Pro. frame" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
+                                <input type="number" step="0.01" name="dup_m1_bonus_frame_3" placeholder="Bonus frame" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
+                                <input type="number" step="0.01" name="dup_m1_kam_3" placeholder="% kam" class="flex-1 border border-slate-300 p-2 text-[11px] font-bold text-center text-slate-800 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-slate-50">
                             </div>
                             <!-- Totals & OK -->
                             <div class="flex gap-4 mt-2 pt-3 border-t border-slate-200">
-                                <input type="number" step="0.01" name="dup_total_pct" placeholder="Total %" class="flex-1 border-2 border-slate-300 p-2 text-[12px] font-bold text-center text-indigo-700 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-indigo-50/50">
-                                <input type="number" step="0.01" name="dup_amount" placeholder="Amount" class="flex-1 border-2 border-slate-300 p-2 text-[12px] font-bold text-center text-indigo-700 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-indigo-50/50">
-                                <input type="number" step="0.01" name="dup_bonus" placeholder="Bonus" class="flex-1 border-2 border-slate-300 p-2 text-[12px] font-bold text-center text-indigo-700 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-indigo-50/50">
-                                <button type="button" onclick="switchMate(this, 'top')" class="border border-indigo-600 px-6 py-2 text-[11px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors uppercase tracking-widest">
-                                    Ok
-                                </button>
+                                <input type="number" step="0.01" name="dup_m1_total_pct" placeholder="Total %" class="flex-1 border-2 border-slate-300 p-2 text-[12px] font-bold text-center text-indigo-700 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-indigo-50/50">
+                                <input type="number" step="0.01" name="dup_m1_amount" placeholder="Amount" class="flex-1 border-2 border-slate-300 p-2 text-[12px] font-bold text-center text-indigo-700 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-indigo-50/50">
+                                <input type="number" step="0.01" name="dup_m1_bonus" placeholder="Bonus" class="flex-1 border-2 border-slate-300 p-2 text-[12px] font-bold text-center text-indigo-700 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-indigo-50/50">
+
                             </div>
                         </div>
                     </div>
@@ -139,8 +139,7 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-6">
-                                <span class="tab-top-mate text-[11px] font-bold text-indigo-700 border-b-2 border-indigo-700 pb-0.5 cursor-pointer uppercase tracking-widest transition-colors" onclick="switchMate(this, 'top')">Top mate</span>
-                                <span class="tab-dup-mate text-[11px] font-bold text-slate-400 border-b-2 border-transparent pb-0.5 cursor-pointer uppercase tracking-widest hover:text-indigo-500 transition-colors" onclick="switchMate(this, 'dup')">Dup mate</span>
+
                             </div>
                         </div>
 
@@ -149,6 +148,9 @@
                             <div class="relative w-28">
                                 <select name="machine_2_id" class="machine-select-2 w-full border border-slate-300 p-2.5 text-xs font-bold text-slate-700 appearance-none text-center bg-white uppercase tracking-widest focus:border-indigo-500 focus:ring-0">
                                     <option value="">- -</option>
+                                    @foreach($machines as $machine)
+                                        <option value="{{ $machine->id }}">{{ $machine->machine_no }}</option>
+                                    @endforeach
                                 </select>
                                 <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none text-slate-400">
                                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
@@ -187,9 +189,7 @@
                                 <input type="number" step="0.01" name="dup_m2_total_pct" placeholder="Total %" class="flex-1 border-2 border-slate-300 p-2 text-[12px] font-bold text-center text-indigo-700 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-indigo-50/50">
                                 <input type="number" step="0.01" name="dup_m2_amount" placeholder="Amount" class="flex-1 border-2 border-slate-300 p-2 text-[12px] font-bold text-center text-indigo-700 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-indigo-50/50">
                                 <input type="number" step="0.01" name="dup_m2_bonus" placeholder="Bonus" class="flex-1 border-2 border-slate-300 p-2 text-[12px] font-bold text-center text-indigo-700 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-indigo-50/50">
-                                <button type="button" onclick="switchMate(this, 'top')" class="border border-indigo-600 px-6 py-2 text-[11px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors uppercase tracking-widest">
-                                    Ok
-                                </button>
+
                             </div>
                         </div>
                     </div>
@@ -218,8 +218,7 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-6">
-                                <span class="tab-top-mate text-[11px] font-bold text-indigo-700 border-b-2 border-indigo-700 pb-0.5 cursor-pointer uppercase tracking-widest transition-colors" onclick="switchMate(this, 'top')">Top mate</span>
-                                <span class="tab-dup-mate text-[11px] font-bold text-slate-400 border-b-2 border-transparent pb-0.5 cursor-pointer uppercase tracking-widest hover:text-indigo-500 transition-colors" onclick="switchMate(this, 'dup')">Dup mate</span>
+
                             </div>
                         </div>
 
@@ -228,6 +227,9 @@
                             <div class="relative w-28">
                                 <select name="machine_3_id" class="machine-select-3 w-full border border-slate-300 p-2.5 text-xs font-bold text-slate-700 appearance-none text-center bg-white uppercase tracking-widest focus:border-indigo-500 focus:ring-0">
                                     <option value="">- -</option>
+                                    @foreach($machines as $machine)
+                                        <option value="{{ $machine->id }}">{{ $machine->machine_no }}</option>
+                                    @endforeach
                                 </select>
                                 <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none text-slate-400">
                                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
@@ -266,9 +268,7 @@
                                 <input type="number" step="0.01" name="dup_m3_total_pct" placeholder="Total %" class="flex-1 border-2 border-slate-300 p-2 text-[12px] font-bold text-center text-indigo-700 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-indigo-50/50">
                                 <input type="number" step="0.01" name="dup_m3_amount" placeholder="Amount" class="flex-1 border-2 border-slate-300 p-2 text-[12px] font-bold text-center text-indigo-700 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-indigo-50/50">
                                 <input type="number" step="0.01" name="dup_m3_bonus" placeholder="Bonus" class="flex-1 border-2 border-slate-300 p-2 text-[12px] font-bold text-center text-indigo-700 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-indigo-50/50">
-                                <button type="button" onclick="switchMate(this, 'top')" class="border border-indigo-600 px-6 py-2 text-[11px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors uppercase tracking-widest">
-                                    Ok
-                                </button>
+
                             </div>
                         </div>
                     </div>
@@ -330,8 +330,7 @@
             </div>
             
             <div class="flex items-center gap-6">
-                <span class="tab-top-mate text-[11px] font-bold text-indigo-700 border-b-2 border-indigo-700 pb-0.5 cursor-pointer uppercase tracking-widest transition-colors" onclick="switchMate(this, 'top')">Top mate</span>
-                <span class="tab-dup-mate text-[11px] font-bold text-slate-400 border-b-2 border-transparent pb-0.5 cursor-pointer uppercase tracking-widest hover:text-indigo-500 transition-colors" onclick="switchMate(this, 'dup')">Dup mate</span>
+
                 <button type="button" class="remove-machine-btn text-red-500 hover:text-red-700 transition-colors ml-2" title="Remove Machine">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
@@ -343,6 +342,9 @@
             <div class="relative w-28">
                 <select name="m_id[]" class="w-full border border-slate-300 p-2.5 text-xs font-bold text-slate-700 appearance-none text-center bg-white uppercase tracking-widest focus:border-indigo-500 focus:ring-0">
                     <option value="">- -</option>
+                    @foreach($machines as $machine)
+                        <option value="{{ $machine->id }}">{{ $machine->machine_no }}</option>
+                    @endforeach
                 </select>
                 <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none text-slate-400">
                     <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
@@ -381,9 +383,7 @@
                 <input type="number" step="0.01" name="dup_m_total_pct[]" placeholder="Total %" class="flex-1 border-2 border-slate-300 p-2 text-[12px] font-bold text-center text-indigo-700 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-indigo-50/50">
                 <input type="number" step="0.01" name="dup_m_amount[]" placeholder="Amount" class="flex-1 border-2 border-slate-300 p-2 text-[12px] font-bold text-center text-indigo-700 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-indigo-50/50">
                 <input type="number" step="0.01" name="dup_m_bonus[]" placeholder="Bonus" class="flex-1 border-2 border-slate-300 p-2 text-[12px] font-bold text-center text-indigo-700 placeholder-slate-400 focus:border-indigo-500 focus:ring-0 uppercase tracking-widest bg-indigo-50/50">
-                <button type="button" onclick="switchMate(this, 'top')" class="border border-indigo-600 px-6 py-2 text-[11px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors uppercase tracking-widest">
-                    Ok
-                </button>
+
             </div>
         </div>
     </div>
@@ -398,11 +398,19 @@
         const addMachineBtn = document.getElementById('addMachineBtn');
         let dynamicMachineCount = 3; // Starts after 3
 
+        machinesContainer.addEventListener('change', function(e) {
+            if (e.target.tagName === 'SELECT' && e.target.name && e.target.name.includes('type')) {
+                autoSwitchMate(e.target);
+            }
+        });
+
         function getOrdinal(n) {
             const s = ["TH", "ST", "ND", "RD"];
             const v = n % 100;
             return n + (s[(v - 20) % 10] || s[v] || s[0]);
         }
+
+        let machineIndexCounter = 0;
 
         addMachineBtn.addEventListener('click', function() {
             dynamicMachineCount++;
@@ -410,6 +418,13 @@
             const row = clone.querySelector('.machine-row');
             
             row.querySelector('.machine-title').textContent = getOrdinal(dynamicMachineCount) + ' MACHINE';
+            
+            // Set explicit indices for all array inputs to prevent checkbox mismatch
+            const inputs = row.querySelectorAll('[name$="[]"]');
+            inputs.forEach(input => {
+                input.name = input.name.replace('[]', `[${machineIndexCounter}]`);
+            });
+            machineIndexCounter++;
             
             const removeBtn = row.querySelector('.remove-machine-btn');
             removeBtn.addEventListener('click', function() {
@@ -442,54 +457,44 @@
             const m2Select = document.querySelector('.machine-select-2');
             const m3Select = document.querySelector('.machine-select-3');
             
-            m1Select.innerHTML = '<option value="">- -</option>';
-            m2Select.innerHTML = '<option value="">- -</option>';
-            m3Select.innerHTML = '<option value="">- -</option>';
+            m1Select.value = '';
+            m2Select.value = '';
+            m3Select.value = '';
 
             if (karigar) {
-                if (karigar.machine_1_id && karigar.machine1) {
-                    m1Select.innerHTML += `<option value="${karigar.machine_1_id}" selected>${karigar.machine1.machine_no}</option>`;
-                }
-                if (karigar.machine_2_id && karigar.machine2) {
-                    m2Select.innerHTML += `<option value="${karigar.machine_2_id}" selected>${karigar.machine2.machine_no}</option>`;
-                }
-                if (karigar.machine_3_id && karigar.machine3) {
-                    m3Select.innerHTML += `<option value="${karigar.machine_3_id}" selected>${karigar.machine3.machine_no}</option>`;
-                }
+                if (karigar.machine_1_id) m1Select.value = karigar.machine_1_id;
+                if (karigar.machine_2_id) m2Select.value = karigar.machine_2_id;
+                if (karigar.machine_3_id) m3Select.value = karigar.machine_3_id;
             }
         });
     });
 
     function switchMate(element, type) {
         const row = element.closest('.machine-row');
-        const topMateTab = row.querySelector('.tab-top-mate');
-        const dupMateTab = row.querySelector('.tab-dup-mate');
-        const topMateContent = row.querySelector('.content-top-mate');
         const dupMateContent = row.querySelector('.content-dup-mate');
+        const topMateContent = row.querySelector('.content-top-mate');
+        const topInputs = topMateContent.querySelectorAll('input');
 
         if (type === 'top') {
-            topMateTab.classList.remove('text-slate-400', 'border-transparent');
-            topMateTab.classList.add('text-indigo-700', 'border-indigo-700');
-            
-            dupMateTab.classList.add('text-slate-400', 'border-transparent');
-            dupMateTab.classList.remove('text-indigo-700', 'border-indigo-700');
-            
-            topMateContent.classList.remove('hidden');
-            topMateContent.classList.add('flex');
+            topInputs.forEach(input => input.classList.remove('hidden'));
             dupMateContent.classList.add('hidden');
             dupMateContent.classList.remove('flex');
-        } else {
-            dupMateTab.classList.remove('text-slate-400', 'border-transparent');
-            dupMateTab.classList.add('text-indigo-700', 'border-indigo-700');
-            
-            topMateTab.classList.add('text-slate-400', 'border-transparent');
-            topMateTab.classList.remove('text-indigo-700', 'border-indigo-700');
-            
+        } else if (type === 'dup') {
+            topInputs.forEach(input => input.classList.add('hidden'));
             dupMateContent.classList.remove('hidden');
             dupMateContent.classList.add('flex');
-            topMateContent.classList.add('hidden');
-            topMateContent.classList.remove('flex');
+        } else {
+            // top/dup
+            topInputs.forEach(input => input.classList.remove('hidden'));
+            dupMateContent.classList.remove('hidden');
+            dupMateContent.classList.add('flex');
         }
+    }
+
+    function autoSwitchMate(selectElement) {
+        if (!selectElement) return;
+        const val = selectElement.value.toLowerCase();
+        switchMate(selectElement, val);
     }
     
     // Auto calculate Top & Dup Production Bonus and Amount
@@ -506,32 +511,32 @@
             const karigar = karigarsData.find(k => k.id == karigarId);
 
             // --- Top Mate Calculation ---
-            if (e.target.name === 'm1_production' || e.target.name === 'm2_production' || e.target.name === 'm3_production' || e.target.name === 'm_production[]') {
+            if (e.target.name === 'm1_production' || e.target.name === 'm2_production' || e.target.name === 'm3_production' || (e.target.name && e.target.name.startsWith('m_production['))) {
                 const production = parseFloat(e.target.value) || 0;
-                let bonusInput, amountInput, rate = 0;
+                let bonusInput, amountInput, rate = 433; // Default TOP rate
 
                 if (e.target.name === 'm1_production') {
                     bonusInput = row.querySelector('[name="m1_bonus"]');
                     amountInput = row.querySelector('[name="m1_amount"]');
-                    if (karigar) rate = parseFloat(karigar.machine_1_top_rs) || 0;
+                    if (karigar && karigar.machine_1_top_rs) rate = parseFloat(karigar.machine_1_top_rs) || 433;
                 } else if (e.target.name === 'm2_production') {
                     bonusInput = row.querySelector('[name="m2_bonus"]');
                     amountInput = row.querySelector('[name="m2_amount"]');
-                    if (karigar) rate = parseFloat(karigar.machine_2_top_rs) || 0;
+                    if (karigar && karigar.machine_2_top_rs) rate = parseFloat(karigar.machine_2_top_rs) || 433;
                 } else if (e.target.name === 'm3_production') {
                     bonusInput = row.querySelector('[name="m3_bonus"]');
                     amountInput = row.querySelector('[name="m3_amount"]');
-                    if (karigar) rate = parseFloat(karigar.machine_3_top_rs) || 0;
+                    if (karigar && karigar.machine_3_top_rs) rate = parseFloat(karigar.machine_3_top_rs) || 433;
                 } else {
-                    bonusInput = row.querySelector('[name="m_bonus[]"]');
-                    amountInput = row.querySelector('[name="m_amount[]"]');
+                    bonusInput = row.querySelector('[name^="m_bonus["]');
+                    amountInput = row.querySelector('[name^="m_amount["]');
                     // Dynamic fallback
-                    if (karigar) rate = parseFloat(karigar.machine_1_top_rs) || 0;
+                    if (karigar && karigar.machine_1_top_rs) rate = parseFloat(karigar.machine_1_top_rs) || 433;
                 }
 
                 if (production >= 300) {
                     if (bonusInput) bonusInput.value = 100;
-                    if (rate > 0 && amountInput) amountInput.value = rate.toFixed(2);
+                    if (amountInput) amountInput.value = rate.toFixed(2);
                 } else if (production > 0) {
                     if (bonusInput) bonusInput.value = '';
                     if (amountInput) amountInput.value = Math.floor(production * 1.5).toFixed(2);
@@ -555,30 +560,51 @@
                     else rate = parseFloat(karigar.machine_1_dup_rs) || 0; // Dynamic fallback
                 }
 
-                let totalPct = 0;
+                let totalPctSum = 0;
+                let frameCount = 0;
                 
                 // Calculate percentage from up to 3 designs
                 for (let i = 1; i <= 3; i++) {
                     // Match inputs for this specific row (works for both static and dynamic name formats)
                     let proFrameInput = row.querySelector(`.content-dup-mate input[name*="pro_frame_${i}"]`);
+                    let bonusFrameInput = row.querySelector(`.content-dup-mate input[name*="bonus_frame_${i}"]`);
                     let kamInput = row.querySelector(`.content-dup-mate input[name*="kam_${i}"]`);
                     
-                    if (proFrameInput && kamInput) {
+                    if (proFrameInput && bonusFrameInput && kamInput) {
                         let pro = parseFloat(proFrameInput.value) || 0;
-                        let kam = parseFloat(kamInput.value) || 0;
-                        if (pro > 0) {
-                            totalPct += (kam / pro) * 100;
+                        let bonusTarget = parseFloat(bonusFrameInput.value) || 0;
+                        
+                        if (bonusTarget > 0 && pro > 0) {
+                            let kam = (pro / bonusTarget) * 100;
+                            kamInput.value = kam.toFixed(2);
+                            totalPctSum += kam;
+                            frameCount++;
+                        } else {
+                            // Only clear the percentage if they are interacting with the fields
+                            // (Avoid clearing if they just manually typed a percentage, though auto-calc overwrites)
+                            if (e.target === proFrameInput || e.target === bonusFrameInput) {
+                                kamInput.value = '';
+                            }
+                            
+                            // If kam was manually entered without pro/bonus, we can still add it
+                            let manualKam = parseFloat(kamInput.value) || 0;
+                            if (manualKam > 0) {
+                                totalPctSum += manualKam;
+                                frameCount++;
+                            }
                         }
                     }
                 }
+                
+                let totalPct = frameCount > 0 ? (totalPctSum / frameCount) : 0;
 
                 // Get result inputs
                 let dupTotalPctInput = row.querySelector('.content-dup-mate input[name*="total_pct"]');
                 let dupAmountInput = row.querySelector('.content-dup-mate input[name*="amount"]');
-                let dupBonusInput = row.querySelector('.content-dup-mate input[name*="bonus"]');
+                let dupBonusInput = row.querySelector('.content-dup-mate input[placeholder="Bonus"]');
 
                 if (dupTotalPctInput) {
-                    dupTotalPctInput.value = totalPct > 0 ? totalPct.toFixed(1) : '';
+                    dupTotalPctInput.value = totalPct > 0 ? totalPct.toFixed(2) : '';
                 }
                 
                 if (dupAmountInput && rate > 0 && totalPct > 0) {
@@ -639,8 +665,20 @@
                             });
                         }
                     }
+                    
+                    // Trigger autoSwitchMate for all type dropdowns after drafts load
+                    const mTypes = form.querySelectorAll('select[name*="type"]');
+                    mTypes.forEach(sel => autoSwitchMate(sel));
+                    
+                    // Trigger input event to force recalculation of all fields
+                    form.dispatchEvent(new Event('input', { bubbles: true }));
+                    
                 }, 500); // Wait for Karigar select side-effects to settle
             } catch(e) { console.error('Error loading draft', e); }
+        } else {
+            // Trigger autoSwitchMate for all type dropdowns if no draft
+            const mTypes = form.querySelectorAll('select[name*="type"]');
+            mTypes.forEach(sel => autoSwitchMate(sel));
         }
 
         // On Input: Save to Local Storage & Queue DB Save

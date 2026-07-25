@@ -176,4 +176,24 @@ class GenerateChalanController extends Controller implements HasMiddleware
         $generateChalan->load(['items', 'firm', 'party']);
         return view('generate-chalan-print', compact('generateChalan'));
     }
+
+    public function printBulk(Request $request)
+    {
+        $chalanIds = $request->input('chalan_ids');
+        if (empty($chalanIds)) {
+            $chalanIds = [];
+        } else {
+            $chalanIds = explode(',', $chalanIds);
+        }
+
+        if (empty($chalanIds)) {
+            return back()->with('error', 'No chalans selected for printing.');
+        }
+
+        $generateChalans = GenerateChalan::with(['items', 'firm', 'party'])
+            ->whereIn('id', $chalanIds)
+            ->get();
+
+        return view('generate-chalan-print-bulk', compact('generateChalans'));
+    }
 }

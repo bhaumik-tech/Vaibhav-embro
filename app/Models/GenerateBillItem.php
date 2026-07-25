@@ -11,6 +11,7 @@ class GenerateBillItem extends Model
 
     protected $fillable = [
         'generate_bill_id',
+        'sr_no',
         'ch_no',
         'details',
         'pcs',

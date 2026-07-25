@@ -77,6 +77,7 @@ class GenerateBillController extends Controller implements HasMiddleware
         foreach ($request->items as $item) {
             if (!empty($item['ch_no']) || !empty($item['pcs'])) {
                 $generateBill->items()->create([
+                    'sr_no' => $item['sr_no'] ?? null,
                     'ch_no' => $item['ch_no'] ?? null,
                     'details' => $item['details'] ?? [],
                     'pcs' => $item['pcs'] ?? 0,
@@ -129,6 +130,7 @@ class GenerateBillController extends Controller implements HasMiddleware
         foreach ($request->items as $item) {
             if (!empty($item['ch_no']) || !empty($item['pcs'])) {
                 $generateBill->items()->create([
+                    'sr_no' => $item['sr_no'] ?? null,
                     'ch_no' => $item['ch_no'] ?? null,
                     'details' => $item['details'] ?? [],
                     'pcs' => $item['pcs'] ?? 0,

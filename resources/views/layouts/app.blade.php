@@ -8,7 +8,8 @@
     @if(file_exists(public_path('logo.png')))
         <link rel="icon" href="{{ asset('logo.png') }}?v={{ time() }}" type="image/png">
     @endif
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <script src="{{ asset('js/app.js') }}" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
@@ -21,6 +22,16 @@
         /* Force Square Borders Globally */
         * {
             border-radius: 0 !important;
+        }
+
+        /* Hide Number Input Spinners */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type=number] {
+            -moz-appearance: textfield; /* Firefox */
         }
 
         /* Custom Thin Scrollbar */
@@ -42,29 +53,23 @@
         }
 
         /* Mini Sidebar Styles */
-        body.sidebar-collapsed .sidebar-text {
-            display: none;
-        }
+        @media (min-width: 1024px) {
+            body.sidebar-collapsed #sidebar-container {
+                width: 0 !important;
+                border-right-width: 0 !important;
+            }
 
-        body.sidebar-collapsed .sidebar-nav-title {
-            display: none;
-        }
-
-        body.sidebar-collapsed .sidebar-header {
-            justify-content: center;
-            padding-left: 0;
-            padding-right: 0;
-        }
-
-        body.sidebar-collapsed .sidebar-link {
-            justify-content: center;
-            padding-left: 0;
-            padding-right: 0;
+            body.sidebar-collapsed .sidebar-text,
+            body.sidebar-collapsed .sidebar-nav-title,
+            body.sidebar-collapsed .sidebar-header,
+            body.sidebar-collapsed .sidebar-link {
+                display: none;
+            }
         }
     </style>
 </head>
 
-<body class="text-slate-800 h-screen flex overflow-hidden bg-slate-50">
+<body class="text-slate-800 h-screen flex overflow-hidden bg-slate-50 sidebar-collapsed">
 
     <!-- Mobile Overlay -->
     <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/50 z-40 hidden lg:hidden transition-opacity" onclick="window.toggleSidebar()"></div>
@@ -133,8 +138,8 @@
         </header>
 
         <!-- Page Content -->
-        <main class="flex-1 overflow-y-auto p-6 relative">
-            <div class="max-w-7xl mx-auto h-full">
+        <main class="flex-1 overflow-y-auto @yield('main_padding', 'p-6') relative">
+            <div class="@yield('container_width', 'max-w-7xl mx-auto') h-full">
                 @yield('content')
             </div>
             
@@ -146,7 +151,25 @@
         </main>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: "{{ session('success') }}",
+                timer: 3000,
+                showConfirmButton: false
+            });
+        @endif
+        @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: "{{ session('error') }}"
+            });
+        @endif
+
         function checkUnreadMessages() {
             fetch('/chat/unread-count')
                 .then(res => res.json())
@@ -179,15 +202,7 @@
                 if (overlay) overlay.classList.toggle('hidden');
             } else {
                 // Desktop behavior: toggle collapsed state
-                const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
-
-                if (isCollapsed) {
-                    sidebar.classList.remove('w-64');
-                    sidebar.classList.add('w-20'); // 5rem = 80px width
-                } else {
-                    sidebar.classList.remove('w-20');
-                    sidebar.classList.add('w-64');
-                }
+                document.body.classList.toggle('sidebar-collapsed');
             }
         };
 

@@ -91,6 +91,15 @@
                 <span class="text-xs text-slate-500 text-center font-semibold leading-relaxed">Add and configure karigars details.</span>
             </a>
 
+            <!-- Chalan Dropdown Options -->
+            <a href="{{ route('settings.dropdown-options') }}" class="flex flex-col items-center justify-center p-8 bg-white border border-slate-300 hover:bg-slate-50 transition-colors">
+                <div class="w-16 h-16 bg-slate-100 flex items-center justify-center text-slate-500 mb-5 border border-slate-200">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                </div>
+                <span class="text-sm font-bold text-slate-800 uppercase tracking-wide mb-2 text-center">Chalan Dropdowns</span>
+                <span class="text-xs text-slate-500 text-center font-semibold leading-relaxed">Manage dropdown options for input and output chalans.</span>
+            </a>
+
         </div>
     </div>
 </div>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Challan - {{ $generateChalan->chalan_no }}</title>
+    <title>Bulk Print Chalans</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
@@ -48,6 +48,12 @@
             display: grid;
             grid-template-columns: 35px 50px 1fr 60px 70px 65px;
         }
+        .page-break {
+            page-break-after: always;
+        }
+        .page-break:last-child {
+            page-break-after: auto;
+        }
     </style>
 </head>
 <body class="p-8 print:p-0 flex flex-col items-center bg-gray-100">
@@ -55,16 +61,17 @@
     <!-- Print Button -->
     <div class="w-full max-w-[290mm] mb-6 flex justify-end no-print">
         <button onclick="window.print()" class="px-6 py-2 bg-indigo-600 text-white font-bold text-sm uppercase rounded shadow-lg hover:bg-indigo-700 transition-colors">
-            Print Challan
+            Print Selected
         </button>
     </div>
 
-    <!-- Wrapper for 2 copies -->
-    <div class="flex flex-row w-full justify-between items-center print:px-2 gap-4">
-        @for($copy = 1; $copy <= 2; $copy++)
+    @foreach($generateChalans->chunk(2) as $chunk)
+    <!-- Wrapper for 2 chalans per page -->
+    <div class="flex flex-row w-full max-w-[290mm] justify-between items-center print:px-2 gap-4 page-break mb-8 print:mb-0">
+        @foreach($chunk as $generateChalan)
         
         <!-- Main Challan Container -->
-        <div class="flex-1 bg-white border-[3px] border-primary p-[2px] print:border-[2px] print:shadow-none shadow-xl flex flex-col ml-6 print:ml-10" style="min-height: 195mm;">
+        <div class="flex-1 bg-white border-[3px] border-primary p-[2px] print:border-[2px] print:shadow-none shadow-xl flex flex-col ml-6 print:ml-10" style="min-height: 195mm; max-width: 50%;">
             
             <!-- Outer Wrapper with 1px border inside the 3px border -->
             <div class="border-[1.5px] border-primary flex-1 flex flex-col relative" style="padding-left: 2px;">
@@ -293,7 +300,7 @@
             </div>
         </div>
         
-        @if($copy == 1)
+        @if($loop->first && count($chunk) == 2)
         <!-- Cutting Line -->
         <div class="flex flex-col items-center justify-center h-full relative" style="min-height: 195mm;">
             <div class="h-full border-r-[1.5px] border-dashed border-gray-400"></div>
@@ -302,8 +309,15 @@
             </div>
         </div>
         @endif
-        @endfor
+        
+        @endforeach
+        
+        @if(count($chunk) == 1)
+        <!-- Empty space for the second half of the page -->
+        <div class="flex-1" style="min-height: 195mm;"></div>
+        @endif
     </div>
+    @endforeach
 
 </body>
 </html>

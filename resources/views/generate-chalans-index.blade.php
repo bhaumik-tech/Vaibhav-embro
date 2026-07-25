@@ -6,9 +6,19 @@
     <!-- Header Row -->
     <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white p-4 border border-slate-200 shadow-sm shrink-0">
         <h2 class="text-xl font-bold text-slate-800 uppercase tracking-wider">Generate Chalans</h2>
-        <a href="{{ route('generate-chalan.create') }}" class="bg-indigo-600 text-white px-6 py-2 shadow-sm hover:bg-indigo-700 transition-colors uppercase font-bold text-sm">
-            + New Chalan
-        </a>
+        <div class="flex items-center gap-3">
+            <button type="button" onclick="submitBulkPrint()" class="bg-slate-700 text-white px-4 py-2 shadow-sm hover:bg-slate-800 transition-colors uppercase font-bold text-sm hidden" id="bulk-print-btn">
+                Print Selected
+            </button>
+            <a href="{{ route('generate-chalan.create') }}" class="bg-indigo-600 text-white px-6 py-2 shadow-sm hover:bg-indigo-700 transition-colors uppercase font-bold text-sm">
+                + New Chalan
+            </a>
+        </div>
+        
+        <form id="bulk-print-form" action="{{ route('generate-chalans.print-bulk') }}" method="POST" target="_blank" class="hidden">
+            @csrf
+            <input type="hidden" name="chalan_ids" id="bulk-print-ids" value="">
+        </form>
     </div>
 
     <!-- Tabs Row -->
@@ -33,6 +43,9 @@
             <table class="w-full text-sm text-left whitespace-nowrap">
                 <thead class="text-slate-500 bg-slate-50 sticky top-0 border-b border-slate-200 shadow-sm z-10">
                     <tr>
+                        <th class="px-4 py-3 font-semibold text-center border-r border-slate-200 w-12">
+                            <input type="checkbox" id="select-all" class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                        </th>
                         <th class="px-4 py-3 font-semibold text-center border-r border-slate-200">Date</th>
                         <th class="px-4 py-3 font-semibold text-center border-r border-slate-200">Chalan No</th>
                         <th class="px-4 py-3 font-semibold text-left border-r border-slate-200">Party</th>
@@ -44,6 +57,9 @@
                 <tbody>
                     @forelse($generateChalans as $chalan)
                         <tr class="border-b border-slate-100 hover:bg-slate-50/50">
+                            <td class="px-4 py-2 border-r border-slate-100 text-center">
+                                <input type="checkbox" name="selected_chalans[]" value="{{ $chalan->id }}" class="chalan-checkbox rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+                            </td>
                             <td class="px-4 py-2 border-r border-slate-100 text-center text-slate-700 font-medium">{{ \Carbon\Carbon::parse($chalan->date)->format('d-m-Y') }}</td>
                             <td class="px-4 py-2 border-r border-slate-100 text-center text-indigo-700 font-bold">{{ $chalan->chalan_no }}</td>
                             <td class="px-4 py-2 border-r border-slate-100 text-slate-800 font-medium">{{ $chalan->party->name }}</td>
@@ -71,7 +87,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="p-8 text-center text-slate-500 font-bold uppercase tracking-widest text-sm">
+                            <td colspan="7" class="p-8 text-center text-slate-500 font-bold uppercase tracking-widest text-sm">
                                 No Generate Chalans Found
                             </td>
                         </tr>
@@ -81,4 +97,41 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectAll = document.getElementById('select-all');
+        const checkboxes = document.querySelectorAll('.chalan-checkbox');
+        const bulkPrintBtn = document.getElementById('bulk-print-btn');
+
+        function updateBulkButton() {
+            const checkedCount = document.querySelectorAll('.chalan-checkbox:checked').length;
+            if (checkedCount > 0) {
+                bulkPrintBtn.classList.remove('hidden');
+                bulkPrintBtn.innerText = `Print Selected (${checkedCount})`;
+            } else {
+                bulkPrintBtn.classList.add('hidden');
+            }
+        }
+
+        if (selectAll) {
+            selectAll.addEventListener('change', function() {
+                checkboxes.forEach(cb => cb.checked = this.checked);
+                updateBulkButton();
+            });
+        }
+
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', updateBulkButton);
+        });
+    });
+
+    function submitBulkPrint() {
+        const selectedIds = Array.from(document.querySelectorAll('.chalan-checkbox:checked')).map(cb => cb.value);
+        if (selectedIds.length === 0) return;
+        
+        document.getElementById('bulk-print-ids').value = selectedIds.join(',');
+        document.getElementById('bulk-print-form').submit();
+    }
+</script>
 @endsection

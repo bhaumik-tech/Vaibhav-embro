@@ -42,30 +42,33 @@
                         <label class="font-semibold text-slate-700 w-12 text-sm uppercase">GST:</label>
                         <input type="text" id="party-gst" value="{{ $generateChalan->party->gst_number ?? '' }}" placeholder="GST" readonly class="flex-1 font-medium text-slate-600 text-sm bg-transparent border-none p-0 focus:ring-0 cursor-not-allowed">
                     </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4 pt-4 border-t border-slate-200">
+                        <div class="border border-slate-200 bg-slate-50 p-2 flex flex-col gap-1">
+                            <label class="font-semibold text-slate-500 text-[10px] uppercase tracking-wider">GST (%)</label>
+                            <input type="text" name="gst" value="{{ $generateChalan->gst }}" placeholder="--" class="bg-white border border-slate-200 px-2 py-1 text-slate-900 font-bold text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 w-full placeholder-slate-400">
+                        </div>
+                        <div class="border border-slate-200 bg-slate-50 p-2 flex flex-col gap-1">
+                            <label class="font-semibold text-slate-500 text-[10px] uppercase tracking-wider">Payment Date</label>
+                            <input type="date" name="payment_date" value="{{ $generateChalan->payment_date ? \Carbon\Carbon::parse($generateChalan->payment_date)->format('Y-m-d') : '' }}" class="bg-white border border-slate-200 px-2 py-1 text-slate-900 font-bold text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 w-full">
+                        </div>
+                        <div class="border border-slate-200 bg-slate-50 p-2 flex flex-col gap-1">
+                            <label class="font-semibold text-slate-500 text-[10px] uppercase tracking-wider">Payment Detail</label>
+                            <input type="text" name="payment_detail" value="{{ $generateChalan->payment_detail }}" placeholder="--" class="bg-white border border-slate-200 px-2 py-1 text-slate-900 font-bold text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 w-full placeholder-slate-400">
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- Right Box (Chalan Info) -->
-            <div class="w-full lg:w-1/3 bg-white border border-slate-200 p-4 shadow-sm flex flex-col justify-center gap-2">
-                <div class="flex items-center gap-1">
-                    <span class="font-semibold text-slate-700 text-lg whitespace-nowrap">Ch. No.=</span>
-                    <input type="text" name="chalan_no" value="{{ $generateChalan->chalan_no }}" class="bg-transparent border-b border-slate-300 p-0 text-slate-900 font-bold text-lg focus:ring-0 w-full placeholder-slate-400">
+            <div class="w-full lg:w-1/4 bg-white border border-slate-200 p-4 shadow-sm flex flex-col justify-center gap-3">
+                <div class="border border-slate-200 bg-slate-50 p-2 flex flex-col gap-1 text-center">
+                    <label class="font-semibold text-slate-500 text-[10px] uppercase tracking-wider">Chalan No.</label>
+                    <input type="text" name="chalan_no" value="{{ $generateChalan->chalan_no }}" placeholder="Auto" class="bg-white border border-slate-200 px-2 py-1 text-slate-900 font-bold text-lg focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 w-full placeholder-slate-400 text-center">
                 </div>
-                <div class="flex items-center gap-1">
-                    <span class="font-semibold text-slate-700 text-lg whitespace-nowrap">Date.-</span>
-                    <input type="date" name="date" required value="{{ \Carbon\Carbon::parse($generateChalan->date)->format('Y-m-d') }}" class="bg-transparent border-none p-0 text-slate-900 font-bold text-lg focus:ring-0 w-full">
-                </div>
-                <div class="flex items-center gap-1 mt-1 border-t border-slate-200 pt-2">
-                    <span class="font-semibold text-slate-700 text-sm whitespace-nowrap w-16">GST(%) :</span>
-                    <input type="text" name="gst" value="{{ $generateChalan->gst }}" placeholder="--" class="bg-transparent border-b border-slate-300 p-0 text-slate-900 font-bold text-sm focus:ring-0 w-full placeholder-slate-400">
-                </div>
-                <div class="flex items-center gap-1">
-                    <span class="font-semibold text-slate-700 text-sm whitespace-nowrap w-16">P.Date :</span>
-                    <input type="date" name="payment_date" value="{{ $generateChalan->payment_date ? \Carbon\Carbon::parse($generateChalan->payment_date)->format('Y-m-d') : '' }}" class="bg-transparent border-b border-slate-300 p-0 text-slate-900 font-bold text-sm focus:ring-0 w-full">
-                </div>
-                <div class="flex items-center gap-1">
-                    <span class="font-semibold text-slate-700 text-sm whitespace-nowrap w-16">P. Dtl :</span>
-                    <input type="text" name="payment_detail" value="{{ $generateChalan->payment_detail }}" placeholder="--" class="bg-transparent border-b border-slate-300 p-0 text-slate-900 font-bold text-sm focus:ring-0 w-full placeholder-slate-400">
+                <div class="border border-slate-200 bg-slate-50 p-2 flex flex-col gap-1 text-center">
+                    <label class="font-semibold text-slate-500 text-[10px] uppercase tracking-wider">Date</label>
+                    <input type="date" name="date" required value="{{ \Carbon\Carbon::parse($generateChalan->date)->format('Y-m-d') }}" class="bg-white border border-slate-200 px-2 py-1 text-slate-900 font-bold text-lg focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 w-full text-center">
                 </div>
             </div>
         </div>
@@ -88,14 +91,14 @@
             <tbody id="chalan-tbody">
             </tbody>
         </table>
-        
+
         <div class="mt-4">
             <button type="button" onclick="addRow()" class="text-sm font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-1 p-2 bg-indigo-50 border border-indigo-100 shadow-sm transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 Add Row
             </button>
         </div>
-        
+
         <div class="mt-6 flex justify-end">
             <div class="w-80 bg-slate-50 p-4 border border-slate-200 space-y-3">
                 <div class="flex justify-between text-sm text-slate-600">
@@ -129,7 +132,7 @@
         const selectedOption = select.options[select.selectedIndex];
         const address = selectedOption.getAttribute('data-address') || '';
         const gst = selectedOption.getAttribute('data-gst') || '';
-        
+
         document.getElementById('party-address').value = address;
         document.getElementById('party-gst').value = gst;
     }
@@ -150,7 +153,7 @@
         tr.className = "border-b border-slate-200 hover:bg-slate-50/50 group";
         tr.innerHTML = `
             <td class="px-4 py-2 font-medium text-slate-900 text-center row-number border-r border-slate-200 align-top pt-3">${rowCount}</td>
-            <td class="px-4 py-2 border-r border-slate-200 align-top"><input type="text" name="items[${rowCount}][ch_no]" value="${ch_no}" class="w-full border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center mt-1"></td>
+            <td class="px-4 py-2 border-r border-slate-200 align-top"><input type="text" name="items[${rowCount}][ch_no]" value="${ch_no}" oninput="onChalanInput(this)" onblur="fetchRowChalanDetails(this)" class="w-full border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center mt-1"></td>
             <td class="px-4 py-2 border-r border-slate-200 align-top">
                 <div class="flex gap-2">
                     <div class="relative combo-container w-1/2">
@@ -180,6 +183,86 @@
         btn.closest('tr').remove();
         updateRowNumbers();
         calculateTotal();
+    }
+
+    let fetchTimer;
+    function onChalanInput(input) {
+        clearTimeout(fetchTimer);
+        fetchTimer = setTimeout(() => {
+            fetchRowChalanDetails(input);
+        }, 400);
+    }
+
+    function fetchRowChalanDetails(input) {
+        const chNo = input.value;
+        if (!chNo) return;
+
+        // Prevent fetching if we are already filling from fetchRowChalanDetails to avoid infinite loops or unnecessary requests
+        if (input.hasAttribute('data-fetching')) return;
+
+        fetch('/api/input-chalans/by-no/' + chNo)
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) return;
+
+                // Optional: auto-select party and firm if empty
+                const partySelect = document.querySelector('select[name="party_id"]');
+                const firmSelect = document.querySelector('select[name="firm_id"]');
+                if (partySelect && !partySelect.value && data.party_id) {
+                    partySelect.value = data.party_id;
+                    updatePartyDetails(partySelect);
+                }
+                if (firmSelect && !firmSelect.value && data.firm_id) {
+                    firmSelect.value = data.firm_id;
+                }
+
+                if (data.items && data.items.length > 0) {
+                    const tr = input.closest('tr');
+
+                    data.items.forEach((item, index) => {
+                        let targetTr = tr;
+                        if (index > 0) {
+                            let nextRow = targetTr.nextElementSibling;
+                            while(nextRow) {
+                                const nextChNo = nextRow.querySelector('input[name*="[ch_no]"]').value;
+                                const nextCode = nextRow.querySelector('input[name*="[code]"]').value;
+                                if (!nextChNo && !nextCode) {
+                                    break;
+                                }
+                                nextRow = nextRow.nextElementSibling;
+                            }
+                            if (nextRow) {
+                                targetTr = nextRow;
+                            } else {
+                                addRow();
+                                targetTr = document.getElementById('chalan-tbody').lastElementChild;
+                            }
+                        }
+
+                        const chNoInput = targetTr.querySelector('input[name*="[ch_no]"]');
+                        const bundleInput = targetTr.querySelector('input[name*="[bundle]"]');
+                        const codeInput = targetTr.querySelector('input[name*="[code]"]');
+                        const pcsInput = targetTr.querySelector('input[name*="[pcs]"]');
+
+                        if (chNoInput && index > 0) {
+                            chNoInput.setAttribute('data-fetching', 'true');
+                            chNoInput.value = chNo;
+                            setTimeout(() => chNoInput.removeAttribute('data-fetching'), 500);
+                        }
+
+                        if (bundleInput) bundleInput.value = item.bundles || 'Top';
+                        if (codeInput) {
+                            const codeVal = (item.chart || '') + (item.chart && item.detail ? ' ' : '') + (item.detail || '');
+                            codeInput.value = codeVal;
+                        }
+                        if (pcsInput) {
+                            pcsInput.value = item.pcs || '';
+                            calculateAmount(pcsInput);
+                        }
+                    });
+                }
+            })
+            .catch(err => console.error(err));
     }
 
     function updateRowNumbers() {
@@ -227,7 +310,7 @@
         const pcs = parseFloat(pcsInput.value) || 0;
         const rate = parseFloat(rateInput.value) || 0;
         const amount = pcs * rate;
-        
+
         amountInput.value = amount.toFixed(2);
         calculateTotal();
     }
@@ -252,7 +335,7 @@
 
     // Initialize with existing items
     const existingItems = @json($generateChalan->items);
-    
+
     if(existingItems.length > 0) {
         existingItems.forEach(item => {
             addRow({

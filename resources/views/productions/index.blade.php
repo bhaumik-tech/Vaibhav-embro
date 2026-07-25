@@ -2,7 +2,7 @@
 @section('title', 'Karigar Details(Production)')
 
 @section('content')
-<div class="h-full flex flex-col max-w-5xl mx-auto w-full">
+<div class="h-full flex flex-col w-full">
     <!-- Header with + Button -->
     <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-6 shrink-0">
         <div class="bg-slate-100 border border-slate-300 py-2.5 px-6 font-bold text-slate-700 text-sm uppercase tracking-wider shadow-sm flex-1 text-center rounded-none">
@@ -71,7 +71,7 @@
         </div>
 
         <!-- Data Grid -->
-        <div class="flex-1 space-y-4 max-w-4xl mx-auto w-full">
+        <div class="flex-1 space-y-4 w-full">
             @foreach($aggregations as $index => $agg)
                 <div>
                     <div class="flex flex-col lg:flex-row items-stretch lg:items-center gap-4">
@@ -105,6 +105,8 @@
                             <thead>
                                 <tr class="border-b border-indigo-200 text-indigo-800 uppercase tracking-wider text-xs">
                                     <th class="py-2 px-3">Date</th>
+                                    <th class="py-2 px-3 text-center">Machine</th>
+                                    <th class="py-2 px-3 text-center">Info</th>
                                     <th class="py-2 px-3 text-right">Hajri</th>
                                     <th class="py-2 px-3 text-right">Work</th>
                                     <th class="py-2 px-3 text-right">Pagar</th>
@@ -116,21 +118,29 @@
                                 @forelse($agg['details'] as $detail)
                                     <tr class="border-b border-indigo-100/50 hover:bg-indigo-100/50 transition-colors">
                                         <td class="py-2 px-3 font-bold">{{ $detail['date'] }}</td>
-                                        <td class="py-2 px-3 text-right">{{ number_format($detail['hajri'], 2) }}</td>
-                                        <td class="py-2 px-3 text-right">{{ number_format($detail['work'], 2) }}</td>
-                                        <td class="py-2 px-3 text-right">{{ number_format($detail['pagar'], 2) }}</td>
-                                        <td class="py-2 px-3 text-right">{{ number_format($detail['bonus'], 2) }}</td>
+                                        <td class="py-2 px-3 text-center font-bold text-slate-700">{{ $detail['machine_no'] }}</td>
+                                        <td class="py-2 px-3 text-center text-[10px] uppercase">
+                                            @if($detail['holiday']) <span class="text-red-500">{{ str_replace('_', ' ', $detail['holiday']) }}</span> @endif
+                                            @if($detail['second_karigar']) <span class="text-indigo-500">w/ {{ $detail['second_karigar'] }}</span> @endif
+                                            @if(!$detail['holiday'] && !$detail['second_karigar']) - @endif
+                                        </td>
+                                        <td class="py-2 px-3 text-right">{{ $detail['is_empty'] ? '-' : number_format($detail['hajri'], 2) }}</td>
+                                        <td class="py-2 px-3 text-right">{{ $detail['work'] }}</td>
+                                        <td class="py-2 px-3 text-right">{{ $detail['is_empty'] ? '-' : number_format($detail['pagar'], 2) }}</td>
+                                        <td class="py-2 px-3 text-right">{{ $detail['is_empty'] ? '-' : number_format($detail['bonus'], 2) }}</td>
                                         <td class="py-2 px-3 flex justify-end gap-2">
-                                            <a href="{{ route('productions.edit', $detail['id']) }}" class="text-indigo-600 hover:text-indigo-800 transition-colors" title="Edit">
-                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                                            </a>
-                                            <form action="{{ route('productions.destroy', $detail['id']) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this production entry?');" class="inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="text-red-500 hover:text-red-700 transition-colors" title="Delete">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                                </button>
-                                            </form>
+                                            @if(!$detail['is_empty'])
+                                                <a href="{{ route('productions.edit', $detail['id']) }}" class="text-indigo-600 hover:text-indigo-800 transition-colors" title="Edit">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                                                </a>
+                                                <form action="{{ route('productions.destroy', $detail['id']) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this production entry?');" class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="text-red-500 hover:text-red-700 transition-colors" title="Delete">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </td>
                                     </tr>
                                 @empty
@@ -147,7 +157,7 @@
             @endforeach
 
             <!-- Summary Totals -->
-            <div class="flex flex-col gap-4 pt-6 mt-4 border-t border-slate-200 w-full lg:w-3/4 mx-auto">
+            <div class="flex flex-col gap-4 pt-6 mt-4 border-t border-slate-200 w-full">
                 <div class="flex flex-col md:flex-row items-stretch md:items-center gap-4">
                     @php
                         $startDate = \Carbon\Carbon::createFromDate($year, $month, 1)->startOfMonth()->format('d/m/Y');
@@ -199,9 +209,9 @@
             </div>
             
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
-                <button type="button" class="bg-white text-slate-700 border border-slate-300 px-8 py-3 text-sm font-bold hover:bg-slate-50 transition-colors shadow-sm uppercase tracking-widest rounded-none text-center">
+                <a href="{{ route('productions.print', ['karigar_id' => request('karigar_id'), 'month' => $month, 'year' => $year]) }}" target="_blank" class="bg-white text-slate-700 border border-slate-300 px-8 py-3 text-sm font-bold hover:bg-slate-50 transition-colors shadow-sm uppercase tracking-widest rounded-none text-center block">
                     Print
-                </button>
+                </a>
                 <button type="button" class="bg-white text-slate-700 border border-slate-300 px-8 py-3 text-sm font-bold hover:bg-slate-50 transition-colors shadow-sm uppercase tracking-widest rounded-none text-center">
                     Enter
                 </button>

@@ -4,188 +4,185 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ledger - {{ $party ? $party->name : 'All Parties' }}</title>
-    @vite('resources/css/app.css')
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <style>
         @media print {
             body { background-color: white !important; }
             .no-print { display: none !important; }
             @page {
                 size: A4 landscape;
-                margin: 8mm;
+                margin: 5mm;
             }
-            /* Ensure background colors print */
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 4px;
+        }
     </style>
 </head>
-<body class="bg-slate-100 p-8 print:p-0 font-sans">
-    <div class="mx-auto print:w-full bg-white p-8 print:p-0 shadow-sm print:shadow-none min-h-screen">
+<body class="bg-white text-black p-4 print:p-0 font-sans">
+    
+    <!-- Action bar -->
+    <div class="flex justify-end mb-4 no-print">
+        <button onclick="window.print()" class="px-6 py-2 bg-black text-white font-sans font-bold text-sm uppercase tracking-wider hover:bg-gray-800 transition-colors flex items-center gap-2">
+            Print Ledger
+        </button>
+    </div>
+
+    <!-- Header -->
+    <div class="flex justify-between items-end mb-4 pb-2 border-b-2 border-black">
+        <div>
+            <h1 class="text-2xl font-bold uppercase tracking-widest text-black">Ledger Statement</h1>
+            <h2 class="text-lg font-bold text-black mt-1">
+                {{ $party ? 'Party: ' . $party->name : 'All Parties' }}
+            </h2>
+        </div>
+        <div class="text-right">
+            <div class="text-sm font-bold text-black">
+                Status: {{ request('status', 'pending') === 'done' ? 'Completed / Done' : 'Current / Pending' }}
+            </div>
+            <div class="text-xs font-medium text-black mt-1">Generated: {{ \Carbon\Carbon::now()->format('d/m/Y h:i A') }}</div>
+        </div>
+    </div>
+
+    <div class="flex gap-4 items-start">
         
-        <!-- Action bar -->
-        <div class="flex justify-end mb-6 no-print">
-            <button onclick="window.print()" class="px-6 py-2 bg-indigo-600 text-white font-sans font-bold text-sm uppercase tracking-wider hover:bg-indigo-700 transition-colors flex items-center gap-2 rounded shadow">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                Print Ledger
-            </button>
+        <!-- Left Side: Input Chalans -->
+        <div class="flex-1 min-w-0">
+            <h3 class="font-bold text-black text-sm uppercase tracking-wider mb-2">Input Chalan Register</h3>
+            <table class="text-[11px] text-center border-black">
+                <thead class="font-bold border-black">
+                    <tr>
+                        <th class="border-black">Dt.</th>
+                        <th class="border-black">Ch. No / Firm</th>
+                        <th class="border-black">Chart</th>
+                        <th class="border-black">Detail</th>
+                        <th class="border-black">Mtr.</th>
+                        <th class="border-black">Note</th>
+                        <th class="border-black">Pcs</th>
+                        <th class="border-black">Bundles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php $totalInputPcs = 0; @endphp
+                    @forelse($inputChalans as $chalan)
+                        @foreach($chalan->items as $item)
+                        @php $totalInputPcs += $item->pcs; @endphp
+                        <tr>
+                            <td class="border-black">{{ \Carbon\Carbon::parse($chalan->date)->format('d-m-Y') }}</td>
+                            <td class="border-black font-bold">
+                                {{ $chalan->chalan_no }} <span class="text-[9px] block font-normal">{{ substr($chalan->firm->name, 0, 15) }}</span>
+                            </td>
+                            <td class="border-black">{{ $item->chart ?: '-' }}</td>
+                            <td class="border-black">{{ $item->detail ?: '-' }}</td>
+                            <td class="border-black">{{ $item->mtr ?: '-' }}</td>
+                            <td class="border-black">{{ $item->note ?: '-' }}</td>
+                            <td class="border-black font-bold">{{ $item->pcs ?: '-' }}</td>
+                            <td class="border-black">{{ $item->bundles ?: '-' }}</td>
+                        </tr>
+                        @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="8" class="p-4 text-center font-bold uppercase text-xs border-black">
+                                No Input Chalans
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+                <tfoot class="font-bold border-black">
+                    <tr>
+                        <td colspan="6" class="text-right border-black uppercase">Total:</td>
+                        <td class="text-center border-black">{{ $totalInputPcs }}</td>
+                        <td class="border-black"></td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
 
-        <!-- Header -->
-        <div class="flex justify-between items-end mb-6 pb-2 border-b-2 border-slate-200">
-            <div>
-                <h1 class="text-2xl font-bold uppercase tracking-widest text-slate-800">Ledger Statement</h1>
-                <h2 class="text-lg font-bold text-indigo-700 mt-1">
-                    {{ $party ? 'Party: ' . $party->name : 'All Parties' }}
-                </h2>
-            </div>
-            <div class="text-right">
-                <div class="text-sm font-bold text-slate-600">
-                    Status: <span class="text-slate-900">{{ request('status', 'pending') === 'done' ? 'Completed / Done' : 'Current / Pending' }}</span>
-                </div>
-                <div class="text-xs font-medium text-slate-400 mt-1">Generated: {{ \Carbon\Carbon::now()->format('d/m/Y h:i A') }}</div>
-            </div>
-        </div>
-
-        <div class="flex gap-4 items-start">
-            
-            <!-- Left Side: Input Chalans -->
-            <div class="flex-1 min-w-0 border border-slate-300 rounded-lg overflow-hidden">
-                <div class="p-2 border-b border-slate-300 bg-slate-50">
-                    <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider">Input Chalan Register</h3>
-                </div>
-                <table class="w-full text-[10px] text-left whitespace-nowrap">
-                    <thead class="text-slate-600 bg-white border-b border-slate-300">
-                        <tr>
-                            <th class="px-2 py-2 font-bold text-center border-r border-slate-200">Dt.</th>
-                            <th class="px-2 py-2 font-bold text-center border-r border-slate-200">Ch. No / Firm</th>
-                            <th class="px-2 py-2 font-bold text-center border-r border-slate-200">Chart</th>
-                            <th class="px-2 py-2 font-bold text-center border-r border-slate-200">Detail</th>
-                            <th class="px-2 py-2 font-bold text-center border-r border-slate-200">Mtr.</th>
-                            <th class="px-2 py-2 font-bold text-center border-r border-slate-200">Note</th>
-                            <th class="px-2 py-2 font-bold text-center border-r border-slate-200">Pcs</th>
-                            <th class="px-2 py-2 font-bold text-center">Bundles</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php $totalInputPcs = 0; @endphp
-                        @forelse($inputChalans as $chalan)
-                            @foreach($chalan->items as $item)
-                            @php $totalInputPcs += $item->pcs; @endphp
-                            <tr class="border-b border-slate-200 {{ $chalan->is_done ? 'bg-indigo-50/30' : '' }}">
-                                <td class="px-2 py-1.5 border-r border-slate-200 text-center font-medium">{{ \Carbon\Carbon::parse($chalan->date)->format('d-m-Y') }}</td>
-                                <td class="px-2 py-1.5 border-r border-slate-200 text-center font-bold text-indigo-700">
-                                    {{ $chalan->chalan_no }} <span class="text-slate-500 font-normal text-[9px] block">{{ substr($chalan->firm->name, 0, 15) }}</span>
-                                </td>
-                                <td class="px-2 py-1.5 border-r border-slate-200 text-center">{{ $item->chart ?: '-' }}</td>
-                                <td class="px-2 py-1.5 border-r border-slate-200 text-center">{{ $item->detail ?: '-' }}</td>
-                                <td class="px-2 py-1.5 border-r border-slate-200 text-center">{{ $item->mtr ?: '-' }}</td>
-                                <td class="px-2 py-1.5 border-r border-slate-200 text-center">{{ $item->note ?: '-' }}</td>
-                                <td class="px-2 py-1.5 border-r border-slate-200 text-center font-bold">{{ $item->pcs ?: '-' }}</td>
-                                <td class="px-2 py-1.5 text-center">{{ $item->bundles ?: '-' }}</td>
-                            </tr>
-                            @endforeach
-                        @empty
-                            <tr>
-                                <td colspan="8" class="p-4 text-center text-slate-400 font-bold uppercase tracking-widest text-xs">
-                                    No Input Chalans
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                    <tfoot class="bg-indigo-50/50 border-t-2 border-slate-300 font-bold text-slate-800">
-                        <tr>
-                            <td colspan="6" class="px-2 py-2 text-right border-r border-slate-300 uppercase tracking-widest text-[10px] text-slate-600">Total:</td>
-                            <td class="px-2 py-2 text-center border-r border-slate-300 text-indigo-700 text-[11px]">{{ $totalInputPcs }}</td>
-                            <td class="px-2 py-2"></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-
-            <!-- Right Side: Output Chalans -->
-            <div class="flex-1 min-w-0 border border-slate-300 rounded-lg overflow-hidden">
-                <div class="p-2 border-b border-slate-300 bg-slate-50">
-                    <h3 class="font-bold text-slate-800 text-sm uppercase tracking-wider">Output Chalan Register</h3>
-                </div>
-                <table class="w-full text-[10px] text-left whitespace-nowrap">
-                    <thead class="text-slate-600 bg-white border-b border-slate-300">
-                        <tr>
-                            <th class="px-2 py-2 font-bold text-center border-r border-slate-200">Dt.</th>
-                            <th class="px-2 py-2 font-bold text-center border-r border-slate-200">Ch. No</th>
-                            <th class="px-2 py-2 font-bold text-center border-r border-slate-200">Party Ch.</th>
-                            <th class="px-2 py-2 font-bold text-center border-r border-slate-200">T. Pcs</th>
-                            <th class="px-2 py-2 font-bold text-center border-r border-slate-200">T. Rs</th>
-                            <th class="px-2 py-2 font-bold text-center border-r border-slate-200">GST(%)</th>
-                            <th class="px-2 py-2 font-bold text-center border-r border-slate-200">P.Date</th>
-                            <th class="px-2 py-2 font-bold text-center">P. Dtl</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php 
-                            $totalOutputPcs = 0; 
-                            $totalOutputAmount = 0;
+        <!-- Right Side: Output Chalans -->
+        <div class="flex-1 min-w-0">
+            <h3 class="font-bold text-black text-sm uppercase tracking-wider mb-2">Output Chalan Register</h3>
+            <table class="text-[11px] text-center border-black">
+                <thead class="font-bold border-black">
+                    <tr>
+                        <th class="border-black">Dt.</th>
+                        <th class="border-black">Ch. No</th>
+                        <th class="border-black">T. Pcs</th>
+                        <th class="border-black">T. Rs</th>
+                        <th class="border-black">GST(%)</th>
+                        <th class="border-black">P.Date</th>
+                        <th class="border-black">P. Dtl</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php 
+                        $totalOutputPcs = 0; 
+                        $totalOutputAmount = 0;
+                    @endphp
+                    @forelse($outputChalans as $oChalan)
+                        @php
+                            $totalOutputPcs += $oChalan->total_pcs;
+                            $totalOutputAmount += $oChalan->total_amount;
                         @endphp
-                        @forelse($outputChalans as $oChalan)
-                            @php
-                                $totalOutputPcs += $oChalan->total_pcs;
-                                $totalOutputAmount += $oChalan->total_amount;
-                            @endphp
-                            <tr class="border-b border-slate-200 {{ $oChalan->is_done ? 'bg-indigo-50/30' : '' }}">
-                                <td class="px-2 py-1.5 border-r border-slate-200 text-center font-medium">{{ \Carbon\Carbon::parse($oChalan->date)->format('d-m-Y') }}</td>
-                                <td class="px-2 py-1.5 border-r border-slate-200 text-center font-bold text-indigo-700">
-                                    {{ $oChalan->chalan_no }} <span class="text-slate-500 font-normal text-[9px] block">{{ substr($oChalan->firm->name, 0, 15) }}</span>
-                                </td>
-                                <td class="px-2 py-1.5 border-r border-slate-200 text-center">{{ $oChalan->party_chalan_no ?: '-' }}</td>
-                                <td class="px-2 py-1.5 border-r border-slate-200 text-center font-bold">{{ $oChalan->total_pcs ?: '-' }}</td>
-                                <td class="px-2 py-1.5 border-r border-slate-200 text-center">{{ $oChalan->total_amount ?: '-' }}</td>
-                                <td class="px-2 py-1.5 border-r border-slate-200 text-center">{{ $oChalan->gst ?: '-' }}</td>
-                                <td class="px-2 py-1.5 border-r border-slate-200 text-center">{{ $oChalan->payment_date ? \Carbon\Carbon::parse($oChalan->payment_date)->format('d-m-y') : '-' }}</td>
-                                <td class="px-2 py-1.5 text-center">{{ $oChalan->payment_detail ?: '-' }}</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="8" class="p-4 text-center text-slate-400 font-bold uppercase tracking-widest text-xs">
-                                    No Output Chalans
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                    <tfoot class="bg-indigo-50/50 border-t-2 border-slate-300 font-bold text-slate-800">
                         <tr>
-                            <td colspan="3" class="px-2 py-2 text-right border-r border-slate-300 uppercase tracking-widest text-[10px] text-slate-600">Total:</td>
-                            <td class="px-2 py-2 text-center border-r border-slate-300 text-indigo-700 text-[11px]">{{ $totalOutputPcs }}</td>
-                            <td class="px-2 py-2 text-center border-r border-slate-300 text-indigo-700 text-[11px]">{{ number_format($totalOutputAmount, 2, '.', '') }}</td>
-                            <td colspan="3" class="px-2 py-2"></td>
+                            <td class="border-black">{{ \Carbon\Carbon::parse($oChalan->date)->format('d-m-Y') }}</td>
+                            <td class="border-black font-bold">
+                                {{ $oChalan->chalan_no }} <span class="text-[9px] block font-normal">{{ substr($oChalan->firm->name, 0, 15) }}</span>
+                            </td>
+                            <td class="border-black font-bold">{{ $oChalan->total_pcs ?: '-' }}</td>
+                            <td class="border-black">{{ $oChalan->total_amount ?: '-' }}</td>
+                            <td class="border-black">{{ $oChalan->gst ?: '-' }}</td>
+                            <td class="border-black">{{ $oChalan->payment_date ? \Carbon\Carbon::parse($oChalan->payment_date)->format('d-m-y') : '-' }}</td>
+                            <td class="border-black">{{ $oChalan->payment_detail ?: '-' }}</td>
                         </tr>
-                    </tfoot>
-                </table>
-            </div>
-
+                    @empty
+                        <tr>
+                            <td colspan="8" class="p-4 text-center font-bold uppercase text-xs border-black">
+                                No Output Chalans
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+                <tfoot class="font-bold border-black">
+                    <tr>
+                        <td colspan="3" class="text-right border-black uppercase">Total:</td>
+                        <td class="text-center border-black">{{ $totalOutputPcs }}</td>
+                        <td class="text-center border-black">{{ number_format($totalOutputAmount, 2, '.', '') }}</td>
+                        <td colspan="3" class="border-black"></td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
 
-        <!-- Balance Section -->
-        <div class="mt-6 flex justify-end">
-            <div class="border-2 border-slate-300 rounded-lg p-4 w-72 bg-slate-50">
-                <h4 class="font-bold text-slate-800 uppercase tracking-wider border-b border-slate-300 pb-2 mb-2 text-sm text-center">Summary</h4>
-                <div class="flex justify-between text-xs mb-1">
-                    <span class="font-bold text-slate-600">Total Input Pcs:</span>
-                    <span class="font-bold text-slate-900">{{ $totalInputPcs }}</span>
-                </div>
-                <div class="flex justify-between text-xs mb-1">
-                    <span class="font-bold text-slate-600">Total Output Pcs:</span>
-                    <span class="font-bold text-slate-900">{{ $totalOutputPcs }}</span>
-                </div>
-                <div class="flex justify-between text-sm pt-2 mt-2 border-t border-slate-300">
-                    <span class="font-bold text-slate-800">Pending Pcs:</span>
-                    <span class="font-bold {{ ($totalInputPcs - $totalOutputPcs) > 0 ? 'text-red-600' : 'text-green-600' }}">
-                        {{ $totalInputPcs - $totalOutputPcs }}
-                    </span>
-                </div>
+    </div>
+
+    <!-- Balance Section -->
+    <div class="mt-6 flex justify-end">
+        <div class="border-[1.5px] border-black p-4 w-72">
+            <h4 class="font-bold text-black uppercase tracking-wider border-b-[1.5px] border-black pb-2 mb-2 text-sm text-center">Summary</h4>
+            <div class="flex justify-between text-sm mb-1">
+                <span class="font-bold text-black">Total Input Pcs:</span>
+                <span class="font-bold text-black">{{ $totalInputPcs }}</span>
+            </div>
+            <div class="flex justify-between text-sm mb-1">
+                <span class="font-bold text-black">Total Output Pcs:</span>
+                <span class="font-bold text-black">{{ $totalOutputPcs }}</span>
+            </div>
+            <div class="flex justify-between text-sm pt-2 mt-2 border-t-[1.5px] border-black">
+                <span class="font-bold text-black">Pending Pcs:</span>
+                <span class="font-bold text-black">
+                    {{ $totalInputPcs - $totalOutputPcs }}
+                </span>
             </div>
         </div>
-
     </div>
 </body>
 </html>
