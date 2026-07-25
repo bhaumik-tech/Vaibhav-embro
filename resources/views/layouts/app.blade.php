@@ -116,10 +116,16 @@
                     <span id="current-time" class="text-indigo-600"></span>
                 </div>
 
+                <!-- Chat Icon -->
+                <a href="{{ route('chat.index') }}" class="relative p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors focus:outline-none border border-transparent hover:border-indigo-200 shadow-sm" title="Messages">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    <span id="global-unread-badge" class="absolute top-1 right-1 bg-red-500 text-white text-[9px] font-bold h-4 w-4 rounded-full flex items-center justify-center border-2 border-white shadow-sm" style="display: none;">0</span>
+                </a>
+
                 <!-- Notification -->
-                <button class="relative p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors focus:outline-none border border-transparent hover:border-indigo-200 hidden md:block shadow-sm">
+                <button class="relative p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors focus:outline-none border border-transparent hover:border-indigo-200 hidden md:block shadow-sm" title="Notifications">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
-                    <span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500"></span>
+                    <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500"></span>
                 </button>
 
                 <div class="h-6 w-px bg-slate-200 hidden sm:block mx-1"></div>
@@ -142,12 +148,6 @@
             <div class="@yield('container_width', 'max-w-7xl mx-auto') h-full">
                 @yield('content')
             </div>
-            
-            <!-- Floating Chat Button -->
-            <a href="{{ route('chat.index') }}" class="fixed bottom-8 right-8 h-14 w-14 bg-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg hover:bg-indigo-700 hover:scale-110 transition-all duration-300 z-50 cursor-pointer" title="Open Chat Box">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                <span id="global-unread-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold h-5 w-5 rounded-full flex items-center justify-center border-2 border-white shadow-sm" style="display: none;">0</span>
-            </a>
         </main>
     </div>
 
