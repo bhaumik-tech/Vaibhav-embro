@@ -164,62 +164,63 @@
         
     </div>
 
-    <!-- Taxes / Percentages -->
-    <div class="p-4 border-t border-slate-200 bg-white flex justify-end shrink-0">
-        <div class="w-64 flex flex-col gap-2">
-            <div class="flex items-center justify-between gap-2 border border-slate-200 p-2 rounded bg-slate-50">
-                <label class="font-bold text-sm text-slate-700 whitespace-nowrap">Vatav %</label>
-                <div class="flex items-center gap-2">
-                    <span id="vatav-amt" class="text-xs font-bold text-slate-500 w-16 text-right">0.00</span>
-                    <input type="number" step="0.01" name="vatav_percent" value="{{ $generateBill->vatav_percent ?? 5.00 }}" class="w-16 border-none p-1 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded">
+    <!-- Footer (Taxes & Actions) -->
+    <div class="shrink-0 sticky bottom-0 z-20 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)]">
+        <!-- Taxes / Percentages -->
+        <div class="p-2 border-t border-slate-200 bg-white flex flex-wrap justify-end gap-3">
+            <div class="flex items-center gap-1 border border-slate-200 p-1 rounded bg-slate-50">
+                <label class="font-bold text-[11px] text-slate-600 uppercase whitespace-nowrap pl-1">Vatav %</label>
+                <div class="flex items-center gap-1">
+                    <span id="vatav-amt" class="text-xs font-bold text-slate-500 w-12 text-right">0.00</span>
+                    <input type="number" step="0.01" name="vatav_percent" value="{{ $generateBill->vatav_percent ?? 5.00 }}" class="w-14 border border-slate-200 p-0.5 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded text-xs">
                 </div>
             </div>
-            <div class="flex items-center justify-between gap-2 border border-slate-200 p-2 rounded bg-slate-50">
-                <label class="font-bold text-sm text-slate-700 whitespace-nowrap">SGST %</label>
-                <div class="flex items-center gap-2">
-                    <span id="sgst-amt" class="text-xs font-bold text-slate-500 w-16 text-right">0.00</span>
-                    <input type="number" step="0.01" name="sgst_percent" value="{{ $generateBill->sgst_percent ?? 2.50 }}" class="w-16 border-none p-1 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded">
+            <div class="flex items-center gap-1 border border-slate-200 p-1 rounded bg-slate-50">
+                <label class="font-bold text-[11px] text-slate-600 uppercase whitespace-nowrap pl-1">SGST %</label>
+                <div class="flex items-center gap-1">
+                    <span id="sgst-amt" class="text-xs font-bold text-slate-500 w-12 text-right">0.00</span>
+                    <input type="number" step="0.01" name="sgst_percent" value="{{ $generateBill->sgst_percent ?? 2.50 }}" class="w-14 border border-slate-200 p-0.5 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded text-xs">
                 </div>
             </div>
-            <div class="flex items-center justify-between gap-2 border border-slate-200 p-2 rounded bg-slate-50">
-                <label class="font-bold text-sm text-slate-700 whitespace-nowrap">CGST %</label>
-                <div class="flex items-center gap-2">
-                    <span id="cgst-amt" class="text-xs font-bold text-slate-500 w-16 text-right">0.00</span>
-                    <input type="number" step="0.01" name="cgst_percent" value="{{ $generateBill->cgst_percent ?? 2.50 }}" class="w-16 border-none p-1 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded">
+            <div class="flex items-center gap-1 border border-slate-200 p-1 rounded bg-slate-50">
+                <label class="font-bold text-[11px] text-slate-600 uppercase whitespace-nowrap pl-1">CGST %</label>
+                <div class="flex items-center gap-1">
+                    <span id="cgst-amt" class="text-xs font-bold text-slate-500 w-12 text-right">0.00</span>
+                    <input type="number" step="0.01" name="cgst_percent" value="{{ $generateBill->cgst_percent ?? 2.50 }}" class="w-14 border border-slate-200 p-0.5 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded text-xs">
                 </div>
             </div>
-            <div class="flex items-center justify-between gap-2 border border-slate-200 p-2 rounded bg-slate-50">
-                <label class="font-bold text-sm text-slate-700 whitespace-nowrap">TDS %</label>
-                <div class="flex items-center gap-2">
-                    <span id="tds-amt" class="text-xs font-bold text-slate-500 w-16 text-right">0.00</span>
-                    <input type="number" step="0.01" name="tds_percent" value="{{ $generateBill->tds_percent ?? 1.00 }}" class="w-16 border-none p-1 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded">
+            <div class="flex items-center gap-1 border border-slate-200 p-1 rounded bg-slate-50">
+                <label class="font-bold text-[11px] text-slate-600 uppercase whitespace-nowrap pl-1">TDS %</label>
+                <div class="flex items-center gap-1">
+                    <span id="tds-amt" class="text-xs font-bold text-slate-500 w-12 text-right">0.00</span>
+                    <input type="number" step="0.01" name="tds_percent" value="{{ $generateBill->tds_percent ?? 1.00 }}" class="w-14 border border-slate-200 p-0.5 text-right font-bold text-slate-900 bg-white shadow-sm focus:ring-indigo-500 rounded text-xs">
                 </div>
             </div>
-            <div class="flex items-center justify-between gap-2 border border-emerald-200 p-2 rounded bg-emerald-50">
-                <label class="font-bold text-sm text-slate-700">Net Amount</label>
-                <span id="net-total" class="w-24 p-1 text-right font-extrabold text-emerald-700 bg-white shadow-sm rounded">0.00</span>
+            <div class="flex items-center gap-2 border border-emerald-200 p-1 rounded bg-emerald-50 pl-2">
+                <label class="font-bold text-[11px] text-slate-700 uppercase whitespace-nowrap">Net Amount</label>
+                <span id="net-total" class="w-20 p-0.5 text-right font-black text-emerald-700 bg-white shadow-sm rounded border border-emerald-100 text-sm">0.00</span>
             </div>
         </div>
-    </div>
 
-    <!-- Actions -->
-    <div class="p-4 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row justify-between items-center gap-4 shrink-0 sticky bottom-0 z-10 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-        <div class="text-lg font-bold text-slate-800">
-            Total Amount: <span id="grand-total" class="text-indigo-600">0.00</span>
-        </div>
-        <div class="flex gap-3">
-            <button type="submit" class="px-6 py-2 bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors shadow-sm">
-                Save Changes
-            </button>
-            <button type="submit" name="print" value="1" class="px-6 py-2 bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors shadow-sm">
-                Save+Print
-            </button>
-            <button type="submit" formtarget="_blank" name="preview" value="1" class="px-6 py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 transition-colors shadow-sm">
-                Show Bill
-            </button>
-            <a href="{{ route('generate-bills.index') }}" class="px-6 py-2 bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors shadow-sm flex items-center justify-center">
-                Cancel
-            </a>
+        <!-- Actions -->
+        <div class="p-3 border-t border-slate-200 bg-slate-50 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                Total Amount: <span id="grand-total" class="text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">0.00</span>
+            </div>
+            <div class="flex gap-2">
+                <button type="submit" class="px-5 py-2 bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors shadow-sm rounded text-sm">
+                    Save Changes
+                </button>
+                <button type="submit" name="print" value="1" class="px-5 py-2 bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors shadow-sm rounded text-sm">
+                    Save+Print
+                </button>
+                <button type="submit" formtarget="_blank" name="preview" value="1" class="px-5 py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 transition-colors shadow-sm rounded text-sm">
+                    Show Bill
+                </button>
+                <a href="{{ route('generate-bills.index') }}" class="px-5 py-2 bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors shadow-sm flex items-center justify-center rounded text-sm">
+                    Cancel
+                </a>
+            </div>
         </div>
     </div>
 </form>
