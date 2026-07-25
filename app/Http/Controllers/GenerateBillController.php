@@ -34,7 +34,7 @@ class GenerateBillController extends Controller implements HasMiddleware
             $query->whereIn('firm_id', $permittedFirmIds);
         }
         
-        $generateBills = $query->latest('date')->get()->sortByDesc(function($item) {
+        $generateBills = $query->latest('date')->get()->sortBy(function($item) {
             return (int) preg_replace('/[^0-9]/', '', $item->bill_no);
         })->values();
         $firms = Firm::getPermitted();
