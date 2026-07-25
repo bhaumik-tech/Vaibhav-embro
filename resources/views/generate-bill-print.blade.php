@@ -1,67 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bill - {{ $generateBill->bill_no }}</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <style>
-        @media print {
-            @page {
-                size: A4;
-                margin: 0;
-            }
-            body {
-                margin: 0;
-                padding: 0;
-                background-color: white;
-            }
-            .no-print {
-                display: none !important;
-            }
-            .print-full-page {
-                width: 210mm;
-                height: 297mm; /* Strictly 1 page */
-                max-height: 297mm;
-                padding: 6mm;
-                margin: 0 auto;
-                box-sizing: border-box;
-                overflow: hidden;
-            }
-            .bg-ink-blue {
-                background-color: #174378 !important;
-                color: white !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .bg-slate-200 {
-                background-color: #f1f5f9 !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .text-ink-blue {
-                color: #174378 !important;
-            }
-            .border-ink-blue {
-                border-color: #174378 !important;
-            }
+@extends('layouts.app')
+@section('title', 'Bill - ' . $generateBill->bill_no)
+@section('main_padding', 'p-4 sm:p-8 print:p-0')
+@section('container_width', 'w-full print:w-full')
+
+@section('content')
+<style>
+    @media print {
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: white !important;
+        }
+        .no-print {
+            display: none !important;
+        }
+        .print-full-page {
+            width: 210mm;
+            height: 297mm; /* Strictly 1 page */
+            max-height: 297mm;
+            padding: 6mm;
+            margin: 0 auto;
+            box-sizing: border-box;
+            overflow: hidden;
         }
         .bg-ink-blue {
-            background-color: #174378;
-            color: white;
+            background-color: #174378 !important;
+            color: white !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
         .bg-slate-200 {
-            background-color: #f1f5f9;
+            background-color: #f1f5f9 !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
         .text-ink-blue {
-            color: #174378;
+            color: #174378 !important;
         }
         .border-ink-blue {
-            border-color: #174378;
+            border-color: #174378 !important;
         }
-    </style>
-</head>
-<body class="bg-slate-100 p-4 sm:p-8 print:p-0 flex justify-center print:block m-0 font-sans text-black">
+    }
+    .bg-ink-blue {
+        background-color: #174378;
+        color: white;
+    }
+    .bg-slate-200 {
+        background-color: #f1f5f9;
+    }
+    .text-ink-blue {
+        color: #174378;
+    }
+    .border-ink-blue {
+        border-color: #174378;
+    }
+</style>
+<div class="flex justify-center print:block m-0 font-sans text-black bg-transparent">
 
     <div class="w-full overflow-x-auto pb-4 print:pb-0 print:overflow-hidden">
         <div class="min-w-[210mm] max-w-[210mm] mx-auto print:max-w-none print:w-full print:mx-0 print:min-w-0 print-full-page">
@@ -418,5 +416,5 @@
         </div>
     </div>
     </div>
-</body>
-</html>
+</div>
+@endsection

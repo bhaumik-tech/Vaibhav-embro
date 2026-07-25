@@ -76,14 +76,14 @@
 
     <!-- Sidebar -->
     <div id="sidebar-container"
-        class="fixed lg:relative z-50 w-64 flex-shrink-0 h-full bg-white border-r border-slate-200 transition-all duration-300 flex flex-col overflow-hidden -translate-x-full lg:translate-x-0">
+        class="fixed lg:relative z-50 w-64 flex-shrink-0 h-full bg-white border-r border-slate-200 transition-all duration-300 flex flex-col overflow-hidden -translate-x-full lg:translate-x-0 print:hidden">
         @include('components.sidebar')
     </div>
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col h-full overflow-hidden relative">
         <!-- Top Header -->
-        <header class="bg-white min-h-[72px] py-3 sm:py-0 border-b border-slate-200 flex flex-wrap sm:flex-nowrap items-center justify-between gap-4 px-4 sm:px-6 shrink-0 shadow-sm">
+        <header class="bg-white min-h-[72px] py-3 sm:py-0 border-b border-slate-200 flex flex-wrap sm:flex-nowrap items-center justify-between gap-4 px-4 sm:px-6 shrink-0 shadow-sm print:hidden">
             <div class="flex items-center gap-4">
                 <button onclick="window.toggleSidebar()"
                     class="p-2.5 text-slate-500 hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 border border-transparent hover:border-slate-200">
