@@ -184,7 +184,7 @@
                     updatePartyDetails(partySelect);
 
                     const firmSelect = document.querySelector('select[name="firm_id"]');
-                    if (!firmSelect.value && data.firm_id) {
+                    if (data.firm_id) {
                         firmSelect.value = data.firm_id;
                     }
 
