@@ -102,8 +102,12 @@ Route::middleware('auth')->group(function () {
             return $ch;
         });
 
-        $mergedOutputs = collect()->concat($outputChalans)->concat($genChalans)->sortByDesc('date');
-        $inputChalans = $query->latest('date')->get();
+        $mergedOutputs = collect()->concat($outputChalans)->concat($genChalans)->sortBy(function($item) {
+            return (int) preg_replace('/[^0-9]/', '', $item->chalan_no);
+        })->values();
+        $inputChalans = $query->get()->sortBy(function($item) {
+            return (int) preg_replace('/[^0-9]/', '', $item->chalan_no);
+        })->values();
         $outputChalans = $mergedOutputs;
 
         $firms = \App\Models\Firm::getPermitted();
@@ -185,9 +189,13 @@ Route::middleware('auth')->group(function () {
             return $ch;
         });
 
-        $mergedOutputs = collect()->concat($outputChalans)->concat($genChalans)->sortBy('date');
+        $mergedOutputs = collect()->concat($outputChalans)->concat($genChalans)->sortBy(function($item) {
+            return (int) preg_replace('/[^0-9]/', '', $item->chalan_no);
+        })->values();
 
-        $inputChalans = $query->oldest('date')->get();
+        $inputChalans = $query->get()->sortBy(function($item) {
+            return (int) preg_replace('/[^0-9]/', '', $item->chalan_no);
+        })->values();
         $outputChalans = $mergedOutputs;
 
         $party = request('party_id') ? \App\Models\Party::find(request('party_id')) : null;
