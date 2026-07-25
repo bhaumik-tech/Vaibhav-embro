@@ -302,13 +302,13 @@ Route::middleware('auth')->group(function () {
     })->middleware('page.permission:output_chalan,view');
 
     Route::get('/api/generate-chalans/by-no/{chalan_no}', function ($chalan_no) {
-        $chalan = \App\Models\GenerateChalan::with(['items', 'party'])->where('chalan_no', $chalan_no);
+        $chalans = \App\Models\GenerateChalan::with(['items', 'party'])->where('chalan_no', $chalan_no);
         if (request('party_id')) {
-            $chalan->where('party_id', request('party_id'));
+            $chalans->where('party_id', request('party_id'));
         }
-        $chalan = $chalan->first();
-        if ($chalan) {
-            return response()->json($chalan);
+        $chalans = $chalans->get();
+        if ($chalans->isNotEmpty()) {
+            return response()->json($chalans);
         }
         return response()->json(['error' => 'Not found'], 404);
     })->middleware('page.permission:generate_bill,view');

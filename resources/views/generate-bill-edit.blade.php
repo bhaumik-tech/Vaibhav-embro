@@ -475,57 +475,45 @@
                 return res.json();
             })
             .then(data => {
-                if (data && data.items && data.items.length > 0) {
-                    if (!partyId && data.party_id) {
+                if (data && data.length > 0) {
+                    const firstChalan = data[0];
+                    if (!partyId && firstChalan.party_id) {
                         const partySelect = document.getElementById('party-select');
-                        partySelect.value = data.party_id;
+                        partySelect.value = firstChalan.party_id;
                         const event = new Event('change');
                         partySelect.dispatchEvent(event);
                     }
 
-                    const tr = input.closest('tr');
-                    
-                    const match = input.name.match(/items\[(\d+)\]/);
-                    const rIndex = match ? match[1] : 0;
-                    
-                    // Keep detail code blank when chalan is selected; only fill pcs/rate totals.
-                    const container = tr.querySelector('.details-container');
-                    container.innerHTML = '';
-                    container.setAttribute('data-detail-count', 0);
-
-                    const firstItem = data.items[0] || {};
-                    let totalPcs = data.items.reduce((sum, item) => sum + (parseFloat(item.pcs) || 0), 0);
-                    const newRow = document.createElement('div');
-                    newRow.className = "flex gap-2 items-center mt-1";
-                    newRow.innerHTML = `
-                        <div class="relative combo-container w-1/3 shrink-0">
-                            <input type="text" name="items[${rIndex}][details][0][bundle]" value="${firstItem.bundle || 'bundles'}" class="combo-input w-full border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center" onclick="this.nextElementSibling.classList.toggle('hidden')" oninput="filterCombo(this)">
-                            <ul class="combo-list hidden absolute z-10 w-full bg-white border border-slate-200 shadow-lg max-h-40 overflow-y-auto mt-1 text-left">
-                                <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">Top</li>
-                                <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">T-D</li>
-                                <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">T-B-D</li>
-                            </ul>
-                        </div>
-                        <input type="text" name="items[${rIndex}][details][0][value]" value="#" class="flex-1 border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center min-w-0 detail-code-input">
-                        <button type="button" onclick="addDetailRow(this)" class="text-slate-500 hover:text-indigo-600 p-1.5 bg-slate-100 hover:bg-indigo-50 border border-slate-200 shrink-0 transition-colors" title="Add Detail">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                        </button>
-                    `;
-                    container.appendChild(newRow);
-                    initDetailCodeInputs();
-                    
-                    const pcsInput = tr.querySelector('input[name*="[pcs]"]');
-                    if (pcsInput) {
-                        pcsInput.value = totalPcs;
-                        calculateRowAmount(pcsInput);
+                    const firmSelect = document.querySelector('select[name="firm_id"]');
+                    if (firstChalan.firm_id) {
+                        firmSelect.value = firstChalan.firm_id;
                     }
-                    
-                    if (data.items[0] && data.items[0].rate) {
-                        const rateInput = tr.querySelector('input[name*="[rate]"]');
-                        if (rateInput && !rateInput.value) { // only if empty
-                            rateInput.value = data.items[0].rate;
-                            calculateRowAmount(rateInput);
+
+                    let allItems = [];
+                    data.forEach(chalan => {
+                        if (chalan.items) {
+                            chalan.items.forEach(item => {
+                                allItems.push({
+                                    chalan_no: chalan.chalan_no,
+                                    bundle: item.bundle,
+                                    code: item.code,
+                                    pcs: item.pcs,
+                                    rate: item.rate
+                                });
+                            });
                         }
+                    });
+
+                    if (allItems.length > 0) {
+                        const tr = input.closest('tr');
+                        fillRowWithItem(tr, allItems[0]);
+
+                        for (let i = 1; i < allItems.length; i++) {
+                            addRow();
+                            const newTr = document.getElementById('bill-tbody').lastElementChild;
+                            fillRowWithItem(newTr, allItems[i]);
+                        }
+                        initDetailCodeInputs();
                     }
                 }
             })
@@ -533,6 +521,52 @@
             .finally(() => {
                 input.removeAttribute('data-fetching');
             });
+    }
+
+    function fillRowWithItem(tr, item) {
+        const chInput = tr.querySelector('input[name*="[ch_no]"]');
+        if (chInput) chInput.value = item.chalan_no;
+        
+        const match = chInput?.name.match(/items\[(\d+)\]/);
+        const rIndex = match ? match[1] : 0;
+
+        const container = tr.querySelector('.details-container');
+        if (container) {
+            container.innerHTML = '';
+            container.setAttribute('data-detail-count', 0);
+
+            const newRow = document.createElement('div');
+            newRow.className = "flex gap-2 items-center mt-1";
+            newRow.innerHTML = `
+                <div class="relative combo-container w-1/3 shrink-0">
+                    <input type="text" name="items[${rIndex}][details][0][bundle]" value="${item.bundle || 'bundles'}" class="combo-input w-full border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center" onclick="this.nextElementSibling.classList.toggle('hidden')" oninput="filterCombo(this)">
+                    <ul class="combo-list hidden absolute z-10 w-full bg-white border border-slate-200 shadow-lg max-h-40 overflow-y-auto mt-1 text-left">
+                        <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">Top</li>
+                        <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">T-D</li>
+                        <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">T-B-D</li>
+                    </ul>
+                </div>
+                <input type="text" name="items[${rIndex}][details][0][value]" value="${item.code || '#'}" class="flex-1 border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center min-w-0 detail-code-input">
+                <button type="button" onclick="addDetailRow(this)" class="text-slate-500 hover:text-indigo-600 p-1.5 bg-slate-100 hover:bg-indigo-50 border border-slate-200 shrink-0 transition-colors" title="Add Detail">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                </button>
+            `;
+            container.appendChild(newRow);
+        }
+
+        const pcsInput = tr.querySelector('input[name*="[pcs]"]');
+        if (pcsInput) {
+            pcsInput.value = item.pcs || 0;
+            calculateRowAmount(pcsInput);
+        }
+
+        if (item.rate) {
+            const rateInput = tr.querySelector('input[name*="[rate]"]');
+            if (rateInput && (!rateInput.value || rateInput.value === "0" || rateInput.value === "")) {
+                rateInput.value = item.rate;
+                calculateRowAmount(rateInput);
+            }
+        }
     }
 
     if (rowCount === 0) addRow();
