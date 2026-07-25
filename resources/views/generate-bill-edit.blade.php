@@ -458,8 +458,12 @@
     function fetchChalanDetails(input) {
         if (input.hasAttribute('data-fetching')) return;
         
-        const chNo = input.value;
+        const chNo = input.value.trim();
         if (!chNo) return;
+
+        if (input.dataset.lastFetched === chNo) {
+            return;
+        }
 
         const partyId = document.getElementById('party-select').value;
         let url = `/api/generate-chalans/by-no/${chNo}`;
@@ -468,6 +472,7 @@
         }
 
         input.setAttribute('data-fetching', 'true');
+        input.dataset.lastFetched = chNo;
 
         fetch(url)
             .then(res => {
@@ -520,7 +525,10 @@
 
     function fillRowWithItem(tr, item) {
         const chInput = tr.querySelector('input[name*="[ch_no]"]');
-        if (chInput) chInput.value = item.chalan_no;
+        if (chInput) {
+            chInput.value = item.chalan_no;
+            chInput.dataset.lastFetched = item.chalan_no;
+        }
         
         const match = chInput?.name.match(/items\[(\d+)\]/);
         const rIndex = match ? match[1] : 0;
