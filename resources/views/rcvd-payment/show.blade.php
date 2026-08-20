@@ -143,7 +143,7 @@
             <div class="bg-[#9bb3e1] px-4 py-2 border-b border-slate-400 font-bold text-xs tracking-wider uppercase text-black flex justify-between items-center print:!border-slate-400" style="-webkit-print-color-adjust: exact; print-color-adjust: exact;">
                 <span>Attached Cheque / Payment Proof:</span>
                 @if($rcvdPayment->cheque_photo)
-                <a href="{{ asset('storage/' . $rcvdPayment->cheque_photo) }}" target="_blank" class="text-indigo-900 hover:text-white flex items-center gap-1 text-[10px] no-print bg-white/50 px-2 py-0.5 rounded">
+                <a href="{{ asset('storage_files/' . $rcvdPayment->cheque_photo) }}" target="_blank" class="text-indigo-900 hover:text-white flex items-center gap-1 text-[10px] no-print bg-white/50 px-2 py-0.5 rounded">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                     Open Original
                 </a>
@@ -153,7 +153,7 @@
             <div class="flex text-sm min-h-[16rem]">
                 <div class="w-3/4 border-r border-slate-400 p-4 flex justify-center items-center bg-slate-50 relative print:!border-slate-400" style="-webkit-print-color-adjust: exact; print-color-adjust: exact;">
                     @if($rcvdPayment->cheque_photo)
-                        <img src="{{ asset('storage/' . $rcvdPayment->cheque_photo) }}" class="max-w-full max-h-[300px] object-contain shadow-sm border border-slate-300 print:shadow-none">
+                        <img src="{{ asset('storage_files/' . $rcvdPayment->cheque_photo) }}" class="max-w-full max-h-[300px] object-contain shadow-sm border border-slate-300 print:shadow-none">
                     @else
                         <span class="text-slate-400 font-bold uppercase tracking-widest text-xs">No Payment Proof Attached</span>
                     @endif

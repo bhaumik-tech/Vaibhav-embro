@@ -167,7 +167,7 @@
                     </div>
                     @if(isset($editPayment) && $editPayment->cheque_photo)
                         <div class="mt-2 text-[11px] text-slate-500 font-bold uppercase tracking-wide">
-                            Current: <a href="{{ asset('storage/' . $editPayment->cheque_photo) }}" target="_blank" class="text-indigo-600 hover:underline">View Photo</a>
+                            Current: <a href="{{ asset('storage_files/' . $editPayment->cheque_photo) }}" target="_blank" class="text-indigo-600 hover:underline">View Photo</a>
                         </div>
                     @endif
                 </div>

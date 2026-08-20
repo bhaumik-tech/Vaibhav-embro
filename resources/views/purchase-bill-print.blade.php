@@ -144,7 +144,7 @@
         <div class="flex text-xs h-[16rem]">
             <div class="w-2/3 border-r border-slate-400 p-4 flex justify-center items-center bg-slate-50 relative print:!border-slate-400" style="-webkit-print-color-adjust: exact; print-color-adjust: exact;">
                 @if($purchaseBill->image)
-                    <img src="{{ asset('storage/' . $purchaseBill->image) }}" class="max-w-full max-h-full object-contain">
+                    <img src="{{ asset('storage_files/' . $purchaseBill->image) }}" class="max-w-full max-h-full object-contain">
                 @else
                     <span class="text-slate-400 font-bold uppercase">No Image Attached</span>
                 @endif

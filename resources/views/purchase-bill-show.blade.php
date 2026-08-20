@@ -160,7 +160,7 @@
             <div class="bg-[#9bb3e1] px-3 py-1.5 border-b border-slate-400 font-bold text-[11px] tracking-wide uppercase text-black flex justify-between items-center">
                 <span>Attached Receipt Image:</span>
                 @if($purchaseBill->image)
-                <a href="{{ asset('storage/' . $purchaseBill->image) }}" target="_blank" class="text-indigo-900 hover:text-white flex items-center gap-1 text-[10px]">
+                <a href="{{ asset('storage_files/' . $purchaseBill->image) }}" target="_blank" class="text-indigo-900 hover:text-white flex items-center gap-1 text-[10px]">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                     Open Original
                 </a>
@@ -170,7 +170,7 @@
             <div class="flex text-xs min-h-[16rem]">
                 <div class="w-2/3 border-r border-slate-400 p-4 flex justify-center items-center bg-slate-50 relative">
                     @if($purchaseBill->image)
-                        <img src="{{ asset('storage/' . $purchaseBill->image) }}" class="max-w-full max-h-[400px] object-contain shadow-sm border border-slate-300">
+                        <img src="{{ asset('storage_files/' . $purchaseBill->image) }}" class="max-w-full max-h-[400px] object-contain shadow-sm border border-slate-300">
                     @else
                         <span class="text-slate-400 font-bold uppercase">No Image Attached</span>
                     @endif

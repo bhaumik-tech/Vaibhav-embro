@@ -289,7 +289,7 @@
                                                 </svg>
                                                 File Attached
                                             </div>
-                                            <a href="{{ asset('storage/' . $purchaseBill->image) }}" target="_blank"
+                                            <a href="{{ asset('storage_files/' . $purchaseBill->image) }}" target="_blank"
                                                 class="px-2 py-1 bg-white text-indigo-600 border border-indigo-300 rounded text-[10px] font-bold hover:bg-indigo-50 transition-colors shadow-sm uppercase">
                                                 View
                                             </a>
