@@ -1,0 +1,570 @@
+@extends('layouts.app')
+@section('title', 'Generate Bill')
+
+@section('content')
+<div class="flex w-full h-full">
+    <div id="form-container" class="w-full transition-all duration-300 h-full">
+        <form action="{{ route('generate-bills.store') }}" method="POST" class="bg-white shadow-sm border border-slate-200 h-full overflow-y-auto">
+    @csrf
+    <!-- Form Header -->
+    <div class="p-4 border-b border-slate-200 bg-slate-50 flex flex-col gap-4">
+        <!-- Top Row: Firm Dropdown -->
+        <div class="relative bg-white border border-slate-300 shadow-sm rounded-md overflow-hidden hover:border-indigo-400 transition-colors">
+            <select name="firm_id" required class="w-full border-none pl-4 pr-12 py-2.5 font-bold text-slate-800 text-center text-lg focus:ring-0 appearance-none bg-transparent cursor-pointer">
+                <option value="" disabled selected>Select Firm Name</option>
+                @foreach($firms as $firm)
+                    <option value="{{ $firm->id }}">{{ $firm->name }}</option>
+                @endforeach
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500 border-l border-slate-200 bg-slate-50">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </div>
+        </div>
+
+        <!-- Bottom Row -->
+        <div class="flex flex-col lg:flex-row gap-4">
+            <!-- Left Box (Party Details) -->
+            <div class="flex-1 bg-white border border-slate-300 shadow-sm relative rounded-md overflow-hidden flex flex-col">
+                <div class="bg-slate-100 border-b border-slate-300 px-4 py-2 font-bold text-slate-700 text-xs uppercase tracking-wider flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                        Party Details
+                    </div>
+                    <!-- Party Dropdown positioned elegantly in header -->
+                    <div class="relative w-48">
+                        <select name="party_id" required id="party-select" class="w-full text-xs font-bold text-slate-700 bg-white border border-slate-300 rounded shadow-sm px-2 py-1 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 appearance-none pr-6 cursor-pointer">
+                            <option value="" disabled selected>Select Party</option>
+                            @foreach($parties as $party)
+                                <option value="{{ $party->id }}" data-name="{{ $party->name }}" data-add="{{ $party->address ?? '' }}" data-gst="{{ $party->gst_number ?? '' }}" data-vatav="{{ $party->vatav ?? 5.00 }}" data-sgst="{{ $party->sgst ?? 2.50 }}" data-cgst="{{ $party->cgst ?? 2.50 }}" data-tds="{{ $party->tds ?? 1.00 }}">{{ $party->name }}</option>
+                            @endforeach
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1.5 text-slate-400">
+                            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 flex flex-col gap-3 flex-1">
+                    <div class="flex items-center gap-3">
+                        <label class="font-bold text-slate-600 w-12 text-xs uppercase tracking-wider">NAME:</label>
+                        <input type="text" name="name" id="party-name" placeholder="Name" class="flex-1 font-bold text-slate-800 text-sm bg-white border border-slate-300 shadow-sm rounded px-3 py-1.5 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <label class="font-bold text-slate-600 w-12 text-xs uppercase tracking-wider">ADD:</label>
+                        <input type="text" name="add" id="party-add" placeholder="Address..." class="flex-1 font-medium text-slate-700 text-sm bg-white border border-slate-300 shadow-sm rounded px-3 py-1.5 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <label class="font-bold text-slate-600 w-12 text-xs uppercase tracking-wider">GST:</label>
+                        <input type="text" name="gst" id="party-gst" placeholder="GST No..." class="flex-1 font-medium text-slate-700 text-sm bg-white border border-slate-300 shadow-sm rounded px-3 py-1.5 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Box (Bill Info) -->
+            <div class="w-full lg:w-1/4 bg-white border border-slate-300 shadow-sm rounded-md overflow-hidden flex flex-col">
+                <div class="bg-slate-100 border-b border-slate-300 px-4 py-2 font-bold text-slate-700 text-xs uppercase tracking-wider flex items-center gap-2">
+                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Bill Info
+                </div>
+                <div class="p-4 flex flex-col gap-4 flex-1 justify-center">
+                    <div class="flex flex-col gap-1 text-center border-b border-slate-100 pb-3">
+                        <label class="font-bold text-slate-600 text-[10px] uppercase tracking-wider">INVOICE NO.</label>
+                        <input type="text" name="bill_no" placeholder="Auto" class="bg-white border border-slate-300 rounded px-2 py-1.5 text-indigo-700 font-bold text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 w-full placeholder-slate-400 text-center shadow-sm">
+                    </div>
+                    <div class="flex flex-col gap-1 text-center">
+                        <label class="font-bold text-slate-600 text-[10px] uppercase tracking-wider">Date</label>
+                        <input type="date" name="date" value="{{ date('Y-m-d') }}" required class="bg-white border border-slate-300 rounded px-2 py-1.5 text-slate-900 font-bold text-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 w-full text-center shadow-sm">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="p-2 sm:p-6 overflow-x-auto">
+        <table class="w-full min-w-[800px] text-sm text-left border border-slate-200">
+            <thead class="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-200">
+                <tr>
+                    <th class="px-4 py-3 font-medium w-32 text-center border-r border-slate-200">CH.NO/NO</th>
+                    <th class="px-4 py-3 font-medium w-32 text-center border-r border-slate-200">Party Ch.No</th>
+                    <th class="px-4 py-3 font-medium min-w-[250px] border-r border-slate-200">Details</th>
+                    <th class="px-4 py-3 font-medium w-24 text-center border-r border-slate-200">pcs</th>
+                    <th class="px-4 py-3 font-medium text-center w-32 border-r border-slate-200">Rate</th>
+                    <th class="px-4 py-3 font-medium text-right w-40 border-r border-slate-200">Rs</th>
+                    <th class="px-4 py-3 font-medium w-12"></th>
+                </tr>
+            </thead>
+            <tbody id="bill-tbody">
+            </tbody>
+        </table>
+
+        <div class="mt-4">
+            <button type="button" onclick="addRow()" class="text-sm font-medium text-indigo-600 hover:text-indigo-700 flex items-center gap-1 p-2 bg-indigo-50 border border-indigo-100 shadow-sm transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                Add Row
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Footer (Taxes & Actions) -->
+    <div class="shrink-0 lg:sticky lg:bottom-0 lg:z-20 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)]">
+        <!-- Taxes / Percentages -->
+        <div class="p-3 border-t border-slate-200 bg-white flex flex-wrap justify-between gap-3">
+            <div class="flex items-center justify-between gap-3 border border-slate-200 px-3 py-1.5 rounded-md bg-slate-50 flex-1 min-w-[180px]">
+                <label class="font-bold text-[11px] tracking-wide text-slate-600 uppercase whitespace-nowrap">Vatav %</label>
+                <div class="flex items-center gap-2">
+                    <input type="number" step="0.01" name="vatav_percent" value="5.00" class="w-14 border border-slate-300 py-0.5 px-1 text-right font-bold text-slate-800 bg-white shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 rounded text-sm">
+                    <span id="vatav-amt" class="text-sm font-semibold text-slate-700 min-w-[60px] text-right">0.00</span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between gap-3 border border-slate-200 px-3 py-1.5 rounded-md bg-slate-50 flex-1 min-w-[180px]">
+                <label class="font-bold text-[11px] tracking-wide text-slate-600 uppercase whitespace-nowrap">SGST %</label>
+                <div class="flex items-center gap-2">
+                    <input type="number" step="0.01" name="sgst_percent" value="2.50" class="w-14 border border-slate-300 py-0.5 px-1 text-right font-bold text-slate-800 bg-white shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 rounded text-sm">
+                    <span id="sgst-amt" class="text-sm font-semibold text-slate-700 min-w-[60px] text-right">0.00</span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between gap-3 border border-slate-200 px-3 py-1.5 rounded-md bg-slate-50 flex-1 min-w-[180px]">
+                <label class="font-bold text-[11px] tracking-wide text-slate-600 uppercase whitespace-nowrap">CGST %</label>
+                <div class="flex items-center gap-2">
+                    <input type="number" step="0.01" name="cgst_percent" value="2.50" class="w-14 border border-slate-300 py-0.5 px-1 text-right font-bold text-slate-800 bg-white shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 rounded text-sm">
+                    <span id="cgst-amt" class="text-sm font-semibold text-slate-700 min-w-[60px] text-right">0.00</span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between gap-3 border border-slate-200 px-3 py-1.5 rounded-md bg-slate-50 flex-1 min-w-[180px]">
+                <label class="font-bold text-[11px] tracking-wide text-slate-600 uppercase whitespace-nowrap">TDS %</label>
+                <div class="flex items-center gap-2">
+                    <input type="number" step="0.01" name="tds_percent" value="1.00" class="w-14 border border-slate-300 py-0.5 px-1 text-right font-bold text-slate-800 bg-white shadow-sm focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 rounded text-sm">
+                    <span id="tds-amt" class="text-sm font-semibold text-slate-700 min-w-[60px] text-right">0.00</span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between gap-3 border border-slate-200 px-3 py-1.5 rounded-md bg-slate-50 flex-1 min-w-[200px]">
+                <label class="font-bold text-[11px] tracking-wide text-slate-700 uppercase whitespace-nowrap">Net Amount</label>
+                <span id="net-total" class="min-w-[80px] px-2 py-0.5 text-right font-bold text-teal-700 bg-white rounded border border-teal-600 text-sm">0.00</span>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="p-3 border-t border-slate-200 bg-slate-50 flex flex-col lg:flex-row justify-between items-center gap-4">
+            <div class="text-[15px] font-bold text-slate-800 flex items-center gap-4 w-full lg:w-auto justify-center lg:justify-start">
+                <div class="flex items-center gap-2">Total Pcs: <span id="grand-pcs" class="text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded border border-indigo-100">0</span></div>
+                <div class="flex items-center gap-2">Total Amount: <span id="grand-total" class="text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded border border-indigo-100">0.00</span></div>
+            </div>
+            <div class="flex flex-wrap lg:flex-nowrap justify-center gap-2 w-full lg:w-auto">
+                <button type="button" onclick="showBillPreview()" class="w-[calc(50%-0.25rem)] lg:w-auto px-4 py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 font-bold hover:bg-indigo-100 transition-colors shadow-sm rounded text-sm whitespace-nowrap">
+                    Show Bill
+                </button>
+                <button type="submit" name="action" value="draft" class="w-[calc(50%-0.25rem)] lg:w-auto px-4 py-2 bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors shadow-sm rounded text-sm whitespace-nowrap">
+                    Save Draft
+                </button>
+                <button type="submit" name="action" value="generate" class="w-full lg:w-auto px-4 py-2 bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors shadow-sm rounded text-sm whitespace-nowrap">
+                    Generate Bill
+                </button>
+                <button type="button" onclick="clearDetails()" class="w-[calc(50%-0.25rem)] lg:w-auto px-4 py-2 bg-red-50 border border-red-200 text-red-700 font-bold hover:bg-red-100 transition-colors shadow-sm rounded text-sm whitespace-nowrap">
+                    Clear Bill
+                </button>
+                <a href="{{ route('generate-bills.index') }}" class="w-[calc(50%-0.25rem)] lg:w-auto px-4 py-2 bg-white border border-slate-300 text-slate-700 font-medium hover:bg-slate-50 transition-colors shadow-sm flex items-center justify-center rounded text-sm whitespace-nowrap">
+                    Cancel
+                </a>
+            </div>
+        </div>
+    </div>
+</form>
+    </div>
+</div>
+
+<script>
+    let rowCount = 0;
+
+    function showBillPreview() {
+        const form = document.querySelector('form');
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+        
+        const originalAction = form.action;
+        const originalTarget = form.target;
+        
+        // Disable _method input so it submits as a true POST
+        const methodInput = form.querySelector('input[name="_method"]');
+        if (methodInput) methodInput.disabled = true;
+        
+        form.action = "{{ route('generate-bills.preview') }}";
+        form.target = "_blank";
+        
+        form.submit();
+        
+        setTimeout(() => {
+            form.action = originalAction;
+            form.target = originalTarget || '';
+            if (methodInput) methodInput.disabled = false;
+        }, 100);
+    }
+
+    document.getElementById('party-select').addEventListener('change', function() {
+        const selected = this.options[this.selectedIndex];
+        document.getElementById('party-name').value = selected.getAttribute('data-name') || '';
+        document.getElementById('party-add').value = selected.getAttribute('data-add') || '';
+        document.getElementById('party-gst').value = selected.getAttribute('data-gst') || '';
+
+        document.querySelector('input[name="vatav_percent"]').value = selected.getAttribute('data-vatav') || '0.00';
+        document.querySelector('input[name="sgst_percent"]').value = selected.getAttribute('data-sgst') || '0.00';
+        document.querySelector('input[name="cgst_percent"]').value = selected.getAttribute('data-cgst') || '0.00';
+        document.querySelector('input[name="tds_percent"]').value = selected.getAttribute('data-tds') || '0.00';
+        updateGrandTotal();
+    });
+
+    function clearDetails() {
+        document.querySelector('form').reset();
+        document.getElementById('party-name').value = '';
+        document.getElementById('party-add').value = '';
+        document.getElementById('party-gst').value = '';
+        document.querySelector('input[name="vatav_percent"]').value = '5.00';
+        document.querySelector('input[name="sgst_percent"]').value = '2.50';
+        document.querySelector('input[name="cgst_percent"]').value = '2.50';
+        document.querySelector('input[name="tds_percent"]').value = '1.00';
+
+        document.getElementById('bill-tbody').innerHTML = '';
+        rowCount = 0;
+        addRow();
+        updateGrandTotal();
+    }
+
+    function addRow() {
+        rowCount++;
+        const tbody = document.getElementById('bill-tbody');
+        const tr = document.createElement('tr');
+        tr.className = "border-b border-slate-200 hover:bg-slate-50/50 group";
+        tr.innerHTML = `
+            <td class="px-2 py-2 border-r border-slate-200 align-top">
+                <input type="text" name="items[${rowCount}][sr_no]" oninput="onChalanInput(this)" onblur="fetchChalanDetails(this)" class="w-full border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center mt-1">
+            </td>
+            <td class="px-2 py-2 border-r border-slate-200 align-top">
+                <input type="text" name="items[${rowCount}][ch_no]" class="w-full border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center mt-1">
+            </td>
+            <td class="px-4 py-2 border-r border-slate-200 align-top">
+                <div class="flex flex-col gap-2 details-container mt-1" data-row="${rowCount}" data-detail-count="0">
+                    <div class="flex gap-2 items-center">
+                        <div class="relative combo-container w-1/3 shrink-0">
+                            <input type="text" name="items[${rowCount}][details][0][bundle]" value="bundles" class="combo-input w-full border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center" onclick="this.nextElementSibling.classList.toggle('hidden')" oninput="filterCombo(this)">
+                            <ul class="combo-list hidden absolute z-10 w-full bg-white border border-slate-200 shadow-lg max-h-40 overflow-y-auto mt-1 text-left">
+                                <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">Top</li>
+                                <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">T-D</li>
+                                <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">T-B-D</li>
+                            </ul>
+                        </div>
+                        <input type="text" name="items[${rowCount}][details][0][value]" value="#" placeholder="Detail" class="flex-1 border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center min-w-0 detail-code-input">
+                        <button type="button" onclick="addDetailRow(this)" class="text-slate-500 hover:text-indigo-600 p-1.5 bg-slate-100 hover:bg-indigo-50 border border-slate-200 shrink-0 transition-colors" title="Add Detail">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </td>
+            <td class="px-2 py-2 border-r border-slate-200 align-top">
+                <input type="number" name="items[${rowCount}][pcs]" oninput="calculateRowAmount(this); updateGrandTotal();" class="w-full border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center mt-1">
+            </td>
+            <td class="px-2 py-2 border-r border-slate-200 align-top">
+                <input type="number" name="items[${rowCount}][rate]" step="0.01" oninput="calculateRowAmount(this)" class="w-full border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center mt-1">
+            </td>
+            <td class="px-2 py-2 border-r border-slate-200 align-top">
+                <input type="number" name="items[${rowCount}][amount]" step="0.01" readonly class="w-full border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-right mt-1 bg-slate-50">
+            </td>
+            <td class="px-2 py-2 text-center align-top pt-4">
+                <button type="button" onclick="removeRow(this)" class="text-slate-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    function removeRow(btn) {
+        btn.closest('tr').remove();
+        updateRowNumbers();
+        updateGrandTotal();
+    }
+
+    function updateRowNumbers() {
+        const rows = document.querySelectorAll('#bill-tbody tr');
+        rowCount = 0;
+        rows.forEach(row => {
+            rowCount++;
+            const input = row.querySelector('.row-number-input');
+            if (input) {
+                // If the user hasn't modified it manually (or maybe always update? user said editable, maybe we just set the value if it matches old index? For now let's just NOT overwrite if they typed something custom, or just set it)
+                // Actually, if it's editable, re-numbering them on delete might overwrite custom inputs. Let's ONLY update if it's a number and we want auto sequence, but usually people want to keep their manual inputs.
+                // If they made it "1A", deleting row 1 shouldn't change "1A" to "1".
+                // I will skip auto-updating the value, just update `rowCount` so next row gets a correct new ID.
+            }
+        });
+    }
+
+    function addDetailRow(btn) {
+        const container = btn.closest('.details-container');
+        const rIndex = container.getAttribute('data-row');
+        let dIndex = parseInt(container.getAttribute('data-detail-count')) + 1;
+        container.setAttribute('data-detail-count', dIndex);
+
+        const newRow = document.createElement('div');
+        newRow.className = "flex gap-2 items-center";
+        newRow.innerHTML = `
+            <div class="relative combo-container w-1/3 shrink-0">
+                <input type="text" name="items[${rIndex}][details][${dIndex}][bundle]" placeholder="bundles" class="combo-input w-full border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center" onclick="this.nextElementSibling.classList.toggle('hidden')" oninput="filterCombo(this)">
+                <ul class="combo-list hidden absolute z-10 w-full bg-white border border-slate-200 shadow-lg max-h-40 overflow-y-auto mt-1 text-left">
+                    <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">Top</li>
+                    <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">T-D</li>
+                    <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">T-B-D</li>
+                </ul>
+            </div>
+            <input type="text" name="items[${rIndex}][details][${dIndex}][value]" value="#" placeholder="Detail" class="flex-1 border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center min-w-0 detail-code-input">
+            <button type="button" onclick="this.closest('.flex').remove()" class="text-slate-500 hover:text-red-600 p-1.5 bg-slate-100 hover:bg-red-50 border border-slate-200 shrink-0 transition-colors" title="Remove Detail">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
+            </button>
+        `;
+        container.appendChild(newRow);
+    }
+
+    function filterCombo(input) {
+        const filter = input.value.toLowerCase();
+        const list = input.nextElementSibling;
+        const items = list.querySelectorAll('li');
+        list.classList.remove('hidden');
+        items.forEach(item => {
+            if (item.innerText.toLowerCase().includes(filter)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    }
+
+    function selectCombo(li) {
+        const input = li.closest('.combo-container').querySelector('.combo-input');
+        input.value = li.innerText;
+        li.closest('.combo-list').classList.add('hidden');
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.combo-container')) {
+            document.querySelectorAll('.combo-list').forEach(list => list.classList.add('hidden'));
+        }
+    });
+    document.addEventListener('focusin', function(e) {
+        if (e.target.classList.contains('detail-code-input')) {
+            const input = e.target;
+            if (input.value === '#') {
+                requestAnimationFrame(() => {
+                    input.selectionStart = 1;
+                    input.selectionEnd = 1;
+                });
+            }
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('detail-code-input')) {
+            const input = e.target;
+            if (input.value === '#' && input.selectionStart === 0) {
+                requestAnimationFrame(() => {
+                    input.selectionStart = 1;
+                    input.selectionEnd = 1;
+                });
+            }
+        }
+    });
+
+    function initDetailCodeInputs() {
+        // No longer forcing hashtags
+    }
+
+    function calculateRowAmount(input) {
+        const tr = input.closest('tr');
+        const pcsInput = tr.querySelector('input[name*="[pcs]"]');
+        const rateInput = tr.querySelector('input[name*="[rate]"]');
+        const amountInput = tr.querySelector('input[name*="[amount]"]');
+
+        if (pcsInput && rateInput && amountInput) {
+            const pcs = parseFloat(pcsInput.value) || 0;
+            const rate = parseFloat(rateInput.value) || 0;
+            amountInput.value = (pcs * rate).toFixed(2);
+            updateGrandTotal();
+        }
+    }
+
+    function updateGrandTotal() {
+        let total = 0;
+        document.querySelectorAll('input[name*="[amount]"]').forEach(input => {
+            total += parseFloat(input.value) || 0;
+        });
+
+        let totalPcs = 0;
+        document.querySelectorAll('input[name*="[pcs]"]').forEach(input => {
+            totalPcs += parseFloat(input.value) || 0;
+        });
+
+        const vatavPercent = parseFloat(document.querySelector('input[name="vatav_percent"]')?.value) || 0;
+        const sgstPercent = parseFloat(document.querySelector('input[name="sgst_percent"]')?.value) || 0;
+        const cgstPercent = parseFloat(document.querySelector('input[name="cgst_percent"]')?.value) || 0;
+        const tdsPercent = parseFloat(document.querySelector('input[name="tds_percent"]')?.value) || 0;
+        const vatavAmount = total * (vatavPercent / 100);
+        const taxableAmount = total - vatavAmount;
+        const sgstAmount = taxableAmount * (sgstPercent / 100);
+        const cgstAmount = taxableAmount * (cgstPercent / 100);
+        const tdsAmount = taxableAmount * (tdsPercent / 100);
+        const netAmount = Math.round(taxableAmount + sgstAmount + cgstAmount - tdsAmount);
+
+        document.getElementById('vatav-amt').innerText = vatavAmount.toFixed(2);
+        document.getElementById('sgst-amt').innerText = sgstAmount.toFixed(2);
+        document.getElementById('cgst-amt').innerText = cgstAmount.toFixed(2);
+        document.getElementById('tds-amt').innerText = tdsAmount.toFixed(2);
+
+        document.getElementById('grand-total').innerText = total.toFixed(2);
+        document.getElementById('net-total').innerText = netAmount.toFixed(2);
+        
+        const pcsEl = document.getElementById('grand-pcs');
+        if (pcsEl) pcsEl.innerText = totalPcs;
+    }
+
+    document.querySelectorAll('input[name="vatav_percent"], input[name="sgst_percent"], input[name="cgst_percent"], input[name="tds_percent"]').forEach(input => {
+        input.addEventListener('input', updateGrandTotal);
+    });
+
+    let fetchTimer;
+    function onChalanInput(input) {
+        clearTimeout(fetchTimer);
+        fetchTimer = setTimeout(() => {
+            fetchChalanDetails(input);
+        }, 400);
+    }
+
+    function fetchChalanDetails(input) {
+        if (input.hasAttribute('data-fetching')) return;
+
+        const chNo = input.value.trim();
+        if (!chNo) return;
+
+        if (input.dataset.lastFetched === chNo) {
+            return;
+        }
+
+        const partyId = document.getElementById('party-select').value;
+        let url = `/api/generate-chalans/by-no/${chNo}`;
+        if (partyId) {
+            url += `?party_id=${partyId}`;
+        }
+
+        input.setAttribute('data-fetching', 'true');
+        input.dataset.lastFetched = chNo;
+
+        fetch(url)
+            .then(res => {
+                if (!res.ok) throw new Error('Not found');
+                return res.json();
+            })
+            .then(data => {
+                if (data && data.items && data.items.length > 0) {
+                    if (!partyId && data.party_id) {
+                        const partySelect = document.getElementById('party-select');
+                        partySelect.value = data.party_id;
+                        const event = new Event('change');
+                        partySelect.dispatchEvent(event);
+                    }
+
+                    const firmSelect = document.querySelector('select[name="firm_id"]');
+                    if (data.firm_id) {
+                        firmSelect.value = data.firm_id;
+                    }
+
+                    let allItems = [];
+                    data.items.forEach(item => {
+                        allItems.push({
+                            chalan_no: data.chalan_no,
+                            party_ch_no: item.ch_no,
+                            bundle: item.bundle,
+                            code: item.code,
+                            pcs: item.pcs,
+                            rate: item.rate
+                        });
+                    });
+
+                    if (allItems.length > 0) {
+                        const tr = input.closest('tr');
+                        fillRowWithItem(tr, allItems[0]);
+
+                        for (let i = 1; i < allItems.length; i++) {
+                            addRow();
+                            const newTr = document.getElementById('bill-tbody').lastElementChild;
+                            fillRowWithItem(newTr, allItems[i]);
+                        }
+                        initDetailCodeInputs();
+                    }
+                }
+            })
+            .catch(err => console.error(err))
+            .finally(() => {
+                input.removeAttribute('data-fetching');
+            });
+    }
+
+    function fillRowWithItem(tr, item) {
+        const srInput = tr.querySelector('input[name*="[sr_no]"]');
+        const chInput = tr.querySelector('input[name*="[ch_no]"]');
+        if (srInput) {
+            srInput.value = item.chalan_no;
+            srInput.dataset.lastFetched = item.chalan_no;
+        }
+        if (chInput) {
+            chInput.value = item.party_ch_no || '';
+        }
+        
+        const match = chInput?.name.match(/items\[(\d+)\]/);
+        const rIndex = match ? match[1] : 0;
+
+        const container = tr.querySelector('.details-container');
+        if (container) {
+            container.innerHTML = '';
+            container.setAttribute('data-detail-count', 0);
+
+            const newRow = document.createElement('div');
+            newRow.className = "flex gap-2 items-center mt-1";
+            newRow.innerHTML = `
+                <div class="relative combo-container w-1/3 shrink-0">
+                    <input type="text" name="items[${rIndex}][details][0][bundle]" value="${item.bundle || 'bundles'}" class="combo-input w-full border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center" onclick="this.nextElementSibling.classList.toggle('hidden')" oninput="filterCombo(this)">
+                    <ul class="combo-list hidden absolute z-10 w-full bg-white border border-slate-200 shadow-lg max-h-40 overflow-y-auto mt-1 text-left">
+                        <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">Top</li>
+                        <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">T-D</li>
+                        <li class="px-3 py-1.5 hover:bg-indigo-50 cursor-pointer text-sm text-slate-700" onclick="selectCombo(this)">T-B-D</li>
+                    </ul>
+                </div>
+                <input type="text" name="items[${rIndex}][details][0][value]" value="${item.code || '#'}" placeholder="Detail" class="flex-1 border-slate-200 p-1.5 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 border text-center min-w-0 detail-code-input">
+                <button type="button" onclick="addDetailRow(this)" class="text-slate-500 hover:text-indigo-600 p-1.5 bg-slate-100 hover:bg-indigo-50 border border-slate-200 shrink-0 transition-colors" title="Add Detail">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                </button>
+            `;
+            container.appendChild(newRow);
+        }
+
+        const pcsInput = tr.querySelector('input[name*="[pcs]"]');
+        if (pcsInput) {
+            pcsInput.value = item.pcs || 0;
+            calculateRowAmount(pcsInput);
+        }
+
+        if (item.rate) {
+            const rateInput = tr.querySelector('input[name*="[rate]"]');
+            if (rateInput && (!rateInput.value || rateInput.value === "0" || rateInput.value === "")) {
+                rateInput.value = item.rate;
+                calculateRowAmount(rateInput);
+            }
+        }
+    }
+
+    // Initialize first rows
+    for (let i = 0; i < 6; i++) {
+        addRow();
+    }
+    initDetailCodeInputs();
+</script>
+@endsection

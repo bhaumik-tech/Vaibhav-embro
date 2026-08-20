@@ -1,0 +1,1 @@
+<?php require "vendor/autoload.php"; $app = require_once "bootstrap/app.php"; $kernel = $app->make(Illuminate\Contracts\Console\Kernel::class); $kernel->bootstrap(); $chalan = \App\Models\GenerateChalan::where("chalan_no", "59")->first(); echo "Bill No for Chalan 59 is: " . ($chalan->bill_no ?? "empty") . "\n";

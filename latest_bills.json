@@ -1,0 +1,552 @@
+[
+    {
+        "id": 15,
+        "firm_id": 10,
+        "party_id": 6,
+        "bill_no": "16",
+        "date": "2026-08-01",
+        "name": "BHAVANI SUIT",
+        "add": "209, RAGHUNANDAN TEXTILE MARKET,RINGROAD, SURAT",
+        "gst": "24AOJPC9987K1ZA",
+        "vatav_percent": "5.00",
+        "sgst_percent": "2.50",
+        "cgst_percent": "2.50",
+        "tds_percent": "1.00",
+        "created_at": "2026-08-01T06:24:40.000000Z",
+        "updated_at": "2026-08-01T06:24:51.000000Z",
+        "is_draft": 0,
+        "items": [
+            {
+                "id": 135,
+                "sr_no": "77",
+                "generate_bill_id": 15,
+                "ch_no": "86",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#56"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "140.00",
+                "amount": "16800.00",
+                "created_at": "2026-08-01T06:24:51.000000Z",
+                "updated_at": "2026-08-01T06:24:51.000000Z"
+            },
+            {
+                "id": 136,
+                "sr_no": "77",
+                "generate_bill_id": 15,
+                "ch_no": "86",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#HA-108"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "170.00",
+                "amount": "20400.00",
+                "created_at": "2026-08-01T06:24:51.000000Z",
+                "updated_at": "2026-08-01T06:24:51.000000Z"
+            },
+            {
+                "id": 137,
+                "sr_no": "77",
+                "generate_bill_id": 15,
+                "ch_no": "86",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#108"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "210.00",
+                "amount": "25200.00",
+                "created_at": "2026-08-01T06:24:51.000000Z",
+                "updated_at": "2026-08-01T06:24:51.000000Z"
+            }
+        ]
+    },
+    {
+        "id": 14,
+        "firm_id": 12,
+        "party_id": 5,
+        "bill_no": "18",
+        "date": "2026-07-29",
+        "name": "K. M. FASHION",
+        "add": "E-6055-56, RADHA RAMAN TEXTILE MARKET,SAROLI, SURAT",
+        "gst": "24ACVPR5883M1ZH",
+        "vatav_percent": "5.00",
+        "sgst_percent": "2.50",
+        "cgst_percent": "2.50",
+        "tds_percent": "1.00",
+        "created_at": "2026-07-28T17:57:48.000000Z",
+        "updated_at": "2026-07-28T17:57:48.000000Z",
+        "is_draft": 0,
+        "items": [
+            {
+                "id": 120,
+                "sr_no": "1",
+                "generate_bill_id": 14,
+                "ch_no": "130",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#KM=5"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "140.00",
+                "amount": "16800.00",
+                "created_at": "2026-07-31T09:17:11.000000Z",
+                "updated_at": "2026-07-31T09:17:11.000000Z"
+            },
+            {
+                "id": 121,
+                "sr_no": "2",
+                "generate_bill_id": 14,
+                "ch_no": "130",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#HA-36"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "145.00",
+                "amount": "17400.00",
+                "created_at": "2026-07-31T09:17:11.000000Z",
+                "updated_at": "2026-07-31T09:17:11.000000Z"
+            },
+            {
+                "id": 122,
+                "sr_no": "3",
+                "generate_bill_id": 14,
+                "ch_no": "137",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#5100"
+                    }
+                ],
+                "pcs": "180.00",
+                "rate": "70.00",
+                "amount": "12600.00",
+                "created_at": "2026-07-31T09:17:11.000000Z",
+                "updated_at": "2026-07-31T09:17:11.000000Z"
+            },
+            {
+                "id": 123,
+                "sr_no": "4",
+                "generate_bill_id": 14,
+                "ch_no": "138",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#09"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "58.00",
+                "amount": "6960.00",
+                "created_at": "2026-07-31T09:17:11.000000Z",
+                "updated_at": "2026-07-31T09:17:11.000000Z"
+            },
+            {
+                "id": 124,
+                "sr_no": "5",
+                "generate_bill_id": 14,
+                "ch_no": "138",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#HA-99"
+                    }
+                ],
+                "pcs": "240.00",
+                "rate": "58.00",
+                "amount": "13920.00",
+                "created_at": "2026-07-31T09:17:11.000000Z",
+                "updated_at": "2026-07-31T09:17:11.000000Z"
+            },
+            {
+                "id": 125,
+                "sr_no": "6",
+                "generate_bill_id": 14,
+                "ch_no": "138",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#550"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "70.00",
+                "amount": "8400.00",
+                "created_at": "2026-07-31T09:17:11.000000Z",
+                "updated_at": "2026-07-31T09:17:11.000000Z"
+            },
+            {
+                "id": 126,
+                "sr_no": "7",
+                "generate_bill_id": 14,
+                "ch_no": "141",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#555_____#HA-91"
+                    }
+                ],
+                "pcs": "240.00",
+                "rate": "70.00",
+                "amount": "16800.00",
+                "created_at": "2026-07-31T09:17:11.000000Z",
+                "updated_at": "2026-07-31T09:17:11.000000Z"
+            },
+            {
+                "id": 127,
+                "sr_no": "8",
+                "generate_bill_id": 14,
+                "ch_no": "141",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#JA=108_____#8148"
+                    }
+                ],
+                "pcs": "240.00",
+                "rate": "70.00",
+                "amount": "16800.00",
+                "created_at": "2026-07-31T09:17:11.000000Z",
+                "updated_at": "2026-07-31T09:17:11.000000Z"
+            },
+            {
+                "id": 128,
+                "sr_no": "9",
+                "generate_bill_id": 14,
+                "ch_no": "141",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#A022"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "75.00",
+                "amount": "9000.00",
+                "created_at": "2026-07-31T09:17:11.000000Z",
+                "updated_at": "2026-07-31T09:17:11.000000Z"
+            },
+            {
+                "id": 129,
+                "sr_no": "10",
+                "generate_bill_id": 14,
+                "ch_no": "141",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#878"
+                    }
+                ],
+                "pcs": "240.00",
+                "rate": "80.00",
+                "amount": "19200.00",
+                "created_at": "2026-07-31T09:17:11.000000Z",
+                "updated_at": "2026-07-31T09:17:11.000000Z"
+            },
+            {
+                "id": 130,
+                "sr_no": "11",
+                "generate_bill_id": 14,
+                "ch_no": "142",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#AB-2_____#HA-34"
+                    }
+                ],
+                "pcs": "240.00",
+                "rate": "58.00",
+                "amount": "13920.00",
+                "created_at": "2026-07-31T09:17:11.000000Z",
+                "updated_at": "2026-07-31T09:17:11.000000Z"
+            },
+            {
+                "id": 131,
+                "sr_no": "12",
+                "generate_bill_id": 14,
+                "ch_no": "142",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#5100"
+                    }
+                ],
+                "pcs": "240.00",
+                "rate": "70.00",
+                "amount": "16800.00",
+                "created_at": "2026-07-31T09:17:11.000000Z",
+                "updated_at": "2026-07-31T09:17:11.000000Z"
+            }
+        ]
+    },
+    {
+        "id": 12,
+        "firm_id": 11,
+        "party_id": 6,
+        "bill_no": "15",
+        "date": "2026-07-25",
+        "name": "BHAVANI SUIT",
+        "add": "209, RAGHUNANDAN TEXTILE MARKET,RINGROAD, SURAT",
+        "gst": "24AOJPC9987K1ZA",
+        "vatav_percent": "5.00",
+        "sgst_percent": "2.50",
+        "cgst_percent": "2.50",
+        "tds_percent": "1.00",
+        "created_at": "2026-07-25T12:16:20.000000Z",
+        "updated_at": "2026-07-25T12:16:20.000000Z",
+        "is_draft": 0,
+        "items": [
+            {
+                "id": 82,
+                "sr_no": "59",
+                "generate_bill_id": 12,
+                "ch_no": "50",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#HA-111"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "135.00",
+                "amount": "16200.00",
+                "created_at": "2026-07-25T12:33:32.000000Z",
+                "updated_at": "2026-07-25T12:33:32.000000Z"
+            },
+            {
+                "id": 83,
+                "sr_no": "59",
+                "generate_bill_id": 12,
+                "ch_no": "50",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#HA-50"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "150.00",
+                "amount": "18000.00",
+                "created_at": "2026-07-25T12:33:32.000000Z",
+                "updated_at": "2026-07-25T12:33:32.000000Z"
+            },
+            {
+                "id": 84,
+                "sr_no": "59",
+                "generate_bill_id": 12,
+                "ch_no": "50",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#HA-112"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "150.00",
+                "amount": "18000.00",
+                "created_at": "2026-07-25T12:33:32.000000Z",
+                "updated_at": "2026-07-25T12:33:32.000000Z"
+            },
+            {
+                "id": 85,
+                "sr_no": "59",
+                "generate_bill_id": 12,
+                "ch_no": "50",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#HA-109"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "160.00",
+                "amount": "19200.00",
+                "created_at": "2026-07-25T12:33:32.000000Z",
+                "updated_at": "2026-07-25T12:33:32.000000Z"
+            },
+            {
+                "id": 86,
+                "sr_no": "59",
+                "generate_bill_id": 12,
+                "ch_no": "50",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#05"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "170.00",
+                "amount": "20400.00",
+                "created_at": "2026-07-25T12:33:32.000000Z",
+                "updated_at": "2026-07-25T12:33:32.000000Z"
+            },
+            {
+                "id": 87,
+                "sr_no": "59",
+                "generate_bill_id": 12,
+                "ch_no": "50",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#108"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "210.00",
+                "amount": "25200.00",
+                "created_at": "2026-07-25T12:33:32.000000Z",
+                "updated_at": "2026-07-25T12:33:32.000000Z"
+            },
+            {
+                "id": 88,
+                "sr_no": "61",
+                "generate_bill_id": 12,
+                "ch_no": "50",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#HA-111"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "135.00",
+                "amount": "16200.00",
+                "created_at": "2026-07-25T12:33:32.000000Z",
+                "updated_at": "2026-07-25T12:33:32.000000Z"
+            },
+            {
+                "id": 89,
+                "sr_no": "61",
+                "generate_bill_id": 12,
+                "ch_no": "50",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#HA-107"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "160.00",
+                "amount": "19200.00",
+                "created_at": "2026-07-25T12:33:32.000000Z",
+                "updated_at": "2026-07-25T12:33:32.000000Z"
+            },
+            {
+                "id": 90,
+                "sr_no": "61",
+                "generate_bill_id": 12,
+                "ch_no": "50",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#HA-115"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "190.00",
+                "amount": "22800.00",
+                "created_at": "2026-07-25T12:33:32.000000Z",
+                "updated_at": "2026-07-25T12:33:32.000000Z"
+            },
+            {
+                "id": 91,
+                "sr_no": "61",
+                "generate_bill_id": 12,
+                "ch_no": "50",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#108"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "210.00",
+                "amount": "25200.00",
+                "created_at": "2026-07-25T12:33:32.000000Z",
+                "updated_at": "2026-07-25T12:33:32.000000Z"
+            },
+            {
+                "id": 92,
+                "sr_no": "62",
+                "generate_bill_id": 12,
+                "ch_no": "50",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#HA-110"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "150.00",
+                "amount": "18000.00",
+                "created_at": "2026-07-25T12:33:32.000000Z",
+                "updated_at": "2026-07-25T12:33:32.000000Z"
+            },
+            {
+                "id": 93,
+                "sr_no": "62",
+                "generate_bill_id": 12,
+                "ch_no": "50",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#HA-50"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "150.00",
+                "amount": "18000.00",
+                "created_at": "2026-07-25T12:33:32.000000Z",
+                "updated_at": "2026-07-25T12:33:32.000000Z"
+            },
+            {
+                "id": 94,
+                "sr_no": "62",
+                "generate_bill_id": 12,
+                "ch_no": "50",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#5660"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "170.00",
+                "amount": "20400.00",
+                "created_at": "2026-07-25T12:33:32.000000Z",
+                "updated_at": "2026-07-25T12:33:32.000000Z"
+            },
+            {
+                "id": 95,
+                "sr_no": "62",
+                "generate_bill_id": 12,
+                "ch_no": "50",
+                "details": [
+                    {
+                        "bundle": "T-D",
+                        "value": "#JA=13"
+                    }
+                ],
+                "pcs": "120.00",
+                "rate": "190.00",
+                "amount": "22800.00",
+                "created_at": "2026-07-25T12:33:32.000000Z",
+                "updated_at": "2026-07-25T12:33:32.000000Z"
+            }
+        ]
+    }
+]
