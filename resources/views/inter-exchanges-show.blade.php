@@ -127,8 +127,8 @@
                 
                 <div class="p-4 flex-1 flex flex-col items-center justify-center bg-slate-50/50 relative group">
                     @if($interExchange->photo_path)
-                        <a href="{{ Storage::url($interExchange->photo_path) }}" target="_blank" class="block w-full h-full relative cursor-zoom-in" title="Click to view full size">
-                            <img src="{{ Storage::url($interExchange->photo_path) }}" alt="Inter-Exchange Photo" class="w-full h-auto object-contain max-h-[500px] border border-slate-200 shadow-sm bg-white p-1">
+                        <a href="{{ Storage::disk('public')->url($interExchange->photo_path) }}" target="_blank" class="block w-full h-full relative cursor-zoom-in" title="Click to view full size">
+                            <img src="{{ Storage::disk('public')->url($interExchange->photo_path) }}" alt="Inter-Exchange Photo" class="w-full h-auto object-contain max-h-[500px] border border-slate-200 shadow-sm bg-white p-1">
                             <div class="absolute inset-0 bg-slate-900/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
                                 <span class="bg-slate-900/80 text-white text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-sm shadow-lg backdrop-blur-sm">View Full Screen</span>
                             </div>

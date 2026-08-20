@@ -199,7 +199,7 @@
                     
                     let attachmentHtml = '';
                     if (msg.attachment_path) {
-                        const url = `/storage/${msg.attachment_path}`;
+                        const url = `/storage_files/${msg.attachment_path}`;
                         if (msg.attachment_type === 'image') {
                             attachmentHtml = `<a href="${url}" target="_blank"><img src="${url}" class="rounded-sm max-w-[200px] mb-2 border border-slate-200 shadow-sm" /></a>`;
                         } else if (msg.attachment_type === 'video') {

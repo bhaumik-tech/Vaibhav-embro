@@ -23,7 +23,7 @@
             <!-- Profile Section -->
             <div class="bg-white border border-slate-300 shadow-sm p-6 flex flex-col items-center">
                 @if($karigar->photo)
-                    <img src="{{ Storage::url($karigar->photo) }}" class="w-32 h-32 object-cover rounded-full border-4 border-slate-100 shadow-sm mb-4">
+                    <img src="{{ Storage::disk('public')->url($karigar->photo) }}" class="w-32 h-32 object-cover rounded-full border-4 border-slate-100 shadow-sm mb-4">
                 @else
                     <div class="w-32 h-32 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 border-4 border-slate-50 shadow-sm mb-4">
                         <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
@@ -112,8 +112,8 @@
                         <div>
                             <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Aadhar Front</div>
                             @if($karigar->aadhar_front)
-                                <a href="{{ Storage::url($karigar->aadhar_front) }}" target="_blank" class="block border border-slate-200 p-1 hover:border-indigo-500 transition-colors">
-                                    <img src="{{ Storage::url($karigar->aadhar_front) }}" class="w-full h-48 object-cover">
+                                <a href="{{ Storage::disk('public')->url($karigar->aadhar_front) }}" target="_blank" class="block border border-slate-200 p-1 hover:border-indigo-500 transition-colors">
+                                    <img src="{{ Storage::disk('public')->url($karigar->aadhar_front) }}" class="w-full h-48 object-cover">
                                 </a>
                             @else
                                 <div class="w-full h-48 bg-slate-50 border border-slate-200 flex flex-col items-center justify-center text-slate-400">
@@ -125,8 +125,8 @@
                         <div>
                             <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Aadhar Back</div>
                             @if($karigar->aadhar_back)
-                                <a href="{{ Storage::url($karigar->aadhar_back) }}" target="_blank" class="block border border-slate-200 p-1 hover:border-indigo-500 transition-colors">
-                                    <img src="{{ Storage::url($karigar->aadhar_back) }}" class="w-full h-48 object-cover">
+                                <a href="{{ Storage::disk('public')->url($karigar->aadhar_back) }}" target="_blank" class="block border border-slate-200 p-1 hover:border-indigo-500 transition-colors">
+                                    <img src="{{ Storage::disk('public')->url($karigar->aadhar_back) }}" class="w-full h-48 object-cover">
                                 </a>
                             @else
                                 <div class="w-full h-48 bg-slate-50 border border-slate-200 flex flex-col items-center justify-center text-slate-400">

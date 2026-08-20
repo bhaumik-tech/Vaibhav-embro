@@ -52,7 +52,7 @@
                             <td class="p-4 text-sm font-bold text-slate-800 border-r border-slate-200">
                                 <div class="flex items-center gap-3">
                                     @if($karigar->photo)
-                                        <img src="{{ Storage::url($karigar->photo) }}" class="w-8 h-8 object-cover rounded-full border border-slate-300">
+                                        <img src="{{ Storage::disk('public')->url($karigar->photo) }}" class="w-8 h-8 object-cover rounded-full border border-slate-300">
                                     @else
                                         <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-500">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>

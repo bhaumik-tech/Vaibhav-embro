@@ -41,7 +41,7 @@
                     <td class="p-3 border-r border-slate-200 font-bold text-slate-700">{{ $entry->company_name }}</td>
                     <td class="p-3 border-r border-slate-200 font-bold text-slate-700 text-center">
                         @if($entry->image_path)
-                            <a href="{{ Storage::url($entry->image_path) }}" target="_blank" class="text-indigo-600 hover:text-indigo-800 transition-colors inline-block" title="View Attachment">
+                            <a href="{{ Storage::disk('public')->url($entry->image_path) }}" target="_blank" class="text-indigo-600 hover:text-indigo-800 transition-colors inline-block" title="View Attachment">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                             </a>
                         @else

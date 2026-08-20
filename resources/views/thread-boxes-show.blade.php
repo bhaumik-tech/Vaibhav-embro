@@ -108,7 +108,7 @@
         @if($threadBox->image_path)
         <div class="image-container">
             <div class="image-title">Attached Image</div>
-            <img src="{{ Storage::url($threadBox->image_path) }}" alt="Attachment for {{ $threadBox->ch_no }}">
+            <img src="{{ Storage::disk('public')->url($threadBox->image_path) }}" alt="Attachment for {{ $threadBox->ch_no }}">
         </div>
         @endif
     </div>
