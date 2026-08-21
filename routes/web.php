@@ -204,8 +204,17 @@ Route::middleware('auth')->group(function () {
             return redirect()->route('register.index', array_merge(request()->query(), ['party_id' => $parties->first()->id]));
         }
 
+        $firms = \App\Models\Firm::getPermittedForPage('registers', 'view');
+        $permittedFirmIds = $firms->pluck('id')->toArray();
+
         $query = \App\Models\InputChalan::with(['items', 'firm']);
         $outQuery = \App\Models\OutputChalan::with(['firm']);
+
+        if (!auth()->user()->isAdmin()) {
+            $query->whereIn('firm_id', $permittedFirmIds);
+            $outQuery->whereIn('firm_id', $permittedFirmIds);
+        }
+
         if (request('party_id')) {
             $query->where('party_id', request('party_id'));
             $outQuery->where('party_id', request('party_id'));
@@ -255,6 +264,10 @@ Route::middleware('auth')->group(function () {
         $outputChalans = $outputChalansList;
 
         $genQuery = \App\Models\GenerateChalan::with(['firm', 'items']);
+        if (!auth()->user()->isAdmin()) {
+            $genQuery->whereIn('firm_id', $permittedFirmIds);
+        }
+
         if (request('party_id')) {
             $genQuery->where('party_id', request('party_id'));
         }
@@ -364,6 +377,10 @@ Route::middleware('auth')->group(function () {
 
         // Fetch bills for the Bills tab
         $billsQuery = \App\Models\GenerateBill::with(['firm', 'party']);
+        if (!auth()->user()->isAdmin()) {
+            $billsQuery->whereIn('firm_id', $permittedFirmIds);
+        }
+
         if (request('party_id')) {
             $billsQuery->where('party_id', request('party_id'));
         }
@@ -383,7 +400,7 @@ Route::middleware('auth')->group(function () {
         $registerBillsList = $billsQuery->latest('date')->get();
         $registerBills = $registerBillsList;
 
-        $firms = \App\Models\Firm::getPermitted();
+
 
         return view('register', compact('parties', 'inputChalans', 'outputChalans', 'genChalans', 'registerBills', 'firms'));
     })->name('register.index')->middleware('page.permission:registers,view');
@@ -395,8 +412,17 @@ Route::middleware('auth')->group(function () {
             return redirect()->route('register.print', array_merge(request()->query(), ['party_id' => $parties->first()->id]));
         }
 
+        $firms = \App\Models\Firm::getPermittedForPage('registers', 'view');
+        $permittedFirmIds = $firms->pluck('id')->toArray();
+
         $query = \App\Models\InputChalan::with(['items', 'firm']);
         $outQuery = \App\Models\OutputChalan::with(['firm']);
+
+        if (!auth()->user()->isAdmin()) {
+            $query->whereIn('firm_id', $permittedFirmIds);
+            $outQuery->whereIn('firm_id', $permittedFirmIds);
+        }
+
         if (request('party_id')) {
             $query->where('party_id', request('party_id'));
             $outQuery->where('party_id', request('party_id'));
@@ -439,6 +465,10 @@ Route::middleware('auth')->group(function () {
         });
 
         $genQuery = \App\Models\GenerateChalan::with(['firm', 'items']);
+        if (!auth()->user()->isAdmin()) {
+            $genQuery->whereIn('firm_id', $permittedFirmIds);
+        }
+
         if (request('party_id')) {
             $genQuery->where('party_id', request('party_id'));
         }

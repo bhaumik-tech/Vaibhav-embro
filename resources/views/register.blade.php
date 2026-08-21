@@ -304,7 +304,7 @@
                                     </td>
                                     <td
                                         class="px-2 py-1.5 text-center flex gap-1 justify-center items-center h-full min-h-[36px]">
-                                        @canpage('input_chalan', 'edit')
+                                        @canpage('input_chalan', 'edit', $chalan->firm_id)
                                         <a href="{{ route('input-chalan.edit', ['inputChalan' => $chalan, 'return_to' => request()->fullUrl()]) }}"
                                             class="bg-slate-800 text-white rounded p-1 hover:bg-slate-900 shadow-sm shrink-0 flex items-center justify-center">
                                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -314,7 +314,7 @@
                                             </svg>
                                         </a>
                                         @endcanpage
-                                        @canpage('input_chalan', 'remove')
+                                        @canpage('input_chalan', 'remove', $chalan->firm_id)
                                         <form action="{{ route('input-chalan.destroy', $chalan) }}" method="POST"
                                             class="inline m-0 flex"
                                             onsubmit="return confirm('Are you sure you want to delete this entire Chalan?');">
@@ -605,7 +605,7 @@
                                                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                             </svg>
                                         </button>
-                                        @canpage('generate_chalan', 'edit')
+                                        @canpage('generate_chalan', 'edit', $oChalan->firm_id)
                                         <a href="{{ route('generate-chalans.edit', ['generateChalan' => $oChalan->id, 'return_to' => request()->fullUrl()]) }}"
                                             class="bg-slate-800 text-white rounded p-1 hover:bg-slate-900 shadow-sm shrink-0 flex items-center justify-center"
                                             title="Edit">
@@ -616,7 +616,7 @@
                                             </svg>
                                         </a>
                                         @endcanpage
-                                        @canpage('generate_chalan', 'remove')
+                                        @canpage('generate_chalan', 'remove', $oChalan->firm_id)
                                         <form action="{{ route('generate-chalans.destroy', $oChalan->id) }}"
                                             method="POST" class="inline m-0 flex"
                                             onsubmit="return confirm('Delete Generate Chalan?');">
@@ -741,7 +741,7 @@
                                                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                             </svg>
                                         </button>
-                                        @canpage('generate_bill', 'edit')
+                                        @canpage('generate_bill', 'edit', $bill->firm_id)
                                         <a href="{{ route('generate-bills.edit', ['generateBill' => $bill->id, 'return_to' => request()->fullUrl()]) }}"
                                             class="bg-slate-800 text-white rounded p-1 hover:bg-slate-900 shadow-sm shrink-0 flex items-center justify-center"
                                             title="Edit">
@@ -752,7 +752,7 @@
                                             </svg>
                                         </a>
                                         @endcanpage
-                                        @canpage('generate_bill', 'remove')
+                                        @canpage('generate_bill', 'remove', $bill->firm_id)
                                         <form action="{{ route('generate-bills.destroy', $bill->id) }}" method="POST"
                                             class="inline m-0 flex" onsubmit="return confirm('Delete Generated Bill?');">
                                             @csrf
